@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "services.order-url",
+      "type": "java.lang.String",
+      "description": "Order url."
+    },
+    {
+      "name": "services.warranty-url",
+      "type": "java.lang.String",
+      "description": "Warranty url."
+    },
+    {
+      "name": "services.warehouse-url",
+      "type": "java.lang.String",
+      "description": "Warehouse url."
+    }
+  ]
+}
