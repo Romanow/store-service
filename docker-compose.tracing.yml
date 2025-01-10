@@ -1,6 +1,6 @@
 services:
   jaeger:
-    image: "jaegertracing/all-in-one:1.57"
+    image: "jaegertracing/all-in-one:1.65.0"
     container_name: jaeger
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:16686" ]
@@ -12,4 +12,3 @@ services:
       - SPAN_STORAGE_TYPE=memory
     ports:
       - "16686:16686"
-      - "4318:4318"
