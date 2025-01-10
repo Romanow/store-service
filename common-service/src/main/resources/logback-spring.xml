@@ -15,17 +15,19 @@
                     <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                         <providers>
                             <pattern>
-                                {
-                                    "timestamp": "@timestamp",
-                                    "level": "%level",
-                                    "application": "${APPLICATION_NAME:-}",
-                                    "trace": "%X{traceId:-}",
-                                    "span": "%X{spanId:-}",
-                                    "pid": "${PID:-}",
-                                    "thread": "%thread",
-                                    "class": "%logger{40}",
-                                    "message": "%message"
-                                }
+                                <pattern>
+                                    {
+                                        "timestamp": "@timestamp",
+                                        "level": "%level",
+                                        "application": "${APPLICATION_NAME:-}",
+                                        "trace": "%X{traceId:-}",
+                                        "span": "%X{spanId:-}",
+                                        "pid": "${PID:-}",
+                                        "thread": "%thread",
+                                        "class": "%logger{40}",
+                                        "message": "%message"
+                                    }
+                                </pattern>
                             </pattern>
                         </providers>
                     </encoder>
@@ -49,15 +51,15 @@
                     <pattern>
                         <pattern>
                             {
-                            "timestamp": "@timestamp",
-                            "level": "%level",
-                            "application": "${APPLICATION_NAME:-}",
-                            "trace": "%X{traceId:-}",
-                            "span": "%X{spanId:-}",
-                            "pid": "${PID:-}",
-                            "thread": "%thread",
-                            "class": "%logger{40}",
-                            "message": "%message"
+                                "timestamp": "@timestamp",
+                                "level": "%level",
+                                "application": "${APPLICATION_NAME:-}",
+                                "trace": "%X{traceId:-}",
+                                "span": "%X{spanId:-}",
+                                "pid": "${PID:-}",
+                                "thread": "%thread",
+                                "class": "%logger{40}",
+                                "message": "%message"
                             }
                         </pattern>
                     </pattern>
