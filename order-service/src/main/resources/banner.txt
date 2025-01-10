@@ -18,4 +18,6 @@ Warranty service: ${services.warranty-url}
 ================================================================
 Tracing enabled: ${management.tracing.enabled}
 Security enabled: ${oauth2.security.enabled}
+Logging enabled: ${logging.fluent-bit.enabled}
+Circuit Breaker enabled: ${circuit-breaker.enabled}
 ================================================================

@@ -1,8 +1,9 @@
 x-common-envs: &common-envs
   environment:
     SPRING_PROFILES_ACTIVE: docker,auth0
-    OAUTH2_SECURITY_ENABLED: true
-    TRACING_ENABLED: false
+    OAUTH2_SECURITY_ENABLED: ${OAUTH2_SECURITY_ENABLED:-false}
+    TRACING_ENABLED: ${TRACING_ENABLED:-false}
+    FLUENT_BIT_ENABLED: ${TRACING_ENABLED:-false}
 
 services:
   postgres:

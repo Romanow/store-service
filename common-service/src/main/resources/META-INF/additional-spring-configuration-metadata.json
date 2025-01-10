@@ -67,6 +67,16 @@
       "type": "java.lang.String",
       "description": "Role for management endpoints.",
       "sourceType": "ru.romanow.inst.services.common.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "logging.fluent-bit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable send logs to logging collector."
+    },
+    {
+      "name": "logging.fluent-bit.address",
+      "type": "java.lang.Boolean",
+      "description": "Fluent Bit address."
     }
   ]
 }

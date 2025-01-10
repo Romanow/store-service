@@ -2,6 +2,10 @@ spring:
   security:
     oauth2:
       client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT_ID:store}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC}
         provider:
           keycloak:
             issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8100/realms/master/}

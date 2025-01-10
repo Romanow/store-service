@@ -55,5 +55,8 @@ circuit-breaker:
   default-timeout: ${CIRCUIT_BREAKER_TIMEOUT:30s}
 
 logging:
+  fluent-bit:
+    enabled: ${FLUENT_BIT_ENABLED:false}
+    address: ${FLUENT_BIT_ADDRESS:fluent-bit:5170}
   level:
     org.zalando.logbook: TRACE

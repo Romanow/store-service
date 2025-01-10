@@ -4,12 +4,14 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="FLUENT_BIT_ENABLED" source="logging.fluent-bit.enabled"/>
+    <springProperty scope="context" name="FLUENT_BIT_ADDRESS" source="logging.fluent-bit.address"/>
 
     <springProfile name="docker">
-        <if condition="${FLUENT_BIT_LOGGING_ENABLED:-false}">
+        <if condition="${FLUENT_BIT_ENABLED}">
             <then>
                 <appender name="FLUENT-BIT" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-                    <destination>fluent-bit:5170</destination>
+                    <destination>${FLUENT_BIT_ADDRESS}</destination>
                     <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                         <providers>
                             <pattern>
