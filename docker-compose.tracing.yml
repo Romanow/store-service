@@ -1,14 +1,14 @@
 services:
   jaeger:
-    image: "jaegertracing/all-in-one:1.65.0"
+    image: "jaegertracing/jaeger:2.2.0"
     container_name: jaeger
+    command: ["--config", "/etc/jaeger/config.yml"]
+    ports:
+      - "16686:16686"
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:16686" ]
       interval: 5s
       timeout: 10s
       retries: 5
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-      - SPAN_STORAGE_TYPE=memory
-    ports:
-      - "16686:16686"
+    volumes:
+      - "./docker/jaeger/config.yml:/etc/jaeger/config.yml"
