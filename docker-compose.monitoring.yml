@@ -1,6 +1,6 @@
 services:
   prometheus:
-    image: prom/prometheus:v2.52.0
+    image: prom/prometheus:v3.1.0
     container_name: prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -54,7 +54,7 @@ services:
         condition: service_healthy
 
   grafana:
-    image: grafana/grafana:9.4.7
+    image: grafana/grafana:11.5.1
     container_name: grafana
     environment:
       - GF_AUTH_BASIC_ENABLED=false
