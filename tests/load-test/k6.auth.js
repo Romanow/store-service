@@ -27,7 +27,7 @@ export function setup() {
         }
     }
 
-    const url = "https://localhost:8100/oauth/token"
+    const url = "https://romanowalex.eu.auth0.com/oauth/token"
     const result = http.post(url, body.toString(), params)
     return result.json().access_token
 }
