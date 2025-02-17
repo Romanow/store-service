@@ -41,8 +41,8 @@ CREATE TABLE order_item
 
 ## Данные в БД
 
-| id | available_count |   model   | size |
-|----|-----------------|-----------|------|
-|  1 |      10000      | Lego 8070 |   M  |
-|  2 |      10000      | Lego 42070|   L  |
-|  2 |      10000      | Lego 8880 |   L  |
+| id | available_count | model      | size |
+|----|-----------------|------------|------|
+| 1  | 10000           | Lego 8070  | M    |
+| 2  | 10000           | Lego 42070 | L    |
+| 2  | 10000           | Lego 8880  | L    |

@@ -4,6 +4,7 @@ x-common-envs: &common-envs
     OAUTH2_SECURITY_ENABLED: ${OAUTH2_SECURITY_ENABLED:-false}
     TRACING_ENABLED: ${TRACING_ENABLED:-false}
     FLUENT_BIT_ENABLED: ${FLUENT_BIT_ENABLED:-false}
+    CIRCUIT_BREAKER_ENABLED: ${CIRCUIT_BREAKER_ENABLED:-false}
 
 services:
   postgres:

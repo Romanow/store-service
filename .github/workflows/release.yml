@@ -31,12 +31,20 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build images
+      - name: Build and push images
         timeout-minutes: 10
-        run: docker compose build
+        run: docker buildx bake --push --set *.platform=linux/amd64,linux/arm64
+        env:
+          VERSION: ${{ github.ref_name }}
 
-      - name: Push images
-        run: docker compose push
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          repository: romanowalex/store-service
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          short-description: ${{ github.event.repository.description }}
+          enable-url-completion: true
 
       - name: Create release
         uses: softprops/action-gh-release@v2
