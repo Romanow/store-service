@@ -6,7 +6,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.jpa" version "1.9.25" apply false
     id "org.jetbrains.kotlin.plugin.spring" version "1.9.25" apply false
     id "org.jlleitschuh.gradle.ktlint" version "12.1.2" apply false
-    id "org.springframework.boot" version "3.3.7" apply false
+    id "org.springframework.boot" version "3.4.3" apply false
     id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false
     id "com.adarshr.test-logger" version "4.0.0" apply false
     id "io.spring.dependency-management" version "1.1.7"
@@ -14,14 +14,14 @@ plugins {
 
 ext {
     kotlinVersion = "1.9.25"
-    springBootVersion = "3.3.7"
-    springCircuitBreakerVersion = "3.1.3"
+    springBootVersion = "3.4.3"
+    springCircuitBreakerVersion = "3.2.0"
     validationApiVersion = "2.0.1.Final"
-    jwtVersion = "4.4.0"
-    openApiVersion = "2.6.0"
+    jwtVersion = "4.5.0"
+    openApiVersion = "2.8.5"
     logbookVersion = "2.16.0"
     logstashEncoderVersion = "7.4"
-    postgresContainerVersion = "1.20.4"
+    postgresContainerVersion = "1.20.5"
 }
 
 subprojects { ->

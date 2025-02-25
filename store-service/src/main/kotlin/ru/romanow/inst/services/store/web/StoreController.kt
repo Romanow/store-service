@@ -17,26 +17,21 @@ import ru.romanow.inst.services.store.service.StoreService
 import java.util.*
 import javax.validation.Valid
 
-@Tag(name = "Store API")
+// @formatter:off
+@Suppress("ktlint:standard:max-line-length")
+@Tag(name = "Сервис Магазина")
 @RestController
 @RequestMapping("/api/v1/store")
 class StoreController(
     private val storeService: StoreService
 ) {
-    @Operation(summary = "List user orders")
+
+    @Operation(summary = "Информация о заказах пользователя")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "User orders info"),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "422",
-                description = "External request failed",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Информация о заказах"),
+            ApiResponse(responseCode = "404", description = "Пользователь не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @GetMapping("/orders", produces = ["application/json"])
@@ -45,20 +40,12 @@ class StoreController(
         return storeService.findUserOrders(userId)
     }
 
-    @Operation(summary = "User order info")
+    @Operation(summary = "Информация о заказе пользователя")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "User order info"),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "422",
-                description = "External request failed",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Информация о заказе"),
+            ApiResponse(responseCode = "404", description = "Пользователь не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @GetMapping("/{orderUid}", produces = ["application/json"])
@@ -67,30 +54,14 @@ class StoreController(
         return storeService.findUserOrder(userId, orderUid)
     }
 
-    @Operation(summary = "Purchase item")
+    @Operation(summary = "Создать заказ")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "201", description = "Item purchased"),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request format",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "409",
-                description = "Item not available",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "422",
-                description = "External request failed",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "201", description = "Заказ создан"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "404", description = "Пользователь не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "409", description = "Item not available", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping("/purchase", consumes = ["application/json"])
@@ -109,20 +80,12 @@ class StoreController(
         return ResponseEntity.created(uri).build()
     }
 
-    @Operation(summary = "Return items")
+    @Operation(summary = "Отмена заказа")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "204", description = "Item returned"),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "422",
-                description = "External request failed",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "204", description = "Заказ успешно отменен"),
+            ApiResponse(responseCode = "404", description = "Пользователь не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -132,25 +95,13 @@ class StoreController(
         storeService.refundPurchase(userId, orderUid)
     }
 
-    @Operation(summary = "Request warranty")
+    @Operation(summary = "Запрос гарантии")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Warranty decision"),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request format",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "User not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "422",
-                description = "External request failed",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Результат запроса по гарантии"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "404", description = "Пользователь не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping("/{orderUid}/warranty", consumes = ["application/json"], produces = ["application/json"])
@@ -170,3 +121,4 @@ class StoreController(
         private val USER_UID = UUID.fromString("28946ba3-bfd6-4087-9ffb-2a7520d78562").toString()
     }
 }
+// @formatter:on

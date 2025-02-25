@@ -11,6 +11,9 @@ import java.util.UUID
 
 interface ItemRepository : JpaRepository<Item, Int> {
 
+    @Query("select i from Item i where i.availableCount > 0")
+    fun findAvailableItems(): List<Item>
+
     @Query("select oi.item from OrderItem oi where oi.orderItemUid = :orderItemUid")
     fun findByOrderItemUid(orderItemUid: UUID): Optional<Item>
 
@@ -23,8 +26,10 @@ interface ItemRepository : JpaRepository<Item, Int> {
 
     @Modifying
     @Query(
-        "update Item set availableCount = availableCount + 1 " +
-            "where id = (select id from OrderItem oi where oi.orderItemUid = :orderItemUid)"
+        """
+            update Item set availableCount = availableCount + 1
+            where id = (select id from OrderItem oi where oi.orderItemUid = :orderItemUid)
+        """
     )
     fun returnOneItem(@Param("orderItemUid") orderItemUid: UUID)
 }

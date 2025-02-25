@@ -7,10 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import ru.romanow.inst.services.warehouse.domain.Item
 import ru.romanow.inst.services.warehouse.domain.OrderItem
 import ru.romanow.inst.services.warehouse.exceptions.ItemNotAvailableException
-import ru.romanow.inst.services.warehouse.model.ItemInfoResponse
-import ru.romanow.inst.services.warehouse.model.OrderItemRequest
-import ru.romanow.inst.services.warehouse.model.OrderItemResponse
-import ru.romanow.inst.services.warehouse.model.SizeChart
+import ru.romanow.inst.services.warehouse.model.*
 import ru.romanow.inst.services.warehouse.repository.ItemRepository
 import ru.romanow.inst.services.warehouse.repository.OrderItemRepository
 import java.util.UUID
@@ -23,19 +20,21 @@ class WarehouseServiceImpl(
     private val logger = LoggerFactory.getLogger(WarehouseServiceImpl::class.java)
 
     @Transactional(readOnly = true)
-    override fun getItemInfo(orderItemUid: UUID): ItemInfoResponse {
-        return itemRepository
-            .findByOrderItemUid(orderItemUid)
-            .map { buildItemInfo(it) }
-            .orElseThrow { EntityNotFoundException("Item not found for orderItemUid '$orderItemUid'") }
-    }
+    override fun items(): List<ItemResponse> =
+        itemRepository.findAvailableItems()
+            .map { ItemResponse(model = it.model!!, size = it.size!!.name, availableCount = it.availableCount) }
 
     @Transactional(readOnly = true)
-    override fun getOrderItem(orderItemUid: UUID): Item {
-        return itemRepository
+    override fun getItemInfo(orderItemUid: UUID): ItemInfoResponse =
+        itemRepository.findByOrderItemUid(orderItemUid)
+            .map { buildItemInfo(it) }
+            .orElseThrow { EntityNotFoundException("Item not found for orderItemUid '$orderItemUid'") }
+
+    @Transactional(readOnly = true)
+    override fun getOrderItem(orderItemUid: UUID): Item =
+        itemRepository
             .findByOrderItemUid(orderItemUid)
             .orElseThrow { EntityNotFoundException("Item not found for orderItemUid '$orderItemUid'") }
-    }
 
     @Transactional
     override fun takeItem(request: OrderItemRequest): OrderItemResponse {
@@ -75,9 +74,8 @@ class WarehouseServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun checkItemAvailableCount(orderItemUid: UUID): Int {
-        return getOrderItem(orderItemUid).availableCount
-    }
+    override fun checkItemAvailableCount(orderItemUid: UUID) =
+        getOrderItem(orderItemUid).availableCount
 
     private fun buildItemInfo(item: Item) = ItemInfoResponse(
         model = item.model!!,

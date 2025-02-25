@@ -20,8 +20,9 @@ import ru.romanow.inst.services.warranty.model.OrderWarrantyResponse
 import java.util.*
 import javax.validation.Valid
 
+// @formatter:off
 @Suppress("ktlint:standard:max-line-length")
-@Tag(name = "Order API")
+@Tag(name = "Сервис Заказов")
 @RestController
 @RequestMapping("/api/v1/orders")
 class OrderController(
@@ -29,11 +30,11 @@ class OrderController(
     private val orderManagementService: OrderManagementService
 ) {
 
-    @Operation(summary = "User order info")
+    @Operation(summary = "Информация о заказе пользователя")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Order info"),
-            ApiResponse(responseCode = "404", description = "Order not found", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
+            ApiResponse(responseCode = "200", description = "Информация о заказе"),
+            ApiResponse(responseCode = "404", description = "Заказ не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @GetMapping("/{userId}/{orderUid}", produces = ["application/json"])
@@ -41,20 +42,20 @@ class OrderController(
         return orderService.getUserOrder(userId, orderUid)
     }
 
-    @Operation(summary = "User orders info")
-    @ApiResponse(responseCode = "200", description = "Orders info")
+    @Operation(summary = "Информация о заказах пользователя")
+    @ApiResponse(responseCode = "200", description = "Информация о заказах")
     @GetMapping("/{userId}", produces = ["application/json"])
     fun userOrders(@PathVariable userId: String): OrdersInfoResponse {
         return orderService.getUserOrders(userId)
     }
 
-    @Operation(summary = "Create order")
+    @Operation(summary = "Создать заказ")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Order created"),
-            ApiResponse(responseCode = "400", description = "Bad request format", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
-            ApiResponse(responseCode = "409", description = "Item not available", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
-            ApiResponse(responseCode = "422", description = "External request failed", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
+            ApiResponse(responseCode = "200", description = "Заказ создан"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "409", description = "Товар недоступен", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping(value = ["/{userId}"], consumes = ["application/json"], produces = ["application/json"])
@@ -62,12 +63,12 @@ class OrderController(
         return orderManagementService.makeOrder(userId, request)
     }
 
-    @Operation(summary = "Return order")
+    @Operation(summary = "Отмена заказа")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "204", description = "Order returned"),
-            ApiResponse(responseCode = "404", description = "Order not found", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
-            ApiResponse(responseCode = "422", description = "External request failed", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
+            ApiResponse(responseCode = "204", description = "Заказ успешно отменен"),
+            ApiResponse(responseCode = "404", description = "Заказ не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -76,13 +77,13 @@ class OrderController(
         orderManagementService.refundOrder(orderUid)
     }
 
-    @Operation(summary = "Warranty request")
+    @Operation(summary = "Запрос гарантии")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Warranty decision"),
-            ApiResponse(responseCode = "400", description = "Bad request format", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
-            ApiResponse(responseCode = "404", description = "Order not found", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
-            ApiResponse(responseCode = "422", description = "External request failed", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
+            ApiResponse(responseCode = "200", description = "Результат запроса по гарантии"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "404", description = "Заказ не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping(value = ["/{orderUid}/warranty"], consumes = ["application/json"], produces = ["application/json"])
@@ -93,3 +94,4 @@ class OrderController(
         return orderManagementService.useWarranty(orderUid, request)
     }
 }
+// @formatter:on

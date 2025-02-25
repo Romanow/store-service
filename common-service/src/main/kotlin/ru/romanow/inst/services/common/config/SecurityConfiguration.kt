@@ -67,9 +67,8 @@ class SecurityConfiguration {
     @ConditionalOnProperty("oauth2.security.enabled", havingValue = "false")
     fun disabledSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
-            .authorizeHttpRequests {
-                it.anyRequest().permitAll()
-            }
+            .securityMatcher("/**")
+            .authorizeHttpRequests { it.anyRequest().permitAll() }
             .csrf { it.disable() }
             .cors { it.disable() }
             .build()

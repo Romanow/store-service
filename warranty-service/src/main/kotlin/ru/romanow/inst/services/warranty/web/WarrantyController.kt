@@ -23,22 +23,20 @@ import ru.romanow.inst.services.warranty.service.WarrantyService
 import java.util.UUID
 import javax.validation.Valid
 
-@Tag(name = "Warranty API")
+// @formatter:off
+@Suppress("ktlint:standard:max-line-length")
+@Tag(name = "Гарантийный Сервис")
 @RestController
 @RequestMapping("/api/v1/warranty")
 class WarrantyController(
     private val warrantyService: WarrantyService
 ) {
 
-    @Operation(summary = "Check warranty status")
+    @Operation(summary = "Проверить статус гарантии")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Warranty information"),
-            ApiResponse(
-                responseCode = "404",
-                description = "Warranty info not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Статус гарантии"),
+            ApiResponse(responseCode = "404", description = "Информация по гарантии не найдена", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @GetMapping(value = ["/{itemUid}"], produces = ["application/json"])
@@ -46,36 +44,28 @@ class WarrantyController(
         return warrantyService.getWarrantyInfo(itemUid)
     }
 
-    @Operation(summary = "Start warranty period")
-    @ApiResponse(responseCode = "204", description = "Warranty started for item")
+    @Operation(summary = "Поставить на гарантию")
+    @ApiResponse(responseCode = "204", description = "Товар поставлен на гарантию")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = ["/{itemUid}"])
     fun startWarranty(@PathVariable itemUid: UUID) {
         warrantyService.startWarranty(itemUid)
     }
 
-    @Operation(summary = "Close warranty")
-    @ApiResponse(responseCode = "204", description = "Warranty closed for item")
+    @Operation(summary = "Остановить действие гарантии")
+    @ApiResponse(responseCode = "204", description = "Гарантия по товару остановлена")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{itemUid}")
     fun stopWarranty(@PathVariable itemUid: UUID) {
         warrantyService.stopWarranty(itemUid)
     }
 
-    @Operation(summary = "Request warranty decision")
+    @Operation(summary = "Запрос решения по гарантии")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Warranty decision"),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request format",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Warranty not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Решение по гарантии"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "404", description = "Информация по гарантии не найдена", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping(value = ["/{itemUid}/warranty"], consumes = ["application/json"], produces = ["application/json"])
@@ -86,3 +76,4 @@ class WarrantyController(
         return warrantyService.warrantyRequest(itemUid, request)
     }
 }
+// @formatter:on

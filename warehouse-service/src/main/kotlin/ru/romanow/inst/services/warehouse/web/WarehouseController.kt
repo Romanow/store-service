@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import ru.romanow.inst.services.common.model.ErrorResponse
 import ru.romanow.inst.services.warehouse.model.ItemInfoResponse
+import ru.romanow.inst.services.warehouse.model.ItemResponse
 import ru.romanow.inst.services.warehouse.model.OrderItemRequest
 import ru.romanow.inst.services.warehouse.model.OrderItemResponse
 import ru.romanow.inst.services.warehouse.service.WarehouseService
@@ -19,7 +20,9 @@ import ru.romanow.inst.services.warranty.model.OrderWarrantyResponse
 import java.util.*
 import javax.validation.Valid
 
-@Tag(name = "Warehouse API")
+// @formatter:off
+@Suppress("ktlint:standard:max-line-length")
+@Tag(name = "Сервис Склада")
 @RestController
 @RequestMapping("/api/v1/warehouse")
 class WarehouseController(
@@ -27,15 +30,16 @@ class WarehouseController(
     private val warrantyService: WarrantyService
 ) {
 
-    @Operation(summary = "Get item information")
+    @Operation(summary = "Получить список товаров в наличии")
+    @ApiResponses(value = [ApiResponse(responseCode = "200", description = "Информация о товарах")])
+    @GetMapping(produces = ["application/json"])
+    private fun items(): List<ItemResponse> = warehouseService.items()
+
+    @Operation(summary = "Получить информацию товаре")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Item information"),
-            ApiResponse(
-                responseCode = "404",
-                description = "Item info not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Информация о товаре"),
+            ApiResponse(responseCode = "404", description = "Товар не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @GetMapping(value = ["/{orderItemUid}"], produces = ["application/json"])
@@ -43,61 +47,35 @@ class WarehouseController(
         return warehouseService.getItemInfo(orderItemUid)
     }
 
-    @Operation(summary = "Take item from warehouse")
+    @Operation(summary = "Добавить товар в заказ")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Item add to order"),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request format",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Requested item not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "409",
-                description = "Item not available",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Товар добавлен в заказ"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "404", description = "Товар не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "409", description = "Товар недоступен", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping(consumes = ["application/json"], produces = ["application/json"])
-    fun takeItem(
-        @Valid @RequestBody request: OrderItemRequest
-    ): OrderItemResponse {
+    fun takeItem(@Valid @RequestBody request: OrderItemRequest): OrderItemResponse {
         return warehouseService.takeItem(request)
     }
 
-    @Operation(summary = "Return item")
-    @ApiResponse(responseCode = "204", description = "Item returned")
+    @Operation(summary = "Возврат товара на склад")
+    @ApiResponse(responseCode = "204", description = "Товар возвращен")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{orderItemUid}")
     fun returnItem(@PathVariable orderItemUid: UUID) {
         warehouseService.returnItem(orderItemUid)
     }
 
-    @Operation(summary = "Request item warranty")
+    @Operation(summary = "Запрос гарантии по товару")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "Warranty decision"),
-            ApiResponse(
-                responseCode = "400",
-                description = "Bad request format",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "404",
-                description = "Requested item not found",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            ),
-            ApiResponse(
-                responseCode = "422",
-                description = "External request failed",
-                content = [Content(schema = Schema(implementation = ErrorResponse::class))]
-            )
+            ApiResponse(responseCode = "200", description = "Решение по гарантии"),
+            ApiResponse(responseCode = "400", description = "Ошибка валидации", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "404", description = "Товар не найден", content = [Content(schema = Schema(implementation = ErrorResponse::class))]),
+            ApiResponse(responseCode = "422", description = "Запрос к другой системе завершился с ошибкой", content = [Content(schema = Schema(implementation = ErrorResponse::class))])
         ]
     )
     @PostMapping("/{orderItemUid}/warranty")
@@ -108,3 +86,4 @@ class WarehouseController(
         return warrantyService.warrantyRequest(orderItemUid, request)
     }
 }
+// @formatter:on
