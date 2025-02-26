@@ -10,22 +10,14 @@ GitHub: [romanow/store-service](https://github.com/Romanow/store-service).
 
 ## Состав
 
+* [Gateway](gateway/README.md)
 * [Store Service](store-service/README.md)
-* [Order Service](order-service/README.md)
 * [Warehouse Service](warehouse-service/README.md)
 * [Warranty Service](warranty-service/README.md)
 
 ## Взаимодействие сервисов
 
-```mermaid
-graph TD
-  A[Store Service]--> B[Order Service]
-  A[Store Service] --> C[Warehouse Service]
-  A[Store Service] --> D[Warranty Service]
-  B[OrderService] --> D[Warranty Service]
-  B[OrderService] --> C[Warehouse Service]
-  C[Warehouse Service] --> D[Warranty Service]
-```
+[//]: # (TODO mermaid)
 
 ## Сборка и запуск
 

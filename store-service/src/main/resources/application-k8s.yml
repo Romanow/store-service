@@ -1,7 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST:postgres-service}:${DATABASE_PORT:5432}/${DATABASE_NAME:store}
+    username: ${DATABASE_USER:program}
+    password: ${DATABASE_PASSWORD:test}
+    driver-class-name: org.postgresql.Driver
+
 services:
-  order-url: ${ORDER_URL:http://orders:8380}
   warehouse-url: ${WAREHOUSE_URL:http://warehouse:8280}
-  warranty-url: ${WARRANTY_URL:http://warranty:8180}
+  warranty-url: ${WARRANTY_URL:http://warranty:8380}
 
 management:
   otlp:

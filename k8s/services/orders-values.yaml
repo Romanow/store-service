@@ -1,9 +1,0 @@
-image:
-  repository: romanowalex/order-service
-  tag: v3.2
-
-database:
-  name: orders
-
-ports:
-  internal: 8380

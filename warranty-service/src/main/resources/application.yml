@@ -1,5 +1,5 @@
 server:
-  port: ${APPLICATION_PORT:8180}
+  port: ${APPLICATION_PORT:8380}
   forward-headers-strategy: framework
   servlet:
     context-path: ${APPLICATION_CONTEXT_PATH:/}

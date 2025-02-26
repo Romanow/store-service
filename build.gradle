@@ -15,6 +15,7 @@ plugins {
 ext {
     kotlinVersion = "1.9.25"
     springBootVersion = "3.4.3"
+    springGatewayVersion = "4.2.0"
     springCircuitBreakerVersion = "3.2.0"
     validationApiVersion = "2.0.1.Final"
     jwtVersion = "4.5.0"
@@ -50,6 +51,7 @@ subprojects { ->
     dependencyManagement {
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
+            mavenBom "org.springframework.cloud:spring-cloud-gateway-dependencies:$springGatewayVersion"
             mavenBom "org.springframework.cloud:spring-cloud-circuitbreaker-dependencies:$springCircuitBreakerVersion"
         }
     }
@@ -58,9 +60,7 @@ subprojects { ->
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
         implementation "org.jetbrains.kotlin:kotlin-reflect"
         implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
-
-        implementation "javax.validation:validation-api:$validationApiVersion"
-        implementation "org.apache.commons:commons-lang3"
+        implementation "jakarta.validation:jakarta.validation-api"
     }
 
     processResources {

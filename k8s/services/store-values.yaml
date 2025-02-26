@@ -1,6 +1,9 @@
 image:
   repository: romanowalex/store-service
-  tag: v3.2
+  tag: v4.0
+
+database:
+  name: store
 
 ports:
-  internal: 8480
+  internal: 8180

@@ -42,7 +42,7 @@ $ helm install prometheus-stack prometheus-community/kube-prometheus-stack \
 
 # install services
 $ helm install store romanow/java-service --values=services/common-values.yaml --values=services/store-values.yaml
-$ helm install orders romanow/java-service --values=services/common-values.yaml --values=services/orders-values.yaml
+$ helm install orders romanow/java-service --values=services/common-values.yaml --values=services/gateway-values.yaml
 $ helm install warehouse romanow/java-service --values=services/common-values.yaml --values=services/warehouse-values.yaml
 $ helm install warranty romanow/java-service --values=services/common-values.yaml --values=services/warranty-values.yaml
 
@@ -74,15 +74,15 @@ $ helm upgrade monitoring monitoring-chart --set grafana.domain=local
 
 ## Alerting
 
-* Создать бота: в телеграмм находим `@BotFather`, вызываем `/newbot`:
+* Создать бота: в telegram находим `@BotFather`, вызываем `/newbot`:
     * name: _k8s_monitoring_
     * id: _k8s_monitoring_bot_
 * Создать канал _K8S Monitoring_, добавить `@k8s_monitoring_bot` как администратора. Отправить хотя бы одно сообщение в
   группу.
 * После этого через Telegram API получить chart ID:
-  ```http request
-  GET https://api.telegram.org/bot<token>/getUpdates
-  ```
+   ```http request
+   GET https://api.telegram.org/bot<token>/getUpdates
+   ```
 * Создать Notification Channel: `Grafana` -> `Alerting` -> `Notification Channels` -> `Telegram Bot`.
 * Создать новый dashboard:
     * Title: Request Count

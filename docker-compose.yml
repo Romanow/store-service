@@ -25,43 +25,43 @@ services:
       - postgres:/var/lib/postgresql/data
       - ./docker/postgres/:/docker-entrypoint-initdb.d/
 
-  store-service:
-    build: ./store-service
-    image: ${REPOSITORY_NAME}/store-service:${VERSION}
-    container_name: store
+  store-gateway:
+    build: ./gateway
+    image: romanowalex/store-gateway:${VERSION}
+    container_name: gateway
     restart: on-failure
     <<: *common-envs
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8480/manage/health" ]
+      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8080/manage/health" ]
       interval: 10s
       timeout: 10s
       retries: 10
     ports:
-      - "8480:8480"
+      - "8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
 
-  order-service:
-    build: ./order-service
-    image: ${REPOSITORY_NAME}/order-service:${VERSION}
+  store-service:
+    build: ./store-service
+    image: romanowalex/store-service:${VERSION}
     container_name: orders
     restart: on-failure
     <<: *common-envs
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8380/manage/health" ]
+      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8180/manage/health" ]
       interval: 10s
       timeout: 10s
       retries: 10
     ports:
-      - "8380:8380"
+      - "8180:8180"
     depends_on:
       postgres:
         condition: service_healthy
 
   warehouse-service:
     build: ./warehouse-service
-    image: ${REPOSITORY_NAME}/warehouse-service:${VERSION}
+    image: romanowalex/warehouse-service:${VERSION}
     container_name: warehouse
     restart: on-failure
     <<: *common-envs
@@ -78,17 +78,17 @@ services:
 
   warranty-service:
     build: ./warranty-service
-    image: ${REPOSITORY_NAME}/warranty-service:${VERSION}
+    image: romanowalex/warranty-service:${VERSION}
     container_name: warranty
     restart: on-failure
     <<: *common-envs
     healthcheck:
-      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8180/manage/health" ]
+      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8380/manage/health" ]
       interval: 10s
       timeout: 10s
       retries: 10
     ports:
-      - "8180:8180"
+      - "8380:8380"
     depends_on:
       postgres:
         condition: service_healthy

@@ -14,4 +14,3 @@ spring:
         provider:
           auth0:
             issuer-uri: ${AUTH0_ISSUER_URI:https://romanowalex.eu.auth0.com/}
-

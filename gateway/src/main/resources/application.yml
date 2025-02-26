@@ -1,0 +1,18 @@
+server:
+  port: ${APPLICATION_PORT:8180}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: ${APPLICATION_CONTEXT_PATH:/}
+    session:
+      cookie:
+        http-only: off
+        max-age: 86400
+
+spring:
+  profiles:
+    active: local
+    include: common
+  config:
+    import: optional:git.properties
+  application:
+    name: orders

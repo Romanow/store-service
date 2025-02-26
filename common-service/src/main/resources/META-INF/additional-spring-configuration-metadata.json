@@ -2,27 +2,27 @@
   "groups": [
     {
       "name": "services",
-      "type": "ru.romanow.inst.services.common.properties.ServerUrlProperties",
-      "sourceType": "ru.romanow.inst.services.common.properties.ServerUrlProperties"
+      "type": "ru.romanow.services.common.properties.ServerUrlProperties",
+      "sourceType": "ru.romanow.services.common.properties.ServerUrlProperties"
     },
     {
       "name": "management.credentials",
-      "type": "ru.romanow.inst.services.common.properties.ActuatorSecurityProperties",
-      "sourceType": "ru.romanow.inst.services.common.properties.ActuatorSecurityProperties"
+      "type": "ru.romanow.services.common.properties.ActuatorSecurityProperties",
+      "sourceType": "ru.romanow.services.common.properties.ActuatorSecurityProperties"
     }
   ],
   "properties": [
     {
       "name": "circuit-breaker.enabled",
       "type": "java.lang.Boolean",
-      "sourceType": "ru.romanow.inst.services.common.properties.CircuitBreakerConfigurationProperties",
+      "sourceType": "ru.romanow.services.common.properties.CircuitBreakerConfigurationProperties",
       "description": "Enable circuit breaker.",
       "defaultValue": true
     },
     {
       "name": "circuit-breaker.default-timeout",
       "type": "java.time.Duration",
-      "sourceType": "ru.romanow.inst.services.common.properties.CircuitBreakerConfigurationProperties",
+      "sourceType": "ru.romanow.services.common.properties.CircuitBreakerConfigurationProperties",
       "description": "Default timeout for circuit breaker.",
       "defaultValue": "200ms"
     },
@@ -39,40 +39,40 @@
       "defaultValue": "true"
     },
     {
-      "name": "services.order-url",
+      "name": "services.store-url",
       "type": "java.lang.String",
-      "description": "Order url.",
-      "sourceType": "ru.romanow.inst.services.common.properties.ServerUrlProperties"
+      "description": "Store url.",
+      "sourceType": "ru.romanow.services.common.properties.ServerUrlProperties"
     },
     {
       "name": "services.warranty-url",
       "type": "java.lang.String",
       "description": "Warranty url.",
-      "sourceType": "ru.romanow.inst.services.common.properties.ServerUrlProperties"
+      "sourceType": "ru.romanow.services.common.properties.ServerUrlProperties"
     },
     {
       "name": "services.warehouse-url",
       "type": "java.lang.String",
       "description": "Warehouse url.",
-      "sourceType": "ru.romanow.inst.services.common.properties.ServerUrlProperties"
+      "sourceType": "ru.romanow.services.common.properties.ServerUrlProperties"
     },
     {
       "name": "management.credentials.user",
       "type": "java.lang.String",
       "description": "User for management endpoints.",
-      "sourceType": "ru.romanow.inst.services.common.properties.ActuatorSecurityProperties"
+      "sourceType": "ru.romanow.services.common.properties.ActuatorSecurityProperties"
     },
     {
       "name": "management.credentials.passwd",
       "type": "java.lang.String",
       "description": "Password for management endpoints.",
-      "sourceType": "ru.romanow.inst.services.common.properties.ActuatorSecurityProperties"
+      "sourceType": "ru.romanow.services.common.properties.ActuatorSecurityProperties"
     },
     {
       "name": "management.credentials.role",
       "type": "java.lang.String",
       "description": "Role for management endpoints.",
-      "sourceType": "ru.romanow.inst.services.common.properties.ActuatorSecurityProperties"
+      "sourceType": "ru.romanow.services.common.properties.ActuatorSecurityProperties"
     },
     {
       "name": "logging.fluent-bit.enabled",

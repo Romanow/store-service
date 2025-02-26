@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 services:
-  warranty-url: ${WARRANTY_URL:http://warranty:8180}
+  warranty-url: ${WARRANTY_URL:http://warranty:8380}
 
 management:
   otlp:

@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 services:
-  warranty-url: http://localhost:8180
+  warranty-url: http://localhost:8380
 
 oauth2:
   security:
