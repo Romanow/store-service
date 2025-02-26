@@ -29,7 +29,7 @@ dependencies {
     api "org.postgresql:postgresql"
     api "org.flywaydb:flyway-database-postgresql"
     api "io.github.resilience4j:resilience4j-micrometer"
-    api "org.zalando:logbook-core:$logbookVersion"
+    api "org.zalando:logbook-spring-boot-starter:$logbookVersion"
     api "org.codehaus.janino:janino"
     api "org.codehaus.janino:commons-compiler"
     api "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion"

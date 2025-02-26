@@ -56,6 +56,15 @@ circuit-breaker:
   enabled: ${CIRCUIT_BREAKER_ENABLED:false}
   default-timeout: ${CIRCUIT_BREAKER_TIMEOUT:30s}
 
+logbook:
+  predicate:
+      include:
+        - path: /api/**
+  format:
+    style: http
+  write:
+    max-body-size: 30000
+
 logging:
   fluent-bit:
     enabled: ${FLUENT_BIT_ENABLED:false}
