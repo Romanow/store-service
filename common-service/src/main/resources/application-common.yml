@@ -11,6 +11,8 @@ spring:
 oauth2:
   security:
     enabled: ${OAUTH2_SECURITY_ENABLED:false}
+  login:
+    success-redirect-uri: ${OAUTH2_SUCCESS_REDIRECT_URI:/}
 
 management:
   otlp:

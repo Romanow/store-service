@@ -1,5 +1,12 @@
 server:
   port: ${APPLICATION_PORT:8380}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: ${APPLICATION_CONTEXT_PATH:/}
+    session:
+      cookie:
+        http-only: off
+        max-age: 86400
 
 spring:
   profiles:
