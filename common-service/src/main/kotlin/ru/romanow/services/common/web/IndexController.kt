@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
+
 package ru.romanow.services.common.web
 
 import io.swagger.v3.oas.annotations.Hidden

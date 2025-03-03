@@ -1,14 +1,27 @@
--- V 1.0 Create orders table
+-- v1.0 Create orders and order_items tables
 CREATE TABLE orders
 (
-    id         SERIAL PRIMARY KEY,
-    user_id    VARCHAR(80)  NOT NULL,
-    order_uid  uuid         NOT NULL,
-    item_uid   uuid         NOT NULL,
-    order_date TIMESTAMP    NOT NULL,
-    status     VARCHAR(255) NOT NULL
+    id            SERIAL PRIMARY KEY,
+    uid           UUID         NOT NULL,
+    status        VARCHAR(255) NOT NULL
+        CHECK ( status IN ('PROCESSED', 'CANCELED') ),
+    user_id       VARCHAR(80)  NOT NULL,
+    created_date  TIMESTAMP    NOT NULL,
+    modified_date TIMESTAMP    NOT NULL,
+    modified_user VARCHAR      NOT NULL
 );
 
-CREATE INDEX idx_orders_user_id ON orders (user_id);
-CREATE UNIQUE INDEX idx_orders_order_uid ON orders (order_uid);
-CREATE INDEX idx_orders_user_id_and_order_uid ON orders (user_id, order_uid);
+CREATE UNIQUE INDEX ux_orders_uid ON orders (uid);
+CREATE INDEX ux_orders_user_id ON orders (user_id);
+
+CREATE TABLE order_items
+(
+    id       SERIAL PRIMARY KEY,
+    order_id INT  NOT NULL
+        CONSTRAINT fk_order_items_order_id REFERENCES orders (id)
+            ON DELETE CASCADE,
+    item_uid UUID NOT NULL,
+    count    INT  NOT NULL
+);
+
+CREATE INDEX ux_order_items_order_id ON order_items (order_id);

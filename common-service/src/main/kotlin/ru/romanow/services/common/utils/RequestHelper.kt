@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.common.utils
 
 import org.springframework.web.reactive.function.client.ClientResponse

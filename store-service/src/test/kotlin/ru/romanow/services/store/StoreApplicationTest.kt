@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.store
 
 import org.junit.jupiter.api.Test

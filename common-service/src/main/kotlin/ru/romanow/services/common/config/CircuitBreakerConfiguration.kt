@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.common.config
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig

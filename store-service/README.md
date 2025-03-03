@@ -1,31 +1,13 @@
-# Store Service
-
-## Описание API
-
-1. `POST /api/v1/store/{userUid}` – сделать заказ от имени пользователя;
-2. `GET /api/v1/store/{userUid}/{orderUid}` – получить информацию по конкретному заказу пользователя;
-3. `GET /api/v1/store/{userUid}` – получить все заказы пользователя;
-4. `POST /api/v1/store/{orderUid}/warranty` – запрос гарантии по заказу;
-5. `DELETE /api/v1/store/{orderUid}` – вернуть заказ.
+# Магазин
 
 ## Логика работы
 
-Сервис ответственен за работу с заказом, получение товара со склада (запрос к Warehouse) и создание гарантии (запрос к
-Warranty). При запросе достается заказ `order`, из него получаем `item_uid` и с этим параметром выполняются необходимые
-запросы к Warehouse и Warranty.
+* Посмотреть заказы пользователя.
+* Посмотреть информацию о конкретном заказе.
+* Сделать заказ.
+* Запрос гарантии по товару из заказа.
+* Отменить заказ.
 
 ## Структура таблиц
 
-```sql
-CREATE TABLE orders
-(
-    id         SERIAL
-        CONSTRAINT orders_pkey PRIMARY KEY,
-    item_uid   uuid         NOT NULL,
-    order_date TIMESTAMP    NOT NULL,
-    order_uid  uuid         NOT NULL
-        CONSTRAINT idx_orders_order_uid UNIQUE,
-    status     VARCHAR(255) NOT NULL,
-    user_id    VARCHAR(80)  NOT NULL
-);
-```
+[Table Structure](src/main/resources/db/migration/V1.0__CreateTables.sql)

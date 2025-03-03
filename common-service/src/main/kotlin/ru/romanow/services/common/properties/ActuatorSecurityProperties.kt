@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.common.properties
 
 import jakarta.validation.constraints.NotEmpty
