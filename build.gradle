@@ -19,7 +19,7 @@ ext {
     validationApiVersion = "2.0.1.Final"
     jwtVersion = "4.5.0"
     openApiVersion = "2.8.5"
-    logbookVersion = "3.10.0"
+    logbookVersion = "3.11.0"
     logstashEncoderVersion = "7.4"
     postgresContainerVersion = "1.20.5"
 }
