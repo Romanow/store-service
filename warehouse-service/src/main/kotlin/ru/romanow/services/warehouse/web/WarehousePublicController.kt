@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.romanow.services.warehouse.service.ItemService
 
+// @formatter:off
 @Tag(name = "Сервис склада")
 @RestController
-@RequestMapping("/api/v1")
-class WarehouseController(
+@RequestMapping("/api/public/v1")
+class WarehousePublicController(
     private val itemService: ItemService
 ) {
 
-    @GetMapping
+    @GetMapping("/items")
     fun items() = itemService.items()
 }
+// @formatter:on

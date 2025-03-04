@@ -11,18 +11,16 @@ import org.springframework.web.bind.annotation.RestController
 import ru.romanow.services.warranty.service.WarrantyService
 import java.util.*
 
+// @formatter:off
 @Tag(name = "Гарантийный сервис")
 @RestController
-@RequestMapping("/api/v1")
-class WarrantyController(
+@RequestMapping("/api/private/v1")
+class WarrantyPrivateController(
     private var warrantyService: WarrantyService
 ) {
 
     @GetMapping("/{orderUid}")
     fun orderWarrantyStatus(@PathVariable orderUid: UUID) =
         warrantyService.orderWarrantyStatus(orderUid)
-
-    @GetMapping("/{orderUid}/{itemUid}")
-    fun orderWarrantyStatus(@PathVariable orderUid: UUID, @PathVariable itemUid: UUID) =
-        warrantyService.itemWarrantyStatus(orderUid, itemUid)
 }
+// @formatter:on

@@ -4,7 +4,6 @@
 package ru.romanow.services.store.domain
 
 import jakarta.persistence.*
-import java.util.*
 
 @Entity
 @Table(name = "order_items")
@@ -21,8 +20,8 @@ data class OrderItem(
     @JoinColumn(name = "order_id", nullable = false, foreignKey = ForeignKey(name = "fk_order_items_order_id"))
     var order: Order? = null,
 
-    @Column(name = "item_uid", nullable = false)
-    var itemUid: UUID? = null,
+    @Column(name = "name", nullable = false)
+    var name: String? = null,
 
     @Column(name = "count", nullable = false)
     var count: Int? = 0
@@ -34,7 +33,7 @@ data class OrderItem(
         other as OrderItem
 
         if (orderId != other.orderId) return false
-        if (itemUid != other.itemUid) return false
+        if (name != other.name) return false
         if (count != other.count) return false
 
         return true
@@ -42,12 +41,12 @@ data class OrderItem(
 
     override fun hashCode(): Int {
         var result = orderId ?: 0
-        result = 31 * result + (itemUid?.hashCode() ?: 0)
+        result = 31 * result + (name?.hashCode() ?: 0)
         result = 31 * result + (count ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "OrderItem(id=$id, itemUid=$itemUid, orderId=$orderId, count=$count)"
+        return "OrderItem(id=$id, name=$name, orderId=$orderId, count=$count)"
     }
 }

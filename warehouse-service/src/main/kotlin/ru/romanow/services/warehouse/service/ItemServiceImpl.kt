@@ -17,7 +17,6 @@ class ItemServiceImpl(
     override fun items() = itemRepository.findAvailableItems()
         .map {
             ItemResponse(
-                uid = it.uid,
                 name = it.name,
                 description = it.description,
                 manufacturer = it.manufacturer,

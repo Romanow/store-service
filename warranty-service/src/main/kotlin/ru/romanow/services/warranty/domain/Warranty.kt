@@ -24,8 +24,8 @@ data class Warranty(
     @Column(name = "order_uid", nullable = false)
     var orderUid: UUID? = null,
 
-    @Column(name = "item_uid", nullable = false)
-    var itemUid: UUID? = null,
+    @Column(name = "name", nullable = false)
+    var name: String? = null,
 
     @Column(name = "comment")
     var comment: String? = null,
@@ -53,19 +53,19 @@ data class Warranty(
         other as Warranty
 
         if (orderUid != other.orderUid) return false
-        if (itemUid != other.itemUid) return false
+        if (name != other.name) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = orderUid?.hashCode() ?: 0
-        result = 31 * result + (itemUid?.hashCode() ?: 0)
+        result = 31 * result + (name?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "Warranty(id=$id, orderUid=$orderUid, itemUid=$itemUid, comment=$comment, status=$status, " +
+        return "Warranty(id=$id, orderUid=$orderUid, name=$name, comment=$comment, status=$status, " +
             "createdDate=$createdDate, modifiedDate=$modifiedDate, modifiedUser=$modifiedUser)"
     }
 }

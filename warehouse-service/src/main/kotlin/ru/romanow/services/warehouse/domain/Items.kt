@@ -4,6 +4,7 @@
 package ru.romanow.services.warehouse.domain
 
 import jakarta.persistence.*
+import org.bouncycastle.asn1.x500.style.RFC4519Style.uid
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
@@ -20,10 +21,7 @@ data class Items(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
 
-    @Column(name = "uid", nullable = false, unique = true)
-    var uid: UUID? = null,
-
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     var name: String? = null,
 
     @Column(name = "description")

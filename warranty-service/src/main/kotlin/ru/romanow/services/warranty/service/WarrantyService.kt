@@ -8,5 +8,4 @@ import java.util.*
 
 interface WarrantyService {
     fun orderWarrantyStatus(orderUid: UUID): List<WarrantyStatusResponse>
-    fun itemWarrantyStatus(orderUid: UUID, itemUid: UUID): WarrantyStatusResponse
 }
