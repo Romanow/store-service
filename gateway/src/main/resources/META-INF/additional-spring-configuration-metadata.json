@@ -1,0 +1,69 @@
+{
+  "groups": [
+    {
+      "name": "services",
+      "type": "ru.romanow.services.gateway.properties.ServerUrlProperties",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "oauth2.security.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable OAuth2 security.",
+      "defaultValue": "true"
+    },
+    {
+      "name": "oauth2.security.success-redirect-uri",
+      "type": "java.lang.String",
+      "description": "OAuth2 redirect uri.",
+      "defaultValue": "true"
+    },
+    {
+      "name": "services.store-url",
+      "type": "java.lang.String",
+      "description": "Store url.",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "services.warranty-url",
+      "type": "java.lang.String",
+      "description": "Warranty url.",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "services.warehouse-url",
+      "type": "java.lang.String",
+      "description": "Warehouse url.",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "management.credentials.user",
+      "type": "java.lang.String",
+      "description": "User for management endpoints.",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "management.credentials.passwd",
+      "type": "java.lang.String",
+      "description": "Password for management endpoints.",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "management.credentials.role",
+      "type": "java.lang.String",
+      "description": "Role for management endpoints.",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "logging.fluent-bit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable send logs to logging collector."
+    },
+    {
+      "name": "logging.fluent-bit.address",
+      "type": "java.lang.Boolean",
+      "description": "Fluent Bit address."
+    }
+  ]
+}

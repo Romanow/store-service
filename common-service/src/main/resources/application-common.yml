@@ -11,8 +11,6 @@ spring:
 oauth2:
   security:
     enabled: ${OAUTH2_SECURITY_ENABLED:false}
-  login:
-    success-redirect-uri: ${OAUTH2_SUCCESS_REDIRECT_URI:/}
 
 management:
   otlp:
@@ -47,8 +45,6 @@ management:
 
 springdoc:
   paths-to-match: /api/v1/**
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
   api-docs:
     path: /api-docs
 

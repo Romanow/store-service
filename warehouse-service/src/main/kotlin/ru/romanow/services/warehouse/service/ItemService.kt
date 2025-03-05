@@ -9,7 +9,7 @@ import java.util.*
 
 interface ItemService {
     fun items(): List<ItemResponse>
-    fun items(names: List<String>): Map<String, ItemResponse>
-    fun takeItems(orderUid: UUID, request: List<ItemRequest>): ItemResponse
+    fun items(names: List<String>): List<ItemResponse>
+    fun takeItems(orderUid: UUID, request: List<ItemRequest>)
     fun returnItems(orderUid: UUID)
 }

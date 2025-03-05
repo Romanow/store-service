@@ -19,7 +19,6 @@ import java.util.*
 class WarehousePrivateController(
     private val itemService: ItemService
 ) {
-
     @PutMapping
     fun items(@RequestBody names: List<String>) = itemService.items(names)
 

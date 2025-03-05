@@ -83,14 +83,15 @@ PUT /warehouse/api/private/v1/items
 Ответ:
 
 ```json
-{
-    "Lego Technic 8880": {
+[
+    {
+        "name": "Lego Technic 8880",
         "availableCount": 10,
         "description": "Lego Supercar",
         "manufacturer": "Lego",
         "imageUrl": "<url>"
     }
-}
+]
 ```
 
 Запрос на Warranty Service для получения информации по гарантии:
@@ -260,14 +261,15 @@ PUT /warehouse/api/private/v1/items
 Ответ:
 
 ```json
-{
-    "Lego Technic 8880": {
+[
+    {
+        "name": "Lego Technic 8880",
         "availableCount": 10,
         "description": "Lego Supercar",
         "manufacturer": "Lego",
         "imageUrl": "<url>"
     }
-}
+]
 ```
 
 ### Отменить заказ

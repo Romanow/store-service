@@ -3,24 +3,27 @@
  */
 package ru.romanow.services.warranty.service
 
-import org.springframework.data.domain.Example
+import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.domain.Example.of
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.romanow.services.warranty.domain.Warranty
+import ru.romanow.services.warranty.exceptions.ItemNotOnWarrantyException
 import ru.romanow.services.warranty.model.WarrantyRequest
 import ru.romanow.services.warranty.model.WarrantyResponse
+import ru.romanow.services.warranty.model.WarrantyStatus
 import ru.romanow.services.warranty.model.WarrantyStatusResponse
 import ru.romanow.services.warranty.repository.WarrantyRepository
 import java.util.*
 
 @Service
 class WarrantyServiceImpl(
-    private val warrantyRepository: WarrantyRepository
+    private val warrantyRepository: WarrantyRepository,
 ) : WarrantyService {
 
     @Transactional(readOnly = true)
     override fun warrantyStatus(orderUid: UUID) =
-        warrantyRepository.findAll(Example.of(Warranty(orderUid = orderUid)))
+        warrantyRepository.findAll(of(Warranty(orderUid = orderUid)))
             .map {
                 WarrantyStatusResponse(
                     name = it.name,
@@ -33,16 +36,26 @@ class WarrantyServiceImpl(
 
     @Transactional
     override fun start(orderUid: UUID, names: List<String>) {
-        TODO("Not yet implemented")
+        val warranties = names.map { Warranty(orderUid = orderUid, name = it, status = WarrantyStatus.ON_WARRANTY) }
+        warrantyRepository.saveAll(warranties)
     }
 
     @Transactional
-    override fun warrantyRequest(orderUid: UUID, request: WarrantyRequest): WarrantyResponse {
-        TODO("Not yet implemented")
+    override fun warrantyRequest(orderUid: UUID, request: List<WarrantyRequest>): List<WarrantyResponse> {
+        val warranties = warrantyRepository.findAll(of(Warranty(orderUid = orderUid)))
+        val names = warranties.map { it.name!! }
+        if (!request.map { it.name }.all { names.contains(it) }) {
+            val itemsNotOnWarranty = request.map { it.name }.subtract(names.toSet())
+            throw ItemNotOnWarrantyException("Items '$itemsNotOnWarranty' not on warranty for order '$orderUid'")
+        }
+        return listOf()
     }
 
     @Transactional
     override fun stop(orderUid: UUID) {
-        TODO("Not yet implemented")
+        val updated = warrantyRepository.stop(orderUid)
+        if (updated == 0) {
+            throw EntityNotFoundException("Warranties for order $orderUid not found")
+        }
     }
 }

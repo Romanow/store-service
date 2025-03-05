@@ -33,12 +33,6 @@
       "defaultValue": "true"
     },
     {
-      "name": "oauth2.security.success-redirect-uri",
-      "type": "java.lang.String",
-      "description": "OAuth2 redirect uri.",
-      "defaultValue": "true"
-    },
-    {
       "name": "services.store-url",
       "type": "java.lang.String",
       "description": "Store url.",

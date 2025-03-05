@@ -3,4 +3,10 @@
  */
 package ru.romanow.services.store.service
 
-interface OrderService
+import ru.romanow.services.store.domain.Order
+import java.util.*
+
+interface OrderService {
+    fun orders(userId: String): List<Order>
+    fun orderByUid(userId: String, orderUid: UUID): Order
+}

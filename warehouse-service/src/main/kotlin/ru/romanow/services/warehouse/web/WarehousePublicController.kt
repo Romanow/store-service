@@ -17,7 +17,6 @@ import ru.romanow.services.warehouse.service.ItemService
 class WarehousePublicController(
     private val itemService: ItemService
 ) {
-
     @GetMapping
     fun items() = itemService.items()
 }

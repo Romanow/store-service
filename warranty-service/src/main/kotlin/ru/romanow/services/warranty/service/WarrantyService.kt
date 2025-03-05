@@ -11,6 +11,6 @@ import java.util.*
 interface WarrantyService {
     fun warrantyStatus(orderUid: UUID): List<WarrantyStatusResponse>
     fun start(orderUid: UUID, names: List<String>)
-    fun warrantyRequest(orderUid: UUID, request: WarrantyRequest): WarrantyResponse
+    fun warrantyRequest(orderUid: UUID, request: List<WarrantyRequest>): List<WarrantyResponse>
     fun stop(orderUid: UUID)
 }

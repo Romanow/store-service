@@ -5,6 +5,7 @@ package ru.romanow.services.warranty.web
 
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import jakarta.validation.constraints.NotEmpty
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import ru.romanow.services.warranty.model.WarrantyRequest
@@ -19,19 +20,18 @@ import java.util.*
 class WarrantyPrivateController(
     private var warrantyService: WarrantyService
 ) {
-
     @GetMapping("/{orderUid}")
     fun warrantyStatus(@PathVariable orderUid: UUID) =
         warrantyService.warrantyStatus(orderUid)
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{orderUid}/start")
-    fun start(@PathVariable orderUid: UUID, @RequestBody names: List<String>) {
+    fun start(@PathVariable orderUid: UUID, @NotEmpty(message = "{field.is.empty}") @RequestBody names: List<String>) {
         warrantyService.start(orderUid, names)
     }
 
     @PostMapping("/{orderUid}/request")
-    fun warrantyRequest(@PathVariable orderUid: UUID, @Valid @RequestBody request: WarrantyRequest) =
+    fun warrantyRequest(@PathVariable orderUid: UUID, @Valid @RequestBody request: List<WarrantyRequest>) =
         warrantyService.warrantyRequest(orderUid, request)
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

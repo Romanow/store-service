@@ -31,7 +31,7 @@ data class Order(
     @Column(name = "user_id", nullable = false)
     var userId: String? = null,
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     var items: List<OrderItem>? = null,
 
     @CreatedDate
