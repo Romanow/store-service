@@ -5,8 +5,10 @@ package ru.romanow.services.warehouse.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.romanow.services.warehouse.model.ItemRequest
 import ru.romanow.services.warehouse.model.ItemResponse
 import ru.romanow.services.warehouse.repository.ItemRepository
+import java.util.*
 
 @Service
 class ItemServiceImpl(
@@ -24,4 +26,19 @@ class ItemServiceImpl(
                 imageUrl = it.imageUrl
             )
         }
+
+    @Transactional(readOnly = true)
+    override fun items(names: List<String>): Map<String, ItemResponse> {
+        TODO("Not yet implemented")
+    }
+
+    @Transactional
+    override fun takeItems(orderUid: UUID, request: List<ItemRequest>): ItemResponse {
+        TODO("Not yet implemented")
+    }
+
+    @Transactional
+    override fun returnItems(orderUid: UUID) {
+        TODO("Not yet implemented")
+    }
 }

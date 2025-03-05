@@ -5,6 +5,7 @@ package ru.romanow.services.warranty.model
 
 enum class WarrantyStatus {
     ON_WARRANTY,
-    WARRANTY_USED,
+    TAKE_NEW,
+    REPAIR,
     REMOVED_FROM_WARRANTY
 }

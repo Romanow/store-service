@@ -3,14 +3,14 @@
  */
 package ru.romanow.services.warranty.service
 
-import jakarta.persistence.EntityNotFoundException
-import org.bouncycastle.asn1.x500.style.RFC4519Style.name
 import org.springframework.data.domain.Example
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.romanow.services.warranty.repository.WarrantyRepository
 import ru.romanow.services.warranty.domain.Warranty
+import ru.romanow.services.warranty.model.WarrantyRequest
+import ru.romanow.services.warranty.model.WarrantyResponse
 import ru.romanow.services.warranty.model.WarrantyStatusResponse
+import ru.romanow.services.warranty.repository.WarrantyRepository
 import java.util.*
 
 @Service
@@ -19,7 +19,7 @@ class WarrantyServiceImpl(
 ) : WarrantyService {
 
     @Transactional(readOnly = true)
-    override fun orderWarrantyStatus(orderUid: UUID) =
+    override fun warrantyStatus(orderUid: UUID) =
         warrantyRepository.findAll(Example.of(Warranty(orderUid = orderUid)))
             .map {
                 WarrantyStatusResponse(
@@ -30,4 +30,19 @@ class WarrantyServiceImpl(
                     lastUpdateDate = it.modifiedDate
                 )
             }
+
+    @Transactional
+    override fun start(orderUid: UUID, names: List<String>) {
+        TODO("Not yet implemented")
+    }
+
+    @Transactional
+    override fun warrantyRequest(orderUid: UUID, request: WarrantyRequest): WarrantyResponse {
+        TODO("Not yet implemented")
+    }
+
+    @Transactional
+    override fun stop(orderUid: UUID) {
+        TODO("Not yet implemented")
+    }
 }

@@ -4,21 +4,73 @@
 package ru.romanow.services.store.web
 
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import ru.romanow.services.store.model.DetailedItemInfo
+import ru.romanow.services.store.model.ItemInfo
+import ru.romanow.services.store.model.OrderResponse
+import ru.romanow.services.store.service.OrderManagementService
+import ru.romanow.services.warranty.model.WarrantyRequest
+import ru.romanow.services.warranty.model.WarrantyResponse
 import java.util.*
 
 // @formatter:off
+@Suppress("ktlint:standard:max-line-length")
 @Tag(name = "Магазин")
 @RestController
-@RequestMapping("/api/public/v1")
-class OrderPublicController {
+@RequestMapping("/api/public/v1/orders")
+class OrderPublicController(
+    private val orderManagementService: OrderManagementService
+) {
 
-    @GetMapping("/orders")
-    fun orders(authenticationToken: JwtAuthenticationToken?) {
+    @GetMapping
+    fun orders(authenticationToken: JwtAuthenticationToken?): List<OrderResponse<ItemInfo>> {
         val userId = extractUserId(authenticationToken)
+        return orderManagementService.orders(userId)
+    }
+
+    @GetMapping("/{orderUid}")
+    fun orderByUid(@PathVariable orderUid: UUID, authenticationToken: JwtAuthenticationToken?): OrderResponse<DetailedItemInfo> {
+        val userId = extractUserId(authenticationToken)
+        return orderManagementService.orderByUid(userId, orderUid)
+    }
+
+    @PostMapping("/purchase")
+    fun warrantyRequest(
+        @Valid @RequestBody request: WarrantyRequest,
+        authenticationToken: JwtAuthenticationToken?
+    ): ResponseEntity<Void> {
+        val userId = extractUserId(authenticationToken)
+        val orderUid = orderManagementService.purchase(userId)
+        return ResponseEntity.created(
+            ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .replacePath("/purchase")
+                .path("/{orderUid}")
+                .buildAndExpand(orderUid)
+                .toUri()
+        ).build()
+    }
+
+    @PostMapping("/{orderUid}/warranty")
+    fun warrantyRequest(
+        @PathVariable orderUid: UUID,
+        @Valid @RequestBody request: WarrantyRequest,
+        authenticationToken: JwtAuthenticationToken?
+    ): WarrantyResponse {
+        val userId = extractUserId(authenticationToken)
+        return orderManagementService.warrantyRequest(userId, orderUid)
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{orderUid}/cancel")
+    fun cancel(@PathVariable orderUid: UUID, authenticationToken: JwtAuthenticationToken?) {
+        val userId = extractUserId(authenticationToken)
+        orderManagementService.cancel(userId, orderUid)
     }
 
     private fun extractUserId(jwt: JwtAuthenticationToken?) =

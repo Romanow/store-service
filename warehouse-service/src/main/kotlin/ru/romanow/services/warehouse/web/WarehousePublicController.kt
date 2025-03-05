@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RestController
 import ru.romanow.services.warehouse.service.ItemService
 
 // @formatter:off
+@Suppress("ktlint:standard:max-line-length")
 @Tag(name = "Сервис склада")
 @RestController
-@RequestMapping("/api/public/v1")
+@RequestMapping("/api/public/v1/items")
 class WarehousePublicController(
     private val itemService: ItemService
 ) {
 
-    @GetMapping("/items")
+    @GetMapping
     fun items() = itemService.items()
 }
 // @formatter:on

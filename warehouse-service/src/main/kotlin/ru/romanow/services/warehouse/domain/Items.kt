@@ -10,7 +10,6 @@ import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
-import java.util.*
 
 @Entity
 @Table(name = "items")
@@ -54,7 +53,7 @@ data class Items(
 
         other as Items
 
-        return uid == other.uid
+        return name == other.name
     }
 
     override fun hashCode(): Int {
@@ -62,7 +61,7 @@ data class Items(
     }
 
     override fun toString(): String {
-        return "Items(id=$id, uid=$uid, name=$name, description=$description, availableCount=$availableCount, " +
+        return "Items(id=$id, name=$name, description=$description, availableCount=$availableCount, " +
             "createdDate=$createdDate, modifiedDate=$modifiedDate, modifiedUser=$modifiedUser)"
     }
 }
