@@ -1,6 +1,5 @@
 spring:
-  main:
-    allow-bean-definition-overriding: true
+  application.name: test
   testcontainers:
     dynamic-property-registry-injection: allow
   security:
@@ -10,11 +9,6 @@ spring:
           keycloak:
             client-id: store
             client-secret: kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC
-
-services:
-  test:
-    url: http://localhost:8180
-    pattern: /test/**
 
 oauth2:
   security:

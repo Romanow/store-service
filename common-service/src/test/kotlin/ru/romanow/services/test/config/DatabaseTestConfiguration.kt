@@ -1,12 +1,13 @@
 /*
  * Copyright (c) Romanov Alexey, 2025
  */
-package ru.romanow.services.warranty.config
+package ru.romanow.services.test.config
 
 import com.zaxxer.hikari.HikariDataSource
 import org.postgresql.Driver
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Primary
 import org.testcontainers.containers.PostgreSQLContainer
 
@@ -23,8 +24,9 @@ class DatabaseTestConfiguration {
             .withDatabaseName(DATABASE_NAME)
     }
 
-    @Bean
     @Primary
+    @DependsOn("postgres")
+    @Bean(destroyMethod = "close")
     fun dataSource(): HikariDataSource {
         val dataSource = HikariDataSource()
         dataSource.jdbcUrl = postgres().jdbcUrl

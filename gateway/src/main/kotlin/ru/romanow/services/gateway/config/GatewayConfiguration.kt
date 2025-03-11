@@ -19,7 +19,7 @@ class GatewayConfiguration {
     @Bean
     fun routers(builder: RouteLocatorBuilder, properties: ServerUrlProperties) =
         builder.routes {
-            properties.forEach { name, config ->
+            properties.forEach { _, config ->
                 route {
                     path(config.pattern)
                     filters {

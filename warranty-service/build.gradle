@@ -11,7 +11,9 @@ dependencies {
     implementation project(":common-service")
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "org.testcontainers:postgresql:$postgresContainerVersion"
+    testImplementation "com.github.dasniko:testcontainers-keycloak:$keycloakContainerVersion"
 }
 
 gitProperties {

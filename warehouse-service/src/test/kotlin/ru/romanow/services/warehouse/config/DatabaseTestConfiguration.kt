@@ -7,7 +7,6 @@ import com.zaxxer.hikari.HikariDataSource
 import org.postgresql.Driver
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.DependsOn
 import org.springframework.context.annotation.Primary
 import org.testcontainers.containers.PostgreSQLContainer
 
@@ -15,19 +14,17 @@ typealias CustomPostgresContainer = PostgreSQLContainer<*>
 
 @TestConfiguration
 class DatabaseTestConfiguration {
-    @Bean(destroyMethod = "close")
+
+    @Bean
     fun postgres(): PostgreSQLContainer<*> {
-        val postgres = CustomPostgresContainer(POSTGRES_IMAGE)
+        return CustomPostgresContainer(POSTGRES_IMAGE)
             .withUsername(USERNAME)
             .withPassword(PASSWORD)
             .withDatabaseName(DATABASE_NAME)
-        postgres.start()
-        return postgres
     }
 
+    @Bean
     @Primary
-    @DependsOn("postgres")
-    @Bean(destroyMethod = "close")
     fun dataSource(): HikariDataSource {
         val dataSource = HikariDataSource()
         dataSource.jdbcUrl = postgres().jdbcUrl
