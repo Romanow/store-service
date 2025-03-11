@@ -1,5 +1,5 @@
 server:
-  port: ${APPLICATION_PORT:8180}
+  port: ${APPLICATION_PORT:8080}
   forward-headers-strategy: framework
   servlet:
     context-path: ${APPLICATION_CONTEXT_PATH:/}
@@ -11,11 +11,19 @@ server:
 spring:
   profiles:
     active: local
-    include: common
   config:
     import: optional:git.properties
   application:
     name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns:
+              - "http://localhost:*"
+            allowedMethods: [ GET, POST, PUT, DELETE ]
+            exposed-headers: [ LOCATION ]
 
 management:
   otlp:

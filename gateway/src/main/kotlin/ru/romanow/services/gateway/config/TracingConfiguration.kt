@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Romanov Alexey, 2025
  */
-package ru.romanow.services.common.config
+package ru.romanow.services.gateway.config
 
 import io.micrometer.observation.Observation
 import io.micrometer.observation.ObservationPredicate
@@ -12,23 +12,22 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.server.observation.ServerRequestObservationContext
 import org.springframework.security.config.observation.SecurityObservationSettings
 
+
 @Configuration
 @ConditionalOnProperty("management.tracing.enabled", havingValue = "true")
-class TracingConfiguration(
-    private val serverProperties: ServerProperties
-) {
+class TracingConfiguration(private val serverProperties: ServerProperties) {
 
     @Bean
     fun noActuatorObservations() = ObservationPredicate { name: String, context: Observation.Context? ->
         if (name == "http.server.requests" && context is ServerRequestObservationContext) {
-            !context.carrier.servletPath.startsWith("${serverProperties.servlet.contextPath}/manage")
+            true // TODO
         } else {
             true
         }
     }
 
     @Bean
-    fun noSecurityObservations(): SecurityObservationSettings {
+    fun noSpringSecurityObservations(): SecurityObservationSettings {
         return SecurityObservationSettings.noObservations()
     }
 }

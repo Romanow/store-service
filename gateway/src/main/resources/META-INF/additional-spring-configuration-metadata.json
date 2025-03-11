@@ -4,6 +4,11 @@
       "name": "services",
       "type": "ru.romanow.services.gateway.properties.ServerUrlProperties",
       "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "management.credentials",
+      "type": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
     }
   ],
   "properties": [
@@ -20,21 +25,21 @@
       "defaultValue": "true"
     },
     {
-      "name": "services.store-url",
-      "type": "java.lang.String",
-      "description": "Store url.",
+      "name": "services.store",
+      "type": "ru.romanow.services.gateway.properties.RouteConfig",
+      "description": "Store service config.",
       "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
     },
     {
-      "name": "services.warranty-url",
-      "type": "java.lang.String",
-      "description": "Warranty url.",
+      "name": "services.warranty",
+      "type": "ru.romanow.services.gateway.properties.RouteConfig",
+      "description": "Warranty  service config.",
       "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
     },
     {
-      "name": "services.warehouse-url",
-      "type": "java.lang.String",
-      "description": "Warehouse url.",
+      "name": "services.warehouse",
+      "type": "ru.romanow.services.gateway.properties.RouteConfig",
+      "description": "Warehouse  service config.",
       "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
     },
     {

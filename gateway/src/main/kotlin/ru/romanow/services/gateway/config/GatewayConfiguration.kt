@@ -5,6 +5,7 @@ package ru.romanow.services.gateway.config
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
+import org.springframework.cloud.gateway.route.builder.filters
 import org.springframework.cloud.gateway.route.builder.routes
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,5 +18,15 @@ class GatewayConfiguration {
 
     @Bean
     fun routers(builder: RouteLocatorBuilder, properties: ServerUrlProperties) =
-        builder.routes { }
+        builder.routes {
+            properties.forEach { name, config ->
+                route {
+                    path(config.pattern)
+                    filters {
+                        stripPrefix(1)
+                    }
+                    uri(config.url)
+                }
+            }
+        }
 }

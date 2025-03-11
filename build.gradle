@@ -18,6 +18,7 @@ ext {
     springGatewayVersion = "4.2.0"
     springCircuitBreakerVersion = "3.2.0"
     validationApiVersion = "2.0.1.Final"
+    wireMockVersion = "3.12.1"
     jwtVersion = "4.5.0"
     openApiVersion = "2.8.5"
     logbookVersion = "3.10.0"

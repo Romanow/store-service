@@ -1,11 +1,30 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      client:
+        registration:
+          auth0:
+            client-id: pXrawhpoDM63b82A7fkiLvRIH81wgmH9
+            client-secret: LzQSxUOE2dmAUdgstWke4ngXUeZNLVczvSid7ZVV8HTegCRbOxchQtJ_23EuZ9_V
+        provider:
+          auth0:
+            issuer-uri: https://romanowalex.eu.auth0.com/
+
 services:
-  warranty-url: http://localhost:8180
-  warehouse-url: http://localhost:8280
+  test:
+    url: http://localhost:8180
+    pattern: /test/**
 
 oauth2:
   security:
-    enabled: false
+    enabled: true
 
 management:
   tracing:
     enabled: false
+
+logging:
+  level:
+    org.springframework.security: debug
