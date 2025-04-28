@@ -21,7 +21,7 @@ ext {
     openApiVersion = "2.8.5"
     logbookVersion = "3.10.0"
     logstashEncoderVersion = "7.4"
-    postgresContainerVersion = "1.20.5"
+    postgresContainerVersion = "1.21.0"
 }
 
 subprojects { ->
