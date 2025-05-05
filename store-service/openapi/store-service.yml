@@ -1,0 +1,227 @@
+openapi: 3.0.1
+info:
+  title: Сервис Магазина
+  version: '1.0'
+
+servers:
+  - url: http://localhost:8180
+    description: Local server
+
+security:
+  - TokenBasedAuth: [ ]
+
+paths:
+  /api/public/v1/orders:
+    get:
+      operationId: orders
+      summary: Получить список заказов пользователя
+      tags:
+        - Orders
+      security:
+        - TokenBasedAuth: [ ]
+      x-handler-args:
+        - field: authenticationToken
+          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+          optional: true
+      responses:
+        '200':
+          description: Список заказов пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/public/v1/orders/{orderUid}:
+    get:
+      operationId: orderByUid
+      tags:
+        - Orders
+      security:
+        - TokenBasedAuth: [ ]
+      x-handler-args:
+        - field: authenticationToken
+          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+          optional: true
+      parameters:
+        - name: orderUid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedOrderResponse'
+        '401':
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    TokenBasedAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+    ErrorDescription:
+      type: object
+      properties:
+        name:
+          type: string
+        error:
+          type: string
+    ValidationErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        error:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDescription'
+    OrderResponse:
+      type: object
+      example:
+        {
+          'orderUid': 'd3795a76-d514-4db7-90d1-173e7e49aedb',
+          'userId': 'romanow',
+          'status': 'NEW',
+          'orderDate': '2025-05-05T10:00:00Z',
+          'items': [
+            {
+              'name': 'Lego 8880',
+              'count': 1
+            }
+          ]
+        }
+      properties:
+        orderUid:
+          type: string
+          format: uuid
+        userId:
+          type: string
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        orderDate:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemInfo'
+      additionalProperties: false
+    ItemInfo:
+      type: object
+      example:
+        {
+          'name': 'Lego 8880',
+          'count': 1
+        }
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+      additionalProperties: false
+    DetailedOrderResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/OrderResponse'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/DetailedItemInfo'
+    DetailedItemInfo:
+      type: object
+      example:
+        {
+          'name': 'Lego 8880',
+          'count': 1,
+          'description': '',
+          'manufacturer': 'Lego',
+          'imageUrl': '',
+          'warranty': {
+            'name': 'Lego 8880',
+            'status': 'ON_WARRANTY',
+            'comment': 'https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg',
+            'warrantyStartDate': '2025-05-05T10:00:00Z',
+            'lastUpdateDate': '2025-05-05T10:00:00Z'
+          }
+        }
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+        description:
+          type: string
+        manufacturer:
+          type: string
+        imageUrl:
+          type: string
+          format: url
+        warranty:
+          $ref: '#/components/schemas/WarrantyStatusInfo'
+      additionalProperties: false
+    WarrantyStatusInfo:
+      type: object
+      example:
+        {
+          'name': 'Lego 8880',
+          'status': 'ON_WARRANTY',
+          'comment': '',
+          'warrantyStartDate': '2025-05-05T10:00:00Z',
+          'lastUpdateDate': '2025-05-05T10:00:00Z'
+        }
+      properties:
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/WarrantyStatus'
+        comment:
+          type: string
+        warrantyStartDate:
+          type: string
+          pattern: date-time
+        lastUpdateDate:
+          type: string
+          pattern: date-time
+      additionalProperties: false
+    OrderStatus:
+      type: string
+      enum:
+        - NEW
+        - PROCESSED
+        - DENIED
+        - CANCELED
+    WarrantyStatus:
+      type: string
+      enum:
+        - ON_WARRANTY
+        - TAKE_NEW
+        - REPAIR
+        - REMOVED_FROM_WARRANTY
+

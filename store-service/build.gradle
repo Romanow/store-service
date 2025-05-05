@@ -3,6 +3,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.jpa"
     id "org.jetbrains.kotlin.plugin.spring"
     id "com.gorylenko.gradle-git-properties"
+    id "org.openapi.generator"
     id "com.adarshr.test-logger"
 }
 
@@ -25,6 +26,35 @@ gitProperties {
 }
 
 generateGitProperties.outputs.upToDateWhen { false }
+
+tasks.register("serverCodeGeneration", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "kotlin-spring"
+    ignoreFileOverride = "$rootDir/openapi/.openapi-generator-ignore"
+    templateDir = "$rootDir/openapi/templates"
+    configFile = "$rootDir/openapi/server-config.yml"
+    configOptions = [
+        apiPackage  : "ru.romanow.services.store.web",
+        modelPackage: "ru.romanow.services.store.model"
+    ]
+
+    inputSpec = "$rootDir/store-service/openapi/store-service.yml"
+    outputDir = "$buildDir/generated"
+}
+
+tasks.register("generateCodeByContracts") {
+    dependsOn serverCodeGeneration
+}
+
+runKtlintCheckOverMainSourceSet.dependsOn(tasks.generateCodeByContracts)
+compileKotlin.dependsOn(tasks.generateCodeByContracts)
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated/src/main/kotlin"
+        }
+    }
+}
 
 test {
     useJUnitPlatform()

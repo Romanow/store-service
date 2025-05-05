@@ -1,0 +1,18 @@
+{{>licenseInfo}}
+package {{modelPackage}}
+
+{{#imports}}
+import {{import}}
+{{/imports}}
+{{#useBeanValidation}}
+import {{javaxPackage}}.validation.constraints.Email
+import {{javaxPackage}}.validation.constraints.Max
+import {{javaxPackage}}.validation.constraints.Min
+import {{javaxPackage}}.validation.constraints.NotNull
+import {{javaxPackage}}.validation.constraints.Pattern
+import {{javaxPackage}}.validation.constraints.Size
+import {{javaxPackage}}.validation.Valid
+{{/useBeanValidation}}
+{{#models}}{{#model}}
+{{#isEnum}}{{>enumClass}}{{/isEnum}}{{^isEnum}}{{>dataClass}}{{/isEnum}}
+{{/model}}{{/models}}

@@ -1,0 +1,10 @@
+**/pom.xml
+**/*.gradle
+**/gradlew*
+**/README.md
+**/docs/*.md
+**/gradle/
+.openapi-generator-ignore
+**/ApiUtil.kt
+**/org/openapitools/client/infrastructure/*.kt
+**/org/openapitools/*.kt

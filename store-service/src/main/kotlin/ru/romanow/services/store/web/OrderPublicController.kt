@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import ru.romanow.services.store.model.DetailedItemInfo
-import ru.romanow.services.store.model.ItemInfo
+import ru.romanow.services.store.model.DetailedOrderResponse
 import ru.romanow.services.store.model.OrderResponse
 import ru.romanow.services.store.service.OrderManagementService
 import ru.romanow.services.warranty.model.WarrantyRequest
@@ -20,21 +20,16 @@ import java.util.*
 
 // @formatter:off
 @Suppress("ktlint:standard:max-line-length")
-@Tag(name = "Магазин")
 @RestController
 @RequestMapping("/api/public/v1/orders")
-class OrderPublicController(
-    private val orderManagementService: OrderManagementService
-) {
+class OrderPublicController(private val orderManagementService: OrderManagementService): ApiController {
 
-    @GetMapping
-    fun orders(authenticationToken: JwtAuthenticationToken?): List<OrderResponse<ItemInfo>> {
+    override fun orders(authenticationToken: JwtAuthenticationToken?): List<OrderResponse> {
         val userId = extractUserId(authenticationToken)
         return orderManagementService.orders(userId)
     }
 
-    @GetMapping("/{orderUid}")
-    fun orderByUid(@PathVariable orderUid: UUID, authenticationToken: JwtAuthenticationToken?): OrderResponse<DetailedItemInfo> {
+    override fun orderByUid(authenticationToken: JwtAuthenticationToken?, orderUid: UUID): DetailedOrderResponse {
         val userId = extractUserId(authenticationToken)
         return orderManagementService.orderByUid(userId, orderUid)
     }

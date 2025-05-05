@@ -1,0 +1,38 @@
+{{>licenseInfo}}
+package {{package}}
+
+{{#imports}}import {{import}}
+{{/imports}}
+
+import org.springframework.web.bind.annotation.*
+{{#useBeanValidation}}
+import org.springframework.validation.annotation.Validated
+import {{javaxPackage}}.validation.constraints.DecimalMax
+import {{javaxPackage}}.validation.constraints.DecimalMin
+import {{javaxPackage}}.validation.constraints.Email
+import {{javaxPackage}}.validation.constraints.Max
+import {{javaxPackage}}.validation.constraints.Min
+import {{javaxPackage}}.validation.constraints.NotNull
+import {{javaxPackage}}.validation.constraints.Pattern
+import {{javaxPackage}}.validation.constraints.Size
+import {{javaxPackage}}.validation.Valid
+{{/useBeanValidation}}
+
+{{#useBeanValidation}}
+@Validated
+{{/useBeanValidation}}
+@RestController
+{{#operations}}
+interface {{classname}} {
+{{#operation}}
+
+    @RequestMapping(
+            method = [RequestMethod.{{httpMethod}}],
+            value = ["{{#lambdaEscapeInNormalString}}{{{path}}}{{/lambdaEscapeInNormalString}}"]{{#hasProduces}},
+            produces = [{{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}]{{/hasProduces}}{{#hasConsumes}},
+            consumes = [{{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}]{{/hasConsumes}}
+    )
+    fun {{operationId}}({{#vendorExtensions.x-handler-args}}{{{field}}}: {{{type}}}{{#optional}}?{{/optional}}{{^last}},{{/last}}{{/vendorExtensions.x-handler-args}}{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>cookieParams}}{{>bodyParams}}{{>formParams}}{{^-last}},{{/-last}}{{/allParams}}): {{>returnTypes}}
+{{/operation}}
+}
+{{/operations}}

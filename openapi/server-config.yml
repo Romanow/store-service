@@ -1,0 +1,22 @@
+apiDocs: false
+apiTests: false
+modelDocs: false
+modelTests: false
+
+additionalProperties:
+  dateLibrary: java8
+  serializationLibrary: jackson
+  enumPropertyNaming: 'UPPERCASE'
+  interfaceOnly: true
+  gradleBuildFile: false
+  serviceImplementation: false
+  skipDefaultInterface: true
+  useSpringBoot3: true
+  apiSuffix: Controller
+  documentationProvider: none
+  exceptionHandler: false
+
+files:
+  model.mustache:
+    templateType: Model
+    destinationFilename: .kt
