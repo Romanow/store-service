@@ -8,9 +8,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(":store-api")
-    implementation project(":warranty-api")
-    implementation project(":warehouse-api")
     implementation project(":common-service")
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -35,6 +32,9 @@ tasks.register("serverCodeGeneration", org.openapitools.generator.gradle.plugin.
     configOptions = [
         apiPackage  : "ru.romanow.services.store.web",
         modelPackage: "ru.romanow.services.store.model"
+    ]
+    typeMappings = [
+        'DateTime': 'LocalDateTime',
     ]
 
     inputSpec = "$rootDir/store-service/openapi/store-service.yml"

@@ -1,6 +1,6 @@
 data class {{classname}} (
 {{#vars}}
-    {{#useBeanValidation}}{{>beanValidation}}{{>beanValidationModel}}{{/useBeanValidation}}
-    var {{{name}}}: {{#isArray}}{{#isList}}{{#uniqueItems}}Set{{/uniqueItems}}{{^uniqueItems}}List{{/uniqueItems}}{{/isList}}{{^isList}}Array{{/isList}}<{{^items.isEnum}}{{^items.isPrimitiveType}}{{/items.isPrimitiveType}}{{{items.dataType}}}{{/items.isEnum}}{{#items.isEnum}}{{{nameInCamelCase}}}{{/items.isEnum}}>{{/isArray}}{{^isEnum}}{{^isArray}}{{{dataType}}}{{/isArray}}{{/isEnum}}{{#isEnum}}{{^isArray}}{{{nameInCamelCase}}}{{/isArray}}{{/isEnum}}? = null{{^-last}},{{/-last}}
+    {{#useBeanValidation}}{{>beanValidation}}{{>beanValidationModel}}{{/useBeanValidation}}{{#vendorExtensions.x-field-extra-annotation}}{{{.}}}{{/vendorExtensions.x-field-extra-annotation}}
+    {{>modelMutable}} {{{name}}}: {{#isEnum}}{{#isArray}}{{baseType}}<{{/isArray}}{{classname}}.{{{nameInPascalCase}}}{{#isArray}}>{{/isArray}}{{/isEnum}}{{^isEnum}}{{{dataType}}}{{/isEnum}}{{#isNullable}}?{{/isNullable}}{{#defaultValue}} = {{^isNumber}}{{{defaultValue}}}{{/isNumber}}{{#isNumber}}{{{dataType}}}("{{{defaultValue}}}"){{/isNumber}}{{/defaultValue}}{{^defaultValue}}{{#isNullable}} = null{{/isNullable}}{{/defaultValue}}{{^-last}},{{/-last}}
 {{/vars}}
 )

@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.romanow.services.warranty.domain.Warranty
 import ru.romanow.services.warranty.exceptions.ItemNotOnWarrantyException
-import ru.romanow.services.warranty.model.WarrantyRequest
-import ru.romanow.services.warranty.model.WarrantyResponse
-import ru.romanow.services.warranty.model.WarrantyStatus
-import ru.romanow.services.warranty.model.WarrantyStatusResponse
+import ru.romanow.services.warranty.model.*
 import ru.romanow.services.warranty.repository.WarrantyRepository
 import java.util.*
 
@@ -34,14 +31,13 @@ class WarrantyServiceImpl(
                 )
             }
 
-    @Transactional
-    override fun start(orderUid: UUID, names: List<String>) {
-        val warranties = names.map { Warranty(orderUid = orderUid, name = it, status = WarrantyStatus.ON_WARRANTY) }
+    override fun start(orderUid: UUID, items: List<WarrantyItemInfo>) {
+        val warranties = items.map { Warranty(orderUid = orderUid, name = it, status = WarrantyStatus.ON_WARRANTY) }
         warrantyRepository.saveAll(warranties)
     }
 
     @Transactional
-    override fun warrantyRequest(orderUid: UUID, request: List<WarrantyRequest>): List<WarrantyResponse> {
+    override fun warrantyRequest(orderUid: UUID, items: List<WarrantyItemInfo>): List<WarrantyResponse> {
         val warranties = warrantyRepository.findAll(of(Warranty(orderUid = orderUid)))
         val names = warranties.map { it.name!! }
         if (!request.map { it.name }.all { names.contains(it) }) {

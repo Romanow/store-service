@@ -1,4 +1,0 @@
-dependencies {
-    api project(":warranty-api")
-    api project(":warehouse-api")
-}

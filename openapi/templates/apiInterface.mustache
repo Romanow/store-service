@@ -5,6 +5,7 @@ package {{package}}
 {{/imports}}
 
 import org.springframework.web.bind.annotation.*
+import org.springframework.http.ResponseEntity
 {{#useBeanValidation}}
 import org.springframework.validation.annotation.Validated
 import {{javaxPackage}}.validation.constraints.DecimalMax
@@ -21,7 +22,6 @@ import {{javaxPackage}}.validation.Valid
 {{#useBeanValidation}}
 @Validated
 {{/useBeanValidation}}
-@RestController
 {{#operations}}
 interface {{classname}} {
 {{#operation}}
@@ -32,7 +32,7 @@ interface {{classname}} {
             produces = [{{#produces}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/produces}}]{{/hasProduces}}{{#hasConsumes}},
             consumes = [{{#consumes}}"{{{mediaType}}}"{{^-last}}, {{/-last}}{{/consumes}}]{{/hasConsumes}}
     )
-    fun {{operationId}}({{#vendorExtensions.x-handler-args}}{{{field}}}: {{{type}}}{{#optional}}?{{/optional}}{{^last}},{{/last}}{{/vendorExtensions.x-handler-args}}{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>cookieParams}}{{>bodyParams}}{{>formParams}}{{^-last}},{{/-last}}{{/allParams}}): {{>returnTypes}}
+    fun {{operationId}}({{#vendorExtensions.x-handler-args}}{{{field}}}: {{{type}}}{{#optional}}?{{/optional}}{{^last}},{{/last}}{{/vendorExtensions.x-handler-args}}{{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>cookieParams}}{{>bodyParams}}{{>formParams}}{{^-last}},{{/-last}}{{/allParams}}): ResponseEntity<{{>returnTypes}}>
 {{/operation}}
 }
 {{/operations}}

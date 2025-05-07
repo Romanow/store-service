@@ -2,12 +2,6 @@ rootProject.name = "store-service"
 
 include "gateway"
 include "common-service"
-
-include "store-api"
 include "store-service"
-
-include "warehouse-api"
 include "warehouse-service"
-
-include "warranty-api"
 include "warranty-service"

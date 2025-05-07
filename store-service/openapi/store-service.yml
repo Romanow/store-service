@@ -16,7 +16,7 @@ paths:
       operationId: orders
       summary: Получить список заказов пользователя
       tags:
-        - Orders
+        - public
       security:
         - TokenBasedAuth: [ ]
       x-handler-args:
@@ -24,7 +24,7 @@ paths:
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
       responses:
-        '200':
+        200:
           description: Список заказов пользователя
           content:
             application/json:
@@ -32,7 +32,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrderResponse'
-        '401':
+        401:
           description: Пользователь не авторизован
           content:
             application/json:
@@ -42,8 +42,9 @@ paths:
   /api/public/v1/orders/{orderUid}:
     get:
       operationId: orderByUid
+      summary: Получить подробную информацию о заказе
       tags:
-        - Orders
+        - public
       security:
         - TokenBasedAuth: [ ]
       x-handler-args:
@@ -58,18 +59,155 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
-          description: Пользователь не авторизован
+        200:
+          description: Подробная информация о заказе
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DetailedOrderResponse'
-        '401':
+        401:
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Заказ не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/public/v1/orders/{orderUid}/cancel:
+    delete:
+      operationId: cancel
+      summary: Отменить заказ
+      tags:
+        - public
+      security:
+        - TokenBasedAuth: [ ]
+      x-handler-args:
+        - field: authenticationToken
+          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+          optional: true
+      parameters:
+        - name: orderUid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Заказ отменен
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Заказ не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/public/v1/orders/{orderUid}/warranty:
+    post:
+      operationId: warranty
+      summary: Запросить гарантию по заказу
+      tags:
+        - public
+      security:
+        - TokenBasedAuth: [ ]
+      x-handler-args:
+        - field: authenticationToken
+          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+          optional: true
+      parameters:
+        - name: orderUid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/WarrantyRequest'
+      responses:
+        200:
+          description: Информация о статусе гарантии
+          content:
+            application/json:
+              schema:
+                items:
+                  type: array
+                  $ref: '#/components/schemas/WarrantyResponse'
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Заказ не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/public/v1/orders/purchase:
+    post:
+      operationId: purchase
+      summary: Выполнить заказ
+      tags:
+        - public
+      security:
+        - TokenBasedAuth: [ ]
+      x-handler-args:
+        - field: authenticationToken
+          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+          optional: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseRequest'
+      responses:
+        201:
+          description: Заказ создан
+          headers:
+            Location:
+              description: Ссылка на созданный заказ
+              style: simple
+              schema:
+                type: string
+        400:
+          description: Ошибка входных данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Товар недоступен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   securitySchemes:
     TokenBasedAuth:
@@ -82,34 +220,19 @@ components:
       properties:
         message:
           type: string
-    ErrorDescription:
-      type: object
-      properties:
-        name:
-          type: string
-        error:
-          type: string
-    ValidationErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        error:
-          type: array
-          items:
-            $ref: '#/components/schemas/ErrorDescription'
+          nullable: true
     OrderResponse:
       type: object
       example:
         {
-          'orderUid': 'd3795a76-d514-4db7-90d1-173e7e49aedb',
-          'userId': 'romanow',
-          'status': 'NEW',
-          'orderDate': '2025-05-05T10:00:00Z',
-          'items': [
+          "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
+          "userId": "romanow",
+          "status": "NEW",
+          "orderDate": "2025-05-05T10:00:00Z",
+          "items": [
             {
-              'name': 'Lego 8880',
-              'count': 1
+              "name": "Lego 8880",
+              "count": 1
             }
           ]
         }
@@ -133,18 +256,46 @@ components:
       type: object
       example:
         {
-          'name': 'Lego 8880',
-          'count': 1
+          "name": "Lego 8880",
+          "count": 1
         }
       properties:
         name:
           type: string
+          x-field-extra-annotation:
+            - '@NotEmpty(message = "{field.is.empty}")'
         count:
           type: integer
           format: int32
+      required:
+        - name
+        - count
       additionalProperties: false
     DetailedOrderResponse:
       type: object
+      example:
+        {
+          "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
+          "userId": "romanow",
+          "status": "NEW",
+          "orderDate": "2025-05-05T10:00:00Z",
+          "items": [
+            {
+              "name": "Lego 8880",
+              "count": 1,
+              "description": "Lego Technic Supercar 8880",
+              "manufacturer": "Lego",
+              "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
+              "warranty": {
+                "name": "Lego 8880",
+                "status": "ON_WARRANTY",
+                "comment": "",
+                "warrantyStartDate": "2025-05-05T10:00:00Z",
+                "lastUpdateDate": "2025-05-05T10:00:00Z"
+              }
+            }
+          ]
+        }
       allOf:
         - $ref: '#/components/schemas/OrderResponse'
         - type: object
@@ -157,17 +308,17 @@ components:
       type: object
       example:
         {
-          'name': 'Lego 8880',
-          'count': 1,
-          'description': '',
-          'manufacturer': 'Lego',
-          'imageUrl': '',
-          'warranty': {
-            'name': 'Lego 8880',
-            'status': 'ON_WARRANTY',
-            'comment': 'https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg',
-            'warrantyStartDate': '2025-05-05T10:00:00Z',
-            'lastUpdateDate': '2025-05-05T10:00:00Z'
+          "name": "Lego 8880",
+          "count": 1,
+          "description": "Lego Technic Supercar 8880",
+          "manufacturer": "Lego",
+          "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
+          "warranty": {
+            "name": "Lego 8880",
+            "status": "ON_WARRANTY",
+            "comment": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
+            "warrantyStartDate": "2025-05-05T10:00:00Z",
+            "lastUpdateDate": "2025-05-05T10:00:00Z"
           }
         }
       properties:
@@ -178,11 +329,14 @@ components:
           format: int32
         description:
           type: string
+          nullable: true
         manufacturer:
           type: string
+          nullable: true
         imageUrl:
           type: string
           format: url
+          nullable: true
         warranty:
           $ref: '#/components/schemas/WarrantyStatusInfo'
       additionalProperties: false
@@ -190,11 +344,11 @@ components:
       type: object
       example:
         {
-          'name': 'Lego 8880',
-          'status': 'ON_WARRANTY',
-          'comment': '',
-          'warrantyStartDate': '2025-05-05T10:00:00Z',
-          'lastUpdateDate': '2025-05-05T10:00:00Z'
+          "name": "Lego 8880",
+          "status": "ON_WARRANTY",
+          "comment": "",
+          "warrantyStartDate": "2025-05-05T10:00:00Z",
+          "lastUpdateDate": "2025-05-05T10:00:00Z"
         }
       properties:
         name:
@@ -203,6 +357,7 @@ components:
           $ref: '#/components/schemas/WarrantyStatus'
         comment:
           type: string
+          nullable: true
         warrantyStartDate:
           type: string
           pattern: date-time
@@ -210,6 +365,59 @@ components:
           type: string
           pattern: date-time
       additionalProperties: false
+    PurchaseRequest:
+      type: object
+      example:
+        {
+          "items": [
+            {
+              "name": "Lego 8880",
+              "count": 1
+            }
+          ]
+        }
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemInfo'
+    WarrantyRequest:
+      type: object
+      example:
+        {
+          "name": "Lego 8880",
+          "count": 1,
+          "comment": ""
+        }
+      properties:
+        name:
+          type: string
+          x-field-extra-annotation:
+            - '@NotEmpty(message = "{field.is.empty}")'
+        count:
+          type: integer
+          format: int32
+        comment:
+          type: string
+      required:
+        - name
+        - count
+      additionalProperties: false
+    WarrantyResponse:
+      type: object
+      example:
+        {
+          "name": "Lego 8880",
+          "status": "TAKE_NEW",
+          "comment": ""
+        }
+      properties:
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/WarrantyStatus'
+        comment:
+          type: string
     OrderStatus:
       type: string
       enum:

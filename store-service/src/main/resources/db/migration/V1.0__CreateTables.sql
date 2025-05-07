@@ -1,4 +1,4 @@
--- v1.0 Create orders and order_items tables
+-- v1.0 Create tables
 CREATE TABLE orders
 (
     id            SERIAL PRIMARY KEY,

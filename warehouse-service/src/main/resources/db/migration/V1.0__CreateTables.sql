@@ -1,4 +1,4 @@
--- v1.0 Create items table
+-- v1.0 Create tables
 CREATE TABLE items
 (
     id              SERIAL PRIMARY KEY,
