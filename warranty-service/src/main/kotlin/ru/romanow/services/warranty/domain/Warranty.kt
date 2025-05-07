@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import ru.romanow.services.warranty.model.WarrantyStatus
 import java.time.LocalDateTime
 import java.util.*
 
@@ -23,11 +24,15 @@ data class Warranty(
     @Column(name = "order_uid", nullable = false)
     var orderUid: UUID? = null,
 
-    @OneToMany(mappedBy = "warranty", fetch = FetchType.LAZY)
-    var items: List<WarrantyItem>? = null,
+    @Column(name = "name", nullable = false)
+    var name: String? = null,
 
-    @Column(name = "active", nullable = false)
-    var active: Boolean? = null,
+    @Column(name = "comment")
+    var comment: String? = null,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    var status: WarrantyStatus? = null,
 
     @CreatedDate
     @Column(name = "created_date", nullable = false)
@@ -47,15 +52,20 @@ data class Warranty(
 
         other as Warranty
 
-        return orderUid == other.orderUid
+        if (orderUid != other.orderUid) return false
+        if (name != other.name) return false
+
+        return true
     }
 
     override fun hashCode(): Int {
-        return orderUid?.hashCode() ?: 0
+        var result = orderUid?.hashCode() ?: 0
+        result = 31 * result + (name?.hashCode() ?: 0)
+        return result
     }
 
     override fun toString(): String {
-        return "Warranty(id=$id, orderUid=$orderUid, active=$active, " +
+        return "Warranty(id=$id, orderUid=$orderUid, name=$name, comment=$comment, status=$status, " +
             "createdDate=$createdDate, modifiedDate=$modifiedDate, modifiedUser=$modifiedUser)"
     }
 }

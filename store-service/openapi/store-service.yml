@@ -179,7 +179,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PurchaseRequest'
+              type: array
+              items:
+                type: string
       responses:
         201:
           description: Заказ создан
@@ -230,10 +232,7 @@ components:
           "status": "NEW",
           "orderDate": "2025-05-05T10:00:00Z",
           "items": [
-            {
-              "name": "Lego 8880",
-              "count": 1
-            }
+            "Lego 8880",
           ]
         }
       properties:
@@ -250,26 +249,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/ItemInfo'
-      additionalProperties: false
-    ItemInfo:
-      type: object
-      example:
-        {
-          "name": "Lego 8880",
-          "count": 1
-        }
-      properties:
-        name:
-          type: string
-          x-field-extra-annotation:
-            - '@NotEmpty(message = "{field.is.empty}")'
-        count:
-          type: integer
-          format: int32
-      required:
-        - name
-        - count
+            type: string
       additionalProperties: false
     DetailedOrderResponse:
       type: object
@@ -282,7 +262,6 @@ components:
           "items": [
             {
               "name": "Lego 8880",
-              "count": 1,
               "description": "Lego Technic Supercar 8880",
               "manufacturer": "Lego",
               "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
@@ -303,13 +282,12 @@ components:
             items:
               type: array
               items:
-                $ref: '#/components/schemas/DetailedItemInfo'
-    DetailedItemInfo:
+                $ref: '#/components/schemas/ItemInfo'
+    ItemInfo:
       type: object
       example:
         {
           "name": "Lego 8880",
-          "count": 1,
           "description": "Lego Technic Supercar 8880",
           "manufacturer": "Lego",
           "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
@@ -324,9 +302,6 @@ components:
       properties:
         name:
           type: string
-        count:
-          type: integer
-          format: int32
         description:
           type: string
           nullable: true
@@ -360,33 +335,16 @@ components:
           nullable: true
         warrantyStartDate:
           type: string
-          pattern: date-time
+          format: date-time
         lastUpdateDate:
           type: string
-          pattern: date-time
+          format: date-time
       additionalProperties: false
-    PurchaseRequest:
-      type: object
-      example:
-        {
-          "items": [
-            {
-              "name": "Lego 8880",
-              "count": 1
-            }
-          ]
-        }
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ItemInfo'
     WarrantyRequest:
       type: object
       example:
         {
           "name": "Lego 8880",
-          "count": 1,
           "comment": ""
         }
       properties:
@@ -394,14 +352,10 @@ components:
           type: string
           x-field-extra-annotation:
             - '@NotEmpty(message = "{field.is.empty}")'
-        count:
-          type: integer
-          format: int32
         comment:
           type: string
       required:
         - name
-        - count
       additionalProperties: false
     WarrantyResponse:
       type: object

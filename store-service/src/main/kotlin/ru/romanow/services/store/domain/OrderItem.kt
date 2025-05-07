@@ -22,9 +22,6 @@ data class OrderItem(
 
     @Column(name = "name", nullable = false)
     var name: String? = null,
-
-    @Column(name = "count", nullable = false)
-    var count: Int? = 0
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -34,7 +31,6 @@ data class OrderItem(
 
         if (orderId != other.orderId) return false
         if (name != other.name) return false
-        if (count != other.count) return false
 
         return true
     }
@@ -42,11 +38,10 @@ data class OrderItem(
     override fun hashCode(): Int {
         var result = orderId ?: 0
         result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (count ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "OrderItem(id=$id, name=$name, orderId=$orderId, count=$count)"
+        return "OrderItem(id=$id, orderId=$orderId, name=$name)"
     }
 }

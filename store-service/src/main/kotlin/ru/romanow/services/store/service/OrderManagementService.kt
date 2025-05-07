@@ -3,6 +3,7 @@
  */
 package ru.romanow.services.store.service
 
+import jakarta.annotation.Generated
 import ru.romanow.services.store.model.DetailedOrderResponse
 import ru.romanow.services.store.model.OrderResponse
 import ru.romanow.services.store.model.WarrantyRequest
@@ -12,7 +13,7 @@ import java.util.*
 interface OrderManagementService {
     fun orders(userId: String): List<OrderResponse>
     fun orderByUid(userId: String, orderUid: UUID): DetailedOrderResponse
-    fun purchase(userId: String): UUID
+    fun purchase(userId: String, items: List<String>): UUID
     fun warrantyRequest(userId: String, orderUid: UUID, request: List<WarrantyRequest>): List<WarrantyResponse>
     fun cancel(userId: String, orderUid: UUID)
 }

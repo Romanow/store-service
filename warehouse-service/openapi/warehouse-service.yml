@@ -1,0 +1,174 @@
+openapi: 3.0.1
+info:
+  title: Складской Сервис
+  version: '1.0'
+
+servers:
+  - url: http://localhost:8280
+    description: Local server
+
+security:
+  - TokenBasedAuth: [ ]
+
+paths:
+  /api/public/v1/items:
+    get:
+      operationId: availableItems
+      summary: Получить все доступные товары
+      tags:
+        - public
+      responses:
+        200:
+          description: Информация о доступных товарах
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemInfo'
+
+  /api/private/v1/items:
+    get:
+      operationId: items
+      summary: Получить информацию о товарах
+      tags:
+        - private
+      security:
+        - TokenBasedAuth: [ ]
+      parameters:
+        - in: query
+          required: true
+          name: names
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+      responses:
+        200:
+          description: Информация о товарах
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemInfo'
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Товарны не найдены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/private/v1/items/take:
+    post:
+      operationId: take
+      summary: Забрать товары со склада
+      tags:
+        - private
+      security:
+        - TokenBasedAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        202:
+          description: Товары забронированы
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Товарны не найдены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        409:
+          description: Недостаточное количество товаров
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/private/v1/items/refund:
+    delete:
+      operationId: refund
+      summary: Вернуть товары на склад
+      tags:
+        - private
+      security:
+        - TokenBasedAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        204:
+          description: Товары успешно возвращены
+        401:
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Товарны не найдены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    TokenBasedAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: true
+    ItemInfo:
+      type: object
+      example:
+        {
+          "name": "Lego 8880",
+          "description": "Lego Technic Supercar 8880",
+          "manufacturer": "Lego",
+          "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg"
+        }
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        manufacturer:
+          type: string
+          nullable: true
+        imageUrl:
+          type: string
+          format: url
+          nullable: true
+      additionalProperties: false

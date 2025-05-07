@@ -48,7 +48,10 @@ subprojects { ->
     }
 
     ktlint {
-        version.set("1.1.1")
+        version.set("1.2.1")
+        filter {
+            exclude { entry -> entry.file.toString().contains("generated") }
+        }
     }
 
     dependencyManagement {

@@ -64,9 +64,9 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/WarrantyItemInfo'
+                $ref: '#/components/schemas/WarrantyItem'
       responses:
-        204:
+        202:
           description: Заказ поставлен на гарантию
         401:
           description: Пользователь не авторизован
@@ -97,7 +97,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/WarrantyItemInfo'
+                $ref: '#/components/schemas/WarrantyItem'
       responses:
         200:
           description: Заказ поставлен на гарантию
@@ -184,10 +184,10 @@ components:
           nullable: true
         warrantyStartDate:
           type: string
-          pattern: date-time
+          format: date-time
         lastUpdateDate:
           type: string
-          pattern: date-time
+          format: date-time
       additionalProperties: false
     WarrantyResponse:
       type: object
@@ -204,12 +204,11 @@ components:
           $ref: '#/components/schemas/WarrantyStatus'
         comment:
           type: string
-    WarrantyItemInfo:
+    WarrantyItem:
       type: object
       example:
         {
           "name": "Lego 8880",
-          "count": 1,
           "comment": ""
         }
       properties:
@@ -217,14 +216,10 @@ components:
           type: string
           x-field-extra-annotation:
             - '@NotEmpty(message = "{field.is.empty}")'
-        count:
-          type: integer
-          format: int32
         comment:
           type: string
       required:
         - name
-        - count
       additionalProperties: false
     WarrantyStatus:
       type: string

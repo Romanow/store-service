@@ -3,9 +3,8 @@
  */
 package ru.romanow.services.store.service
 
-import ru.romanow.services.warehouse.model.ItemResponse
 import java.util.*
 
 interface WarehouseClient {
-    fun items(names: List<String>): Optional<List<ItemResponse>>
+    fun items(names: List<String>): Optional<List<*>>
 }

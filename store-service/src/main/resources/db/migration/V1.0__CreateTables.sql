@@ -20,8 +20,7 @@ CREATE TABLE order_items
     order_id INT     NOT NULL
         CONSTRAINT fk_order_items_order_id REFERENCES orders (id)
             ON DELETE CASCADE,
-    name     VARCHAR NOT NULL,
-    count    INT     NOT NULL
+    name     VARCHAR NOT NULL
 );
 
 CREATE INDEX ux_order_items_order_id ON order_items (order_id);

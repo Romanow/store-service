@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import ru.romanow.services.store.model.*
+import ru.romanow.services.store.model.DetailedOrderResponse
+import ru.romanow.services.store.model.OrderResponse
+import ru.romanow.services.store.model.WarrantyRequest
+import ru.romanow.services.store.model.WarrantyResponse
 import ru.romanow.services.store.service.OrderManagementService
 import java.util.*
 
@@ -36,10 +39,10 @@ class OrderController(
     @PostMapping("/purchase")
     override fun purchase(
         authenticationToken: JwtAuthenticationToken?,
-        @Valid @RequestBody purchaseRequest: PurchaseRequest
+        @Valid @RequestBody requestBody: List<String>
     ): ResponseEntity<Unit> {
         val userId = extractUserId(authenticationToken)
-        val orderUid = orderManagementService.purchase(userId)
+        val orderUid = orderManagementService.purchase(userId, requestBody)
         return ResponseEntity.created(
             ServletUriComponentsBuilder
                 .fromCurrentRequest()

@@ -3,13 +3,11 @@
  */
 package ru.romanow.services.warehouse.service
 
-import ru.romanow.services.warehouse.model.ItemRequest
-import ru.romanow.services.warehouse.model.ItemResponse
-import java.util.*
+import ru.romanow.services.warehouse.model.ItemInfo
 
 interface ItemService {
-    fun items(): List<ItemResponse>
-    fun items(names: List<String>): List<ItemResponse>
-    fun takeItems(orderUid: UUID, request: List<ItemRequest>)
-    fun returnItems(orderUid: UUID)
+    fun availableItems(): List<ItemInfo>
+    fun items(names: List<String>): List<ItemInfo>
+    fun takeItems(names: List<String>)
+    fun returnItems(names: List<String>)
 }
