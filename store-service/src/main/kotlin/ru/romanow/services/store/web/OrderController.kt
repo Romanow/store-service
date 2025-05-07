@@ -76,6 +76,6 @@ class OrderController(
         if (jwt != null) (jwt.token.claims["sub"] as String).substringAfter("|") else USER_UID
 
     companion object {
-        private val USER_UID = UUID.fromString("28946ba3-bfd6-4087-9ffb-2a7520d78562").toString()
+        private const val USER_UID = "system"
     }
 }

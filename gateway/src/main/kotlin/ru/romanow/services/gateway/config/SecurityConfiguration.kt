@@ -110,4 +110,3 @@ class SecurityConfiguration {
         private const val SECOND = 2
     }
 }
-

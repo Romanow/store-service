@@ -23,6 +23,7 @@ class ItemServiceImpl(
         .map {
             ItemInfo(
                 name = it.name!!,
+                count = it.availableCount,
                 description = it.description,
                 manufacturer = it.manufacturer,
                 imageUrl = it.imageUrl
@@ -39,6 +40,7 @@ class ItemServiceImpl(
         return items.map {
             ItemInfo(
                 name = it.name!!,
+                count = it.availableCount,
                 description = it.description,
                 manufacturer = it.manufacturer,
                 imageUrl = it.imageUrl
@@ -53,7 +55,7 @@ class ItemServiceImpl(
             val itemsNotFound = names.subtract(items.map { it.name }.toSet())
             throw EntityNotFoundException("Not found information about items '$itemsNotFound!)}'")
         }
-        val itemsNotAvailable = items.filter { it.availableCount < 1 }
+        val itemsNotAvailable = items.filter { it.availableCount < 1 }.map { it.name }
         if (itemsNotAvailable.isNotEmpty()) {
             throw ItemNotAvailableException("Not available items '$itemsNotAvailable'")
         }

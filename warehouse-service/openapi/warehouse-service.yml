@@ -154,6 +154,7 @@ components:
       example:
         {
           "name": "Lego 8880",
+          "count": 1,
           "description": "Lego Technic Supercar 8880",
           "manufacturer": "Lego",
           "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg"
@@ -161,6 +162,9 @@ components:
       properties:
         name:
           type: string
+        count:
+          type: integer
+          format: int32
         description:
           type: string
           nullable: true
