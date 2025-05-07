@@ -5,6 +5,9 @@ spring:
     password: test
     driver-class-name: org.postgresql.Driver
 
+services:
+  warehouse-url: ${WAREHOUSE_URL:http://localhost:8280}
+
 oauth2:
   security:
     enabled: false

@@ -204,6 +204,7 @@ components:
           $ref: '#/components/schemas/WarrantyStatus'
         comment:
           type: string
+          nullable: true
     WarrantyItem:
       type: object
       example:
@@ -218,6 +219,7 @@ components:
             - '@NotEmpty(message = "{field.is.empty}")'
         comment:
           type: string
+          nullable: true
       required:
         - name
       additionalProperties: false

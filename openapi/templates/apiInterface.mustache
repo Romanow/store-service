@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.http.ResponseEntity
 {{#useBeanValidation}}
 import org.springframework.validation.annotation.Validated
-import {{javaxPackage}}.validation.constraints.DecimalMax
-import {{javaxPackage}}.validation.constraints.DecimalMin
-import {{javaxPackage}}.validation.constraints.Email
-import {{javaxPackage}}.validation.constraints.Max
-import {{javaxPackage}}.validation.constraints.Min
-import {{javaxPackage}}.validation.constraints.NotNull
-import {{javaxPackage}}.validation.constraints.Pattern
-import {{javaxPackage}}.validation.constraints.Size
-import {{javaxPackage}}.validation.Valid
+import jakarta.validation.constraints.DecimalMax
+import jakarta.validation.constraints.DecimalMin
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
+import jakarta.validation.Valid
 {{/useBeanValidation}}
-import {{javaxPackage}}.annotation.Generated
+import jakarta.annotation.Generated
 
 {{#useBeanValidation}}
 @Validated

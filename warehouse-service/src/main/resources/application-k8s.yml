@@ -5,9 +5,6 @@ spring:
     password: ${DATABASE_PASSWORD:test}
     driver-class-name: org.postgresql.Driver
 
-services:
-  warranty-url: ${WARRANTY_URL:http://warranty:8380}
-
 management:
   otlp:
     tracing:

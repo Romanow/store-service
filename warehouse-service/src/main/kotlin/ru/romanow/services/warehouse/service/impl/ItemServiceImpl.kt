@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Romanov Alexey, 2025
  */
-package ru.romanow.services.warehouse.service
+package ru.romanow.services.warehouse.service.impl
 
 import jakarta.persistence.EntityNotFoundException
 import org.slf4j.LoggerFactory
@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional
 import ru.romanow.services.warehouse.exceptions.ItemNotAvailableException
 import ru.romanow.services.warehouse.model.ItemInfo
 import ru.romanow.services.warehouse.repository.ItemRepository
+import ru.romanow.services.warehouse.service.ItemService
 
 @Service
-class ItemServiceImpl(
+internal class ItemServiceImpl(
     private val itemRepository: ItemRepository
 ) : ItemService {
     private val logger = LoggerFactory.getLogger(ItemServiceImpl::class.java)

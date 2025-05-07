@@ -13,7 +13,7 @@ import ru.romanow.services.store.service.WarehouseClient
 import java.util.*
 
 @Service
-class WarehouseClientImpl(
+internal class WarehouseClientImpl(
     private val fallback: Fallback,
     private val warehouseWebClient: WebClient,
     private val serverUrlProperties: ServerUrlProperties,

@@ -3,12 +3,9 @@
  */
 package ru.romanow.services.warranty.config
 
-import com.zaxxer.hikari.HikariDataSource
-import org.postgresql.Driver
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Primary
 import org.testcontainers.containers.PostgreSQLContainer
 
 typealias CustomPostgresContainer = PostgreSQLContainer<*>

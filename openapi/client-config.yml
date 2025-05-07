@@ -8,6 +8,7 @@ additionalProperties:
   library: jvm-spring-webclient
   serializationLibrary: jackson
   enumPropertyNaming: 'UPPERCASE'
+  useSpringBoot3: true
 
 files:
   model.mustache:

@@ -24,17 +24,17 @@ class WarrantyController(
 
     override fun start(
         @PathVariable("orderUid") orderUid: UUID,
-        @Valid @RequestBody items: List<WarrantyItem>
+        @Valid @RequestBody warrantyItem: List<WarrantyItem>
     ): ResponseEntity<Unit> {
-        warrantyService.start(orderUid, items)
-        return ResponseEntity.noContent().build()
+        warrantyService.start(orderUid, warrantyItem)
+        return ResponseEntity.accepted().build()
     }
 
     override fun warrantyRequest(
         @PathVariable("orderUid") orderUid: UUID,
-        @Valid @RequestBody items: List<WarrantyItem>
+        @Valid @RequestBody warrantyItem: List<WarrantyItem>
     ): ResponseEntity<List<WarrantyResponse>> =
-        ResponseEntity.ok(warrantyService.warrantyRequest(orderUid, items))
+        ResponseEntity.ok(warrantyService.warrantyRequest(orderUid, warrantyItem))
 
     override fun stop(@PathVariable("orderUid") orderUid: UUID): ResponseEntity<Unit> {
         warrantyService.stop(orderUid)

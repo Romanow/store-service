@@ -13,7 +13,7 @@ import ru.romanow.services.store.service.WarrantyClient
 import java.util.*
 
 @Service
-class WarrantyClientImpl(
+internal class WarrantyClientImpl(
     private val fallback: Fallback,
     private val warrantyWebClient: WebClient,
     private val properties: ServerUrlProperties,

@@ -24,6 +24,7 @@ ext {
     openApiVersion = "2.8.5"
     logbookVersion = "3.10.0"
     logstashEncoderVersion = "7.4"
+    wireMockVersion = "3.10.0"
     postgresContainerVersion = "1.20.5"
     keycloakContainerVersion = "3.6.0"
 }

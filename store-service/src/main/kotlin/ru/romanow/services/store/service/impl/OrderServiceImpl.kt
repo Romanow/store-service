@@ -10,7 +10,7 @@ import ru.romanow.services.store.service.OrderService
 import java.util.*
 
 @Service
-class OrderServiceImpl(private val orderRepository: OrderRepository) : OrderService {
+internal class OrderServiceImpl(private val orderRepository: OrderRepository) : OrderService {
 
     @Transactional(readOnly = true)
     override fun orders(userId: String) = orderRepository.findByUserId(userId)

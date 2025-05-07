@@ -13,7 +13,7 @@ import ru.romanow.services.store.service.OrderService
 import java.util.*
 
 @Service
-class OrderManagementServiceImpl(
+internal class OrderManagementServiceImpl(
     private val orderService: OrderService,
 ) : OrderManagementService {
 

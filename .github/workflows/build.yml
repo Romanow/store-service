@@ -3,6 +3,16 @@ on:
   push:
     branches:
       - master
+    path:
+      - ".github/**"
+      - "src/**"
+      - "common-service/**"
+      - "gateway-service/**"
+      - "store-service/**"
+      - "warehouse-service/**"
+      - "warranty-service/**"
+      - "build.gradle"
+      - "gradle.properties"
 jobs:
   build:
     name: Build

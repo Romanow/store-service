@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Romanov Alexey, 2025
  */
-package ru.romanow.services.warranty.service
+package ru.romanow.services.warranty.service.impl
 
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.data.domain.Example.of
@@ -9,13 +9,19 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.romanow.services.warranty.domain.Warranty
 import ru.romanow.services.warranty.exceptions.ItemNotOnWarrantyException
-import ru.romanow.services.warranty.model.*
+import ru.romanow.services.warranty.model.WarrantyItem
+import ru.romanow.services.warranty.model.WarrantyResponse
+import ru.romanow.services.warranty.model.WarrantyStatus
+import ru.romanow.services.warranty.model.WarrantyStatusResponse
 import ru.romanow.services.warranty.repository.WarrantyRepository
+import ru.romanow.services.warranty.service.WarehouseClient
+import ru.romanow.services.warranty.service.WarrantyService
 import java.util.*
 
 @Service
-class WarrantyServiceImpl(
-    private val warrantyRepository: WarrantyRepository
+internal class WarrantyServiceImpl(
+    private val warrantyRepository: WarrantyRepository,
+    private val warehouseClient: WarehouseClient
 ) : WarrantyService {
 
     @Transactional(readOnly = true)
@@ -46,11 +52,33 @@ class WarrantyServiceImpl(
     @Transactional
     override fun warrantyRequest(orderUid: UUID, items: List<WarrantyItem>): List<WarrantyResponse> {
         val warranties = warrantyRepository.findAll(of(Warranty(orderUid = orderUid)))
-        val names = warranties.map { it.name!! }
-        if (!request.map { it.name }.all { names.contains(it) }) {
-            val itemsNotOnWarranty = request.map { it.name }.subtract(names.toSet())
+        val warrantyMap = warranties.associateBy { it.name!! }
+        if (!items.map { it.name }.all { warrantyMap.containsKey(it) }) {
+            val itemsNotOnWarranty = items.map { it.name }.subtract(warrantyMap.keys)
             throw ItemNotOnWarrantyException("Items '$itemsNotOnWarranty' not on warranty for order '$orderUid'")
         }
+        val availableItems = warehouseClient.items(warrantyMap.keys)
+        if (availableItems.isPresent) {
+            return availableItems.get()
+                .map {
+                    val warranty = warrantyMap[it.name]!!
+                    if (warranty.status == WarrantyStatus.ON_WARRANTY) {
+                        if (it.count > 0) {
+                            warranty.status = WarrantyStatus.TAKE_NEW
+                            warranty.comment = "Take new item from Warehouse"
+                        } else {
+                            warranty.status = WarrantyStatus.REPAIR
+                            warranty.comment = "Send to repair because Warehouse don't have enough items"
+                        }
+                    }
+                    WarrantyResponse(
+                        name = it.name,
+                        status = warranty.status!!,
+                        comment = warranty.comment!!
+                    )
+                }
+        }
+
         return listOf()
     }
 
