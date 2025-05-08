@@ -4,7 +4,6 @@
 package ru.romanow.services.store
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders.LOCATION
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import org.hamcrest.Matchers.matchesPattern
 import org.junit.jupiter.api.BeforeEach
@@ -15,8 +14,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders.CONTENT_TYPE
+import org.springframework.http.HttpHeaders.LOCATION
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.http.ResponseEntity.accepted
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.delete
@@ -31,7 +32,9 @@ import ru.romanow.services.store.domain.OrderItem
 import ru.romanow.services.store.model.OrderStatus.PROCESSED
 import ru.romanow.services.store.repository.OrderRepository
 import ru.romanow.services.warehouse.models.ItemInfo
+import ru.romanow.services.warranty.models.WarrantyResponse
 import ru.romanow.services.warranty.models.WarrantyStatus.ON_WARRANTY
+import ru.romanow.services.warranty.models.WarrantyStatus.TAKE_NEW
 import ru.romanow.services.warranty.models.WarrantyStatusResponse
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
@@ -97,11 +100,11 @@ internal class StoreApplicationTest {
                 .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(warrantyResponse))
         )
 
-        val itemsResponse = objectMapper.writeValueAsString(listOf(ItemInfo(name = ITEM1_NAME, count = 1)))
+        val warehouseResponse = objectMapper.writeValueAsString(listOf(ItemInfo(name = ITEM1_NAME, count = 1)))
         stubFor(
             get(urlPathEqualTo("/api/private/v1/items"))
                 .withQueryParam("names", havingExactly(ITEM1_NAME))
-                .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(itemsResponse))
+                .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(warehouseResponse))
         )
 
         mockMvc.get("/api/public/v1/orders/$ORDER_UID")
@@ -128,40 +131,83 @@ internal class StoreApplicationTest {
 
     @Test
     fun `when purchase then success`() {
+        val request = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
+        stubFor(
+            post(urlMatching("/api/private/v1/warranty/$UUID_REGEX/start"))
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
+                .withRequestBody(equalTo(request))
+                .willReturn(aResponse().withStatus(202))
+        )
+        stubFor(
+            post(urlPathEqualTo("/api/private/v1/items/take"))
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
+                .withRequestBody(equalTo(request))
+                .willReturn(aResponse().withStatus(202))
+        )
+
         mockMvc.post("/api/public/v1/orders/purchase") {
-            contentType(APPLICATION_JSON)
+            contentType = APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
         }
             .andExpect {
                 status { isCreated() }
                 status {
                     header {
-                        string(LOCATION, matchesPattern("/api/public/v1/orders/\\d"))
+                        string(LOCATION, matchesPattern("http://localhost/api/public/v1/orders/$UUID_REGEX"))
                     }
                 }
             }
     }
 
     @Test
-    fun `when warranty then success`() {
+    fun `when warrantyRequest then success`() {
+        val warrantyRequest = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
+        val warrantyResponse = objectMapper.writeValueAsString(
+            listOf(WarrantyResponse(name = ITEM1_NAME, status = TAKE_NEW, comment = "Take new item from Warehouse"))
+        )
+        stubFor(
+            post(urlPathEqualTo("/api/private/v1/warranty/$ORDER_UID/request"))
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
+                .withRequestBody(equalTo(warrantyRequest))
+                .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(warrantyResponse))
+        )
+
         mockMvc.post("/api/public/v1/orders/$ORDER_UID/warranty") {
-            contentType(APPLICATION_JSON)
+            contentType = APPLICATION_JSON
+            content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }
             .andExpect {
                 status { isOk() }
                 status { contentType(APPLICATION_JSON) }
+                jsonPath("$.length()") { value(1) }
+                jsonPath("$[0].name") { value(ITEM1_NAME) }
+                jsonPath("$[0].status") { value(TAKE_NEW.name) }
+                jsonPath("$[0].comment") { value("Take new item from Warehouse") }
             }
     }
 
     @Test
     fun `when cancel then success`() {
+        val warehouseRequest = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
+        stubFor(
+            delete(urlPathEqualTo("/api/private/v1/warranty/$ORDER_UID/stop"))
+                .willReturn(aResponse().withStatus(202))
+        )
+        stubFor(
+            delete(urlPathEqualTo("/api/private/v1/items/refund"))
+                .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
+                .withRequestBody(equalTo(warehouseRequest))
+                .willReturn(aResponse().withStatus(202))
+        )
+
         mockMvc.delete("/api/public/v1/orders/$ORDER_UID/cancel")
-            .andExpect { status { isNoContent() } }
+            .andExpect { status { accepted() } }
     }
 
     companion object {
         private const val ITEM1_NAME = "Item 1"
         private const val ITEM2_NAME = "Item 2"
         private val ORDER_UID = UUID.randomUUID()
+        private const val UUID_REGEX = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import ru.romanow.services.store.exceptions.ItemNotAvailableException
+import ru.romanow.services.store.exceptions.ItemNotOnWarrantyException
 import ru.romanow.services.store.model.ErrorResponse
 
 @Hidden
@@ -31,7 +33,13 @@ class ExceptionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException::class)
     fun notFound(exception: EntityNotFoundException): ErrorResponse {
-        return ErrorResponse(exception.message!!)
+        return ErrorResponse(exception.message)
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(value = [ItemNotOnWarrantyException::class, ItemNotAvailableException::class])
+    fun conflict(exception: RuntimeException): ErrorResponse {
+        return ErrorResponse(exception.message)
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

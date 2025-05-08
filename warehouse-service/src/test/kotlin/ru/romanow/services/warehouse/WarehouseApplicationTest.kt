@@ -104,7 +104,7 @@ internal class WarehouseApplicationTest {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }
-            .andExpect { status { isNoContent() } }
+            .andExpect { status { isAccepted() } }
     }
 
     companion object {

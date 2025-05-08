@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.romanow.services.warranty.domain.Warranty
 import ru.romanow.services.warranty.exceptions.ItemNotOnWarrantyException
-import ru.romanow.services.warranty.model.WarrantyItem
 import ru.romanow.services.warranty.model.WarrantyResponse
 import ru.romanow.services.warranty.model.WarrantyStatus
 import ru.romanow.services.warranty.model.WarrantyStatusResponse
@@ -38,11 +37,11 @@ internal class WarrantyServiceImpl(
             }
 
     @Transactional
-    override fun start(orderUid: UUID, items: List<WarrantyItem>) {
+    override fun start(orderUid: UUID, items: List<String>) {
         val warranties = items.map {
             Warranty(
                 orderUid = orderUid,
-                name = it.name,
+                name = it,
                 status = WarrantyStatus.ON_WARRANTY
             )
         }
@@ -50,11 +49,11 @@ internal class WarrantyServiceImpl(
     }
 
     @Transactional
-    override fun warrantyRequest(orderUid: UUID, items: List<WarrantyItem>): List<WarrantyResponse> {
+    override fun warrantyRequest(orderUid: UUID, items: List<String>): List<WarrantyResponse> {
         val warranties = warrantyRepository.findAll(of(Warranty(orderUid = orderUid)))
         val warrantyMap = warranties.associateBy { it.name!! }
-        if (!items.map { it.name }.all { warrantyMap.containsKey(it) }) {
-            val itemsNotOnWarranty = items.map { it.name }.subtract(warrantyMap.keys)
+        if (!items.all { warrantyMap.containsKey(it) }) {
+            val itemsNotOnWarranty = items.subtract(warrantyMap.keys)
             throw ItemNotOnWarrantyException("Items '$itemsNotOnWarranty' not on warranty for order '$orderUid'")
         }
         val availableItems = warehouseClient.items(warrantyMap.keys)

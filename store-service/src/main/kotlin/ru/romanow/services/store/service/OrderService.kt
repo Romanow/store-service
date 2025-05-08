@@ -8,5 +8,6 @@ import java.util.*
 
 interface OrderService {
     fun orders(userId: String): List<Order>
-    fun orderByUid(userId: String, orderUid: UUID): Order
+    fun orderByUid(orderUid: UUID): Order
+    fun create(userId: String, items: List<String>): Order
 }

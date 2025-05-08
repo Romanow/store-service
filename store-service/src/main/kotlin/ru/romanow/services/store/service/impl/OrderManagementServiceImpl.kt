@@ -30,8 +30,8 @@ internal class OrderManagementServiceImpl(
                 )
             }
 
-    override fun orderByUid(userId: String, orderUid: UUID): DetailedOrderResponse {
-        val order = orderService.orderByUid(userId, orderUid)
+    override fun orderByUid(orderUid: UUID): DetailedOrderResponse {
+        val order = orderService.orderByUid(orderUid)
         val names = order.items!!.map { it.name!! }
         val warrantyDetails = warrantyClient.status(orderUid).orElse(listOf()).associateBy { it.name }
         val itemDetails = warehouseClient.items(names).orElse(listOf()).associateBy { it.name }
@@ -60,18 +60,22 @@ internal class OrderManagementServiceImpl(
     }
 
     override fun purchase(userId: String, items: List<String>): UUID {
-        TODO("Not yet implemented")
+        warehouseClient.take(items)
+        val order = orderService.create(userId, items)
+        warrantyClient.start(order.uid!!, items)
+        return order.uid!!
     }
 
-    override fun warrantyRequest(
-        userId: String,
-        orderUid: UUID,
-        request: List<WarrantyRequest>
-    ): List<WarrantyResponse> {
-        TODO("Not yet implemented")
+    override fun warrantyRequest(orderUid: UUID, items: List<String>): List<WarrantyResponse> {
+        return warrantyClient.request(orderUid, items)
+            .orElse(listOf())
+            .map { WarrantyResponse(it.name, WarrantyStatus.valueOf(it.status.name), it.comment) }
     }
 
-    override fun cancel(userId: String, orderUid: UUID) {
-        TODO("Not yet implemented")
+    override fun cancel(orderUid: UUID) {
+        val order = orderService.orderByUid(orderUid)
+        order.status = OrderStatus.CANCELED
+        warrantyClient.stop(orderUid)
+        warehouseClient.refund(order.items!!.map { it.name!! })
     }
 }

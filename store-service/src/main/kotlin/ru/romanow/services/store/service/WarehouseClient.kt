@@ -8,4 +8,6 @@ import java.util.*
 
 interface WarehouseClient {
     fun items(names: List<String>): Optional<List<ItemInfo>>
+    fun take(items: List<String>)
+    fun refund(items: List<String>)
 }

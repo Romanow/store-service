@@ -30,6 +30,6 @@ class WarehouseController(
 
     override fun refund(@Valid @RequestBody requestBody: List<String>): ResponseEntity<Unit> {
         itemService.returnItems(requestBody)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.accepted().build()
     }
 }

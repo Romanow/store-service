@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import ru.romanow.services.warranty.model.WarrantyItem
 import ru.romanow.services.warranty.model.WarrantyResponse
 import ru.romanow.services.warranty.model.WarrantyStatusResponse
 import ru.romanow.services.warranty.service.WarrantyService
@@ -24,20 +23,20 @@ class WarrantyController(
 
     override fun start(
         @PathVariable("orderUid") orderUid: UUID,
-        @Valid @RequestBody warrantyItem: List<WarrantyItem>
+        @Valid @RequestBody requestBody: List<String>
     ): ResponseEntity<Unit> {
-        warrantyService.start(orderUid, warrantyItem)
+        warrantyService.start(orderUid, requestBody)
         return ResponseEntity.accepted().build()
     }
 
     override fun warrantyRequest(
         @PathVariable("orderUid") orderUid: UUID,
-        @Valid @RequestBody warrantyItem: List<WarrantyItem>
+        @Valid @RequestBody requestBody: List<String>
     ): ResponseEntity<List<WarrantyResponse>> =
-        ResponseEntity.ok(warrantyService.warrantyRequest(orderUid, warrantyItem))
+        ResponseEntity.ok(warrantyService.warrantyRequest(orderUid, requestBody))
 
     override fun stop(@PathVariable("orderUid") orderUid: UUID): ResponseEntity<Unit> {
         warrantyService.stop(orderUid)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.accepted().build()
     }
 }

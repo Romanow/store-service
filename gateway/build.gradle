@@ -45,6 +45,24 @@ test {
     }
 }
 
+tasks.register("copyOpenApi", Copy) {
+    description = 'Копирует OpenAPI в src/main/resources/openapi'
+    group = 'build'
+
+    def serviceDirs = file("$rootDir").listFiles().findAll {
+        it.isDirectory() && it.name.endsWith('-service')
+    }
+
+    serviceDirs.each { serviceDir ->
+        def openApiDir = new File(serviceDir, 'openapi')
+        if (openApiDir.exists()) {
+            from(openApiDir) { include '**/*.yaml', '**/*.yml' }
+        }
+    }
+
+    into("$projectDir/src/main/resources/openapi")
+}
+
 bootJar {
     archiveFileName = "${project.name}.jar"
     manifest {

@@ -27,13 +27,11 @@ import org.wiremock.spring.EnableWireMock
 import ru.romanow.services.warehouse.models.ItemInfo
 import ru.romanow.services.warranty.config.DatabaseTestConfiguration
 import ru.romanow.services.warranty.domain.Warranty
-import ru.romanow.services.warranty.model.WarrantyItem
 import ru.romanow.services.warranty.model.WarrantyStatus.ON_WARRANTY
 import ru.romanow.services.warranty.model.WarrantyStatus.TAKE_NEW
 import ru.romanow.services.warranty.repository.WarrantyRepository
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 import java.util.*
-
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -88,7 +86,7 @@ internal class WarrantyApplicationTest {
 
         mockMvc.post("/api/private/v1/warranty/$ORDER_UID/request") {
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(listOf(WarrantyItem(ITEM1_NAME)))
+            content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }
             .andExpect {
                 status { isOk() }
@@ -106,7 +104,7 @@ internal class WarrantyApplicationTest {
     fun `when start then success`() {
         mockMvc.post("/api/private/v1/warranty/$ORDER_UID/start") {
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(listOf(WarrantyItem(ITEM2_NAME)))
+            content = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
         }
             .andExpect { status { isAccepted() } }
     }
@@ -116,7 +114,7 @@ internal class WarrantyApplicationTest {
         mockMvc.delete("/api/private/v1/warranty/$ORDER_UID/stop") {
             contentType = MediaType.APPLICATION_JSON
         }
-            .andExpect { status { isNoContent() } }
+            .andExpect { status { isAccepted() } }
     }
 
     companion object {
