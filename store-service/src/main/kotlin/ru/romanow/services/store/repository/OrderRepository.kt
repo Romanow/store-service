@@ -11,8 +11,8 @@ import java.util.*
 interface OrderRepository : JpaRepository<Order, Int> {
 
     @EntityGraph(attributePaths = ["items"])
-    fun findByUserId(userId: String): List<Order>
+    fun findByCreatedUser(userId: String): List<Order>
 
     @EntityGraph(attributePaths = ["items"])
-    fun findByUserIdAndUid(userId: String, orderUid: UUID): Order
+    fun findByCreatedUserAndUid(userId: String, orderUid: UUID): Order
 }

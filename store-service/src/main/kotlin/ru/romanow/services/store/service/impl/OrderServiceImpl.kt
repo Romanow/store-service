@@ -13,9 +13,9 @@ import java.util.*
 internal class OrderServiceImpl(private val orderRepository: OrderRepository) : OrderService {
 
     @Transactional(readOnly = true)
-    override fun orders(userId: String) = orderRepository.findByUserId(userId)
+    override fun orders(userId: String) = orderRepository.findByCreatedUser(userId)
 
     @Transactional(readOnly = true)
     override fun orderByUid(userId: String, orderUid: UUID) =
-        orderRepository.findByUserIdAndUid(userId, orderUid)
+        orderRepository.findByCreatedUserAndUid(userId, orderUid)
 }

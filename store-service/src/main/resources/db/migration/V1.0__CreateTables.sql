@@ -5,14 +5,13 @@ CREATE TABLE orders
     uid           UUID         NOT NULL,
     status        VARCHAR(255) NOT NULL
         CHECK ( status IN ('NEW', 'PROCESSED', 'DENIED', 'CANCELED') ),
-    user_id       VARCHAR(80)  NOT NULL,
     created_date  TIMESTAMP    NOT NULL,
+    created_user  VARCHAR      NOT NULL,
     modified_date TIMESTAMP    NOT NULL,
     modified_user VARCHAR      NOT NULL
 );
 
 CREATE UNIQUE INDEX ux_orders_uid ON orders (uid);
-CREATE INDEX ux_orders_user_id ON orders (user_id);
 
 CREATE TABLE order_items
 (

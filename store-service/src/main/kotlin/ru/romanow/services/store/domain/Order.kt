@@ -4,6 +4,7 @@
 package ru.romanow.services.store.domain
 
 import jakarta.persistence.*
+import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
@@ -28,10 +29,7 @@ data class Order(
     @Column(name = "status", nullable = false)
     var status: OrderStatus? = null,
 
-    @Column(name = "user_id", nullable = false)
-    var userId: String? = null,
-
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var items: List<OrderItem>? = null,
 
     @CreatedDate
@@ -41,6 +39,10 @@ data class Order(
     @LastModifiedDate
     @Column(name = "modified_date", nullable = false)
     var modifiedDate: LocalDateTime? = null,
+
+    @CreatedBy
+    @Column(name = "created_user", nullable = false)
+    var createdUser: String? = null,
 
     @LastModifiedBy
     @Column(name = "modified_user", nullable = false)
@@ -60,7 +62,7 @@ data class Order(
     }
 
     override fun toString(): String {
-        return "Order(id=$id, uid=$uid, status=$status, userId=$userId, " +
-            "createdDate=$createdDate, modifiedDate=$modifiedDate, modifiedUser=$modifiedUser)"
+        return "Order(id=$id, uid=$uid, status=$status, createdDate=$createdDate, " +
+            "createdBy=$createdUser, modifiedDate=$modifiedDate, modifiedUser=$modifiedUser)"
     }
 }

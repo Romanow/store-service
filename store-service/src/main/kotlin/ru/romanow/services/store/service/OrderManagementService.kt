@@ -3,7 +3,6 @@
  */
 package ru.romanow.services.store.service
 
-import jakarta.annotation.Generated
 import ru.romanow.services.store.model.DetailedOrderResponse
 import ru.romanow.services.store.model.OrderResponse
 import ru.romanow.services.store.model.WarrantyRequest

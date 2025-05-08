@@ -7,7 +7,6 @@ import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
@@ -36,7 +35,6 @@ class OrderController(
         return ResponseEntity.ok(orderManagementService.orderByUid(userId, orderUid))
     }
 
-    @PostMapping("/purchase")
     override fun purchase(
         authenticationToken: JwtAuthenticationToken?,
         @Valid @RequestBody requestBody: List<String>
@@ -53,7 +51,6 @@ class OrderController(
         ).build()
     }
 
-    @PostMapping("/{orderUid}/warranty")
     override fun warranty(
         authenticationToken: JwtAuthenticationToken?,
         @PathVariable orderUid: UUID,
