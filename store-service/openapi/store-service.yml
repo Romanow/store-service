@@ -319,15 +319,12 @@ components:
       type: object
       example:
         {
-          "name": "Lego 8880",
           "status": "ON_WARRANTY",
           "comment": "",
           "warrantyStartDate": "2025-05-05T10:00:00Z",
           "lastUpdateDate": "2025-05-05T10:00:00Z"
         }
       properties:
-        name:
-          type: string
         status:
           $ref: '#/components/schemas/WarrantyStatus'
         comment:

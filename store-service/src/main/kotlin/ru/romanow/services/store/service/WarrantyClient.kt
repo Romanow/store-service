@@ -3,8 +3,9 @@
  */
 package ru.romanow.services.store.service
 
+import ru.romanow.services.warranty.models.WarrantyStatusResponse
 import java.util.*
 
 interface WarrantyClient {
-    fun warrantyStatus(orderUid: UUID): Optional<List<*>>
+    fun status(orderUid: UUID): Optional<List<WarrantyStatusResponse>>
 }
