@@ -15,6 +15,7 @@ services:
   test:
     url: http://localhost:8180
     pattern: /test/**
+    path: openapi/test.yml
 
 oauth2:
   security:

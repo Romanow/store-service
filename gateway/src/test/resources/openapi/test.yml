@@ -1,0 +1,45 @@
+openapi: 3.0.1
+info:
+  title: Test
+  version: '1.0'
+
+paths:
+  /api/public/v1/echo:
+    get:
+      summary: Public echo endpoint
+      tags:
+        - public
+      parameters:
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Echo response
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /api/private/v1/echo:
+    get:
+      summary: Private echo endpoint
+      tags:
+        - public
+      parameters:
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Echo response
+          content:
+            application/json:
+              schema:
+                type: string
+
+components: {}

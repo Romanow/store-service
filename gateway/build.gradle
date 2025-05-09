@@ -25,6 +25,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-common:$openApiVersion"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApiVersion"
 
+    testImplementation "org.wiremock.integrations:wiremock-spring-boot:$wireMockVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "com.github.dasniko:testcontainers-keycloak:$keycloakContainerVersion"
@@ -46,17 +47,17 @@ test {
 }
 
 tasks.register("copyOpenApi", Copy) {
-    description = 'Копирует OpenAPI в src/main/resources/openapi'
-    group = 'build'
+    description = "Copy OpenAPI to resources/openapi"
+    group = "build"
 
     def serviceDirs = file("$rootDir").listFiles().findAll {
-        it.isDirectory() && it.name.endsWith('-service')
+        it.isDirectory() && it.name.endsWith("-service")
     }
 
     serviceDirs.each { serviceDir ->
-        def openApiDir = new File(serviceDir, 'openapi')
+        def openApiDir = new File(serviceDir, "openapi")
         if (openApiDir.exists()) {
-            from(openApiDir) { include '**/*.yaml', '**/*.yml' }
+            from(openApiDir) { include "**/*.yaml", "**/*.yml" }
         }
     }
 
