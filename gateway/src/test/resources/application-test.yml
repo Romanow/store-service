@@ -13,7 +13,7 @@ spring:
 
 services:
   test:
-    url: http://localhost:8180
+    url: http://localhost:${wiremock.server.port}
     pattern: /test/**
     path: openapi/test.yml
 
