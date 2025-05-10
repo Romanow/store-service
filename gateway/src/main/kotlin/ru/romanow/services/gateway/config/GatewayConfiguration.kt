@@ -30,7 +30,11 @@ class GatewayConfiguration {
             val openApi = openApiService.read(config.path)
             route {
                 path(config.pattern)
-                predicate(openApiRoutePredicate.apply(PredicateConfig(openApi, 1)))
+                predicate(
+                    openApiRoutePredicate.apply(
+                        PredicateConfig(openApi = openApi, prefix = 1, tags = setOf("public"))
+                    )
+                )
                 filters {
                     stripPrefix(1)
                 }

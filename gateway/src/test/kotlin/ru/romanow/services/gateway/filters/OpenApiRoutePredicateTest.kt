@@ -9,7 +9,8 @@ import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpMethod.*
+import org.springframework.http.HttpMethod.GET
+import org.springframework.http.HttpMethod.POST
 import org.springframework.http.server.PathContainer
 import ru.romanow.services.gateway.services.OpenApiServiceImpl
 import java.util.stream.Stream
@@ -24,7 +25,8 @@ class OpenApiRoutePredicateTest {
     fun testCheckIsOperationExists(path: String, method: HttpMethod, expected: Boolean) {
         val openApi = openApiService.read(OPEN_API)
 
-        val result = openApiRoutePredicate.checkIsOperationExists(openApi, method, PathContainer.parsePath(path))
+        val result = openApiRoutePredicate
+            .checkIsOperationExists(openApi, method, PathContainer.parsePath(path), setOf("public"))
 
         assertThat(result).isEqualTo(expected)
     }
@@ -32,14 +34,13 @@ class OpenApiRoutePredicateTest {
     internal class ValueProvider : ArgumentsProvider {
         override fun provideArguments(context: ExtensionContext): Stream<Arguments> =
             Stream.of(
-                of("/api/public/v1/orders/782b44d9-b245-46bd-8bd9-f5d0f4f70a45", GET, true),
-                of("/api/public/v1/orders/purchase", POST, true),
-                of("/api/public/v1/orders/purchase", PUT, false),
-                of("/api/public/v1/orders/cancel", DELETE, false)
+                of("/api/public/v1/echo", GET, true),
+                of("/api/public/v1/echo", POST, false),
+                of("/api/private/v1/echo", GET, false)
             )
     }
 
     companion object {
-        private val OPEN_API = ClassPathResource("openapi/store-service.yml");
+        private val OPEN_API = ClassPathResource("openapi/test.yml");
     }
 }

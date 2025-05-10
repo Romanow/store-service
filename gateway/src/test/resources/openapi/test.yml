@@ -27,7 +27,7 @@ paths:
     get:
       summary: Private echo endpoint
       tags:
-        - public
+        - private
       parameters:
         - name: message
           in: query

@@ -102,6 +102,11 @@ internal class GatewayApplicationTest {
 
     @Test
     fun `when call missing api with auth then notFound`() {
+        val greeting = "hello"
+        stubFor(
+            get(urlPathEqualTo("/api/public/v1/missing"))
+                .willReturn(ok().withHeader(CONTENT_TYPE, TEXT_PLAIN_VALUE).withBody(greeting))
+        )
         webClient.get()
             .uri("/test/api/public/v1/missing")
             .header(AUTHORIZATION, "Bearer ${accessToken()}")
@@ -111,6 +116,12 @@ internal class GatewayApplicationTest {
 
     @Test
     fun `when call private api with auth then notFound`() {
+        val greeting = "hello"
+        stubFor(
+            get(urlPathEqualTo("/api/public/v1/echo"))
+                .withQueryParam("message", havingExactly(greeting))
+                .willReturn(ok().withHeader(CONTENT_TYPE, TEXT_PLAIN_VALUE).withBody(greeting))
+        )
         webClient.get()
             .uri("/test/api/private/v1/echo")
             .header(AUTHORIZATION, "Bearer ${accessToken()}")

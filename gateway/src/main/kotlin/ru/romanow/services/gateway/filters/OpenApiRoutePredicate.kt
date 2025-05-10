@@ -20,21 +20,21 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
     override fun apply(config: PredicateConfig) = Predicate<ServerWebExchange> {
         val method = it.request.method
         val path = trimSlash(it.request.path, config.prefix)
-        return@Predicate checkIsOperationExists(config.openAPI, method, path)
+        return@Predicate checkIsOperationExists(config.openApi, method, path, config.tags)
     }
 
-    fun checkIsOperationExists(openApi: OpenAPI, method: HttpMethod, path: PathContainer) =
-        openApi.paths.entries.stream().filter { isOperationMatch(it, method, path) }.count() > 0
+    fun checkIsOperationExists(openApi: OpenAPI, method: HttpMethod, path: PathContainer, tags: Set<String>?) =
+        openApi.paths.entries.stream().filter { isOperationMatch(it, method, path, tags) }.count() > 0
 
     private fun isOperationMatch(
-        path: Map.Entry<String, PathItem>, requestMethod: HttpMethod, requestPath: PathContainer
+        path: Map.Entry<String, PathItem>, requestMethod: HttpMethod, requestPath: PathContainer, tags: Set<String>?
     ): Boolean {
         val method = PathItem.HttpMethod.valueOf(requestMethod.name())
         val operation = path.value.readOperationsMap()[method]
         val matcher = AntPathMatcher()
         return operation != null
             && matcher.match(path.key, requestPath.value())
-            && operation.tags.contains(PUBLIC_TAG)
+            && (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
     }
 
     private fun trimSlash(path: RequestPath, trimPrefix: Int): PathContainer =
@@ -43,8 +43,4 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
         } else {
             path.subPath(2 * trimPrefix)
         }
-
-    companion object {
-        private const val PUBLIC_TAG = "public"
-    }
 }
