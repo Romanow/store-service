@@ -24,6 +24,7 @@ dependencies {
     implementation "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion"
     implementation "org.springdoc:springdoc-openapi-starter-common:$openApiVersion"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApiVersion"
+    implementation "ru.romanow.openapi:aggregator-by-tags:$aggregatorByTagsVersion"
 
     testImplementation "org.wiremock.integrations:wiremock-spring-boot:$wireMockVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
