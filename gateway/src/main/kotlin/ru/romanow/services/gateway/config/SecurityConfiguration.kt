@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtIss
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler
+import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher
 import ru.romanow.services.gateway.properties.ActuatorSecurityProperties
 
@@ -42,7 +43,12 @@ class SecurityConfiguration {
         properties: ActuatorSecurityProperties
     ): SecurityWebFilterChain {
         return http.invoke {
-            securityMatcher(EndpointRequest.toAnyEndpoint())
+            securityMatcher(
+                OrServerWebExchangeMatcher(
+                    EndpointRequest.toAnyEndpoint(),
+                    PathPatternParserServerWebExchangeMatcher("/api/v1/openapi")
+                )
+            )
             authorizeExchange {
                 authorize("/manage/prometheus", permitAll)
                 authorize("/manage/health/**", permitAll)

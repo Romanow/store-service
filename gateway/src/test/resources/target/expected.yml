@@ -1,30 +1,20 @@
 openapi: 3.0.1
 info:
-  title: Сервис Магазина
-  version: '1.0'
-
+  title: Store Service
+  version: 1.0.0
 servers:
-  - url: http://localhost:8180
+  - url: http://localhost:8080
     description: Local server
-
-security:
-  - TokenBasedAuth: [ ]
-
+security: []
 paths:
-  /api/public/v1/orders:
+  /store/api/public/v1/orders:
     get:
-      operationId: orders
-      summary: Получить список заказов пользователя
       tags:
         - public
-      security:
-        - TokenBasedAuth: [ ]
-      x-handler-args:
-        - field: authenticationToken
-          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
-          optional: true
+      summary: Получить список заказов пользователя
+      operationId: orders
       responses:
-        200:
+        "200":
           description: Список заказов пользователя
           content:
             application/json:
@@ -32,25 +22,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrderResponse'
-        401:
+        "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
-  /api/public/v1/orders/{orderUid}:
-    get:
-      operationId: orderByUid
-      summary: Получить подробную информацию о заказе
-      tags:
-        - public
       security:
-        - TokenBasedAuth: [ ]
+        - TokenBasedAuth: []
       x-handler-args:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
+  /store/api/public/v1/orders/{orderUid}:
+    get:
+      tags:
+        - public
+      summary: Получить подробную информацию о заказе
+      operationId: orderByUid
       parameters:
         - name: orderUid
           in: path
@@ -59,37 +48,36 @@ paths:
             type: string
             format: uuid
       responses:
-        200:
+        "200":
           description: Подробная информация о заказе
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DetailedOrderResponse'
-        401:
+        "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        404:
+        "404":
           description: Заказ не найден
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
-  /api/public/v1/orders/{orderUid}/cancel:
-    delete:
-      operationId: cancel
-      summary: Отменить заказ
-      tags:
-        - public
       security:
-        - TokenBasedAuth: [ ]
+        - TokenBasedAuth: []
       x-handler-args:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
+  /store/api/public/v1/orders/{orderUid}/cancel:
+    delete:
+      tags:
+        - public
+      summary: Отменить заказ
+      operationId: cancel
       parameters:
         - name: orderUid
           in: path
@@ -98,33 +86,32 @@ paths:
             type: string
             format: uuid
       responses:
-        202:
+        "202":
           description: Заказ отменен
-        401:
+        "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        404:
+        "404":
           description: Заказ не найден
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
-  /api/public/v1/orders/{orderUid}/warranty:
-    post:
-      operationId: warranty
-      summary: Запросить гарантию по заказу
-      tags:
-        - public
       security:
-        - TokenBasedAuth: [ ]
+        - TokenBasedAuth: []
       x-handler-args:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
+  /store/api/public/v1/orders/{orderUid}/warranty:
+    post:
+      tags:
+        - public
+      summary: Запросить гарантию по заказу
+      operationId: warranty
       parameters:
         - name: orderUid
           in: path
@@ -133,15 +120,15 @@ paths:
             type: string
             format: uuid
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               type: array
               items:
                 type: string
+        required: true
       responses:
-        200:
+        "200":
           description: Информация о статусе гарантии
           content:
             application/json:
@@ -149,41 +136,40 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WarrantyResponse'
-        401:
+        "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        404:
+        "404":
           description: Заказ не найден
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
-  /api/public/v1/orders/purchase:
-    post:
-      operationId: purchase
-      summary: Выполнить заказ
-      tags:
-        - public
       security:
-        - TokenBasedAuth: [ ]
+        - TokenBasedAuth: []
       x-handler-args:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
+  /store/api/public/v1/orders/purchase:
+    post:
+      tags:
+        - public
+      summary: Выполнить заказ
+      operationId: purchase
       requestBody:
-        required: true
         content:
           application/json:
             schema:
               type: array
               items:
                 type: string
+        required: true
       responses:
-        201:
+        "201":
           description: Заказ создан
           headers:
             Location:
@@ -191,31 +177,46 @@ paths:
               style: simple
               schema:
                 type: string
-        400:
+        "400":
           description: Ошибка входных данных
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        401:
+        "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        404:
+        "404":
           description: Товар недоступен
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+      security:
+        - TokenBasedAuth: []
+      x-handler-args:
+        - field: authenticationToken
+          type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+          optional: true
+  /warehouse/api/public/v1/items:
+    get:
+      tags:
+        - public
+      summary: Получить все доступные товары
+      operationId: availableItems
+      responses:
+        "200":
+          description: Информация о доступных товарах
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemInfo'
 components:
-  securitySchemes:
-    TokenBasedAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   schemas:
     ErrorResponse:
       type: object
@@ -223,18 +224,9 @@ components:
         message:
           type: string
           nullable: true
+      additionalProperties: false
     OrderResponse:
       type: object
-      example:
-        {
-          "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
-          "userId": "romanow",
-          "status": "NEW",
-          "orderDate": "2025-05-05T10:00:00Z",
-          "items": [
-            "Lego 8880",
-          ]
-        }
       properties:
         orderUid:
           type: string
@@ -251,30 +243,32 @@ components:
           items:
             type: string
       additionalProperties: false
+      example:
+        orderUid: d3795a76-d514-4db7-90d1-173e7e49aedb
+        userId: romanow
+        status: NEW
+        orderDate: 2025-05-05T10:00:00Z
+        items:
+          - Lego 8880
     DetailedOrderResponse:
       type: object
+      additionalProperties: false
       example:
-        {
-          "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
-          "userId": "romanow",
-          "status": "NEW",
-          "orderDate": "2025-05-05T10:00:00Z",
-          "items": [
-            {
-              "name": "Lego 8880",
-              "description": "Lego Technic Supercar 8880",
-              "manufacturer": "Lego",
-              "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
-              "warranty": {
-                "name": "Lego 8880",
-                "status": "ON_WARRANTY",
-                "comment": "",
-                "warrantyStartDate": "2025-05-05T10:00:00Z",
-                "lastUpdateDate": "2025-05-05T10:00:00Z"
-              }
-            }
-          ]
-        }
+        orderUid: d3795a76-d514-4db7-90d1-173e7e49aedb
+        userId: romanow
+        status: NEW
+        orderDate: 2025-05-05T10:00:00Z
+        items:
+          - name: Lego 8880
+            description: Lego Technic Supercar 8880
+            manufacturer: Lego
+            imageUrl: https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg
+            warranty:
+              name: Lego 8880
+              status: ON_WARRANTY
+              comment: ""
+              warrantyStartDate: 2025-05-05T10:00:00Z
+              lastUpdateDate: 2025-05-05T10:00:00Z
       allOf:
         - $ref: '#/components/schemas/OrderResponse'
         - type: object
@@ -283,25 +277,45 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ItemInfo'
-    ItemInfo:
+    WarrantyResponse:
       type: object
-      example:
-        {
-          "name": "Lego 8880",
-          "description": "Lego Technic Supercar 8880",
-          "manufacturer": "Lego",
-          "imageUrl": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
-          "warranty": {
-            "name": "Lego 8880",
-            "status": "ON_WARRANTY",
-            "comment": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
-            "warrantyStartDate": "2025-05-05T10:00:00Z",
-            "lastUpdateDate": "2025-05-05T10:00:00Z"
-          }
-        }
       properties:
         name:
           type: string
+        status:
+          $ref: '#/components/schemas/WarrantyStatus'
+        comment:
+          type: string
+          nullable: true
+      additionalProperties: false
+      example:
+        name: Lego 8880
+        status: TAKE_NEW
+        comment: ""
+    OrderStatus:
+      type: string
+      additionalProperties: false
+      enum:
+        - NEW
+        - PROCESSED
+        - DENIED
+        - CANCELED
+    WarrantyStatus:
+      type: string
+      additionalProperties: false
+      enum:
+        - ON_WARRANTY
+        - TAKE_NEW
+        - REPAIR
+        - REMOVED_FROM_WARRANTY
+    ItemInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
         description:
           type: string
           nullable: true
@@ -312,58 +326,15 @@ components:
           type: string
           format: url
           nullable: true
-        warranty:
-          $ref: '#/components/schemas/WarrantyStatusInfo'
       additionalProperties: false
-    WarrantyStatusInfo:
-      type: object
       example:
-        {
-          "status": "ON_WARRANTY",
-          "comment": "",
-          "warrantyStartDate": "2025-05-05T10:00:00Z",
-          "lastUpdateDate": "2025-05-05T10:00:00Z"
-        }
-      properties:
-        status:
-          $ref: '#/components/schemas/WarrantyStatus'
-        comment:
-          type: string
-          nullable: true
-        warrantyStartDate:
-          type: string
-          format: date-time
-        lastUpdateDate:
-          type: string
-          format: date-time
-      additionalProperties: false
-    WarrantyResponse:
-      type: object
-      example:
-        {
-          "name": "Lego 8880",
-          "status": "TAKE_NEW",
-          "comment": ""
-        }
-      properties:
-        name:
-          type: string
-        status:
-          $ref: '#/components/schemas/WarrantyStatus'
-        comment:
-          type: string
-          nullable: true
-    OrderStatus:
-      type: string
-      enum:
-        - NEW
-        - PROCESSED
-        - DENIED
-        - CANCELED
-    WarrantyStatus:
-      type: string
-      enum:
-        - ON_WARRANTY
-        - TAKE_NEW
-        - REPAIR
-        - REMOVED_FROM_WARRANTY
+        name: Lego 8880
+        count: 1
+        description: Lego Technic Supercar 8880
+        manufacturer: Lego
+        imageUrl: https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg
+  securitySchemes:
+    TokenBasedAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

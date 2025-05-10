@@ -9,6 +9,7 @@ import org.springframework.cloud.gateway.route.builder.filters
 import org.springframework.cloud.gateway.route.builder.routes
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import ru.romanow.openapi.aggregator.DefaultOpenApiAggregatorService
 import ru.romanow.services.gateway.filters.OpenApiRoutePredicate
 import ru.romanow.services.gateway.properties.ActuatorSecurityProperties
 import ru.romanow.services.gateway.properties.PredicateConfig
@@ -42,4 +43,7 @@ class GatewayConfiguration {
             }
         }
     }
+
+    @Bean
+    fun openApiAggregatorService() = DefaultOpenApiAggregatorService()
 }

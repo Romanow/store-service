@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Гарантийный Сервис
-  version: '1.0'
+  version: 1.0.0
 
 servers:
   - url: http://localhost:8380
@@ -9,6 +9,9 @@ servers:
 
 security:
   - TokenBasedAuth: [ ]
+
+tags:
+  - name: private
 
 paths:
   /api/private/v1/warranty/{orderUid}:

@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Сервис Магазина
-  version: '1.0'
+  version: 1.0.0
 
 servers:
   - url: http://localhost:8180
@@ -9,6 +9,9 @@ servers:
 
 security:
   - TokenBasedAuth: [ ]
+
+tags:
+  - name: public
 
 paths:
   /api/public/v1/orders:

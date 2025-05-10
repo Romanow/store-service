@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Test
-  version: '1.0'
+  version: 1.0.0
 
 paths:
   /api/public/v1/echo:

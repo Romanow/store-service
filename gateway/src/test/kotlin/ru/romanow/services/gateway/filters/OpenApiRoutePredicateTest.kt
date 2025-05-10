@@ -41,6 +41,6 @@ class OpenApiRoutePredicateTest {
     }
 
     companion object {
-        private val OPEN_API = ClassPathResource("openapi/test.yml");
+        private val OPEN_API = ClassPathResource("openapi/test.yml")
     }
 }

@@ -25,7 +25,11 @@ import ru.romanow.services.gateway.config.KeycloakConfiguration
 import java.net.URI
 
 @ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(properties = [
+    "services.test.url=http://localhost:\${wiremock.server.port}",
+    "services.test.pattern=/test/**",
+    "services.test.path=openapi/test.yml",
+])
 @EnableWireMock
 @AutoConfigureWebTestClient
 @AutoConfigureObservability

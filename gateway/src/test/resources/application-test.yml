@@ -11,12 +11,6 @@ spring:
             client-id: store
             client-secret: kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC
 
-services:
-  test:
-    url: http://localhost:${wiremock.server.port}
-    pattern: /test/**
-    path: openapi/test.yml
-
 oauth2:
   security:
     enabled: true

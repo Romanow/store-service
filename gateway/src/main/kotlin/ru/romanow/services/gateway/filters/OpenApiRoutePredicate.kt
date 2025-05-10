@@ -32,9 +32,9 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
         val method = PathItem.HttpMethod.valueOf(requestMethod.name())
         val operation = path.value.readOperationsMap()[method]
         val matcher = AntPathMatcher()
-        return operation != null
-            && matcher.match(path.key, requestPath.value())
-            && (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
+        return operation != null &&
+            matcher.match(path.key, requestPath.value()) &&
+            (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
     }
 
     private fun trimSlash(path: RequestPath, trimPrefix: Int): PathContainer =

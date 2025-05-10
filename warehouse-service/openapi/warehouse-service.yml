@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Складской Сервис
-  version: '1.0'
+  version: 1.0.0
 
 servers:
   - url: http://localhost:8280
@@ -9,6 +9,10 @@ servers:
 
 security:
   - TokenBasedAuth: [ ]
+
+tags:
+  - name: public
+  - name: private
 
 paths:
   /api/public/v1/items:
