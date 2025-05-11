@@ -25,7 +25,7 @@ services:
       - postgres:/var/lib/postgresql/data
       - ./docker/postgres/:/docker-entrypoint-initdb.d/
 
-  store-gateway:
+  gateway:
     build: ./gateway
     image: romanowalex/store-gateway:${VERSION}
     container_name: gateway
@@ -45,7 +45,7 @@ services:
   store-service:
     build: ./store-service
     image: romanowalex/store-service:${VERSION}
-    container_name: orders
+    container_name: store
     restart: on-failure
     <<: *common-envs
     healthcheck:

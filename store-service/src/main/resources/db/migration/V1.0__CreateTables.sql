@@ -4,7 +4,7 @@ CREATE TABLE orders
     id            SERIAL PRIMARY KEY,
     uid           UUID         NOT NULL,
     status        VARCHAR(255) NOT NULL
-        CHECK ( status IN ('NEW', 'PROCESSED', 'DENIED', 'CANCELED') ),
+        CHECK ( status IN ('PROCESSED', 'CANCELED') ),
     created_date  TIMESTAMP    NOT NULL,
     created_user  VARCHAR      NOT NULL,
     modified_date TIMESTAMP    NOT NULL,

@@ -1,0 +1,39 @@
+{
+    "id": "be8f6b35-a13d-49a3-baae-cec9eaa63601",
+    "name": "[local] Store Service",
+    "values": [
+        {
+            "key": "gatewayUrl",
+            "value": "http://localhost:8080",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "username",
+            "value": "ronin@romanow-alex.ru",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "password",
+            "value": "Qwerty123",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "clientId",
+            "value": "pXrawhpoDM63b82A7fkiLvRIH81wgmH9",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "clientSecret",
+            "value": "LzQSxUOE2dmAUdgstWke4ngXUeZNLVczvSid7ZVV8HTegCRbOxchQtJ_23EuZ9_V",
+            "type": "default",
+            "enabled": true
+        }
+    ],
+    "_postman_variable_scope": "environment",
+    "_postman_exported_at": "2025-05-11T16:39:50.293Z",
+    "_postman_exported_using": "Postman/11.33.3"
+}

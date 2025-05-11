@@ -23,7 +23,7 @@ jobs:
           cache: "gradle"
 
       - name: Build project
-        run: ./gradlew clean build
+        run: ./gradlew clean assemble
         env:
           GITHUB_USER: ${{ secrets.GITHUB_USER }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,13 +34,13 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build and push images
+      - name: Build Images
         timeout-minutes: 10
         run: docker buildx bake --push --set *.platform=linux/amd64,linux/arm64
         env:
           VERSION: ${{ github.ref_name }}
 
-      - name: Docker Hub Description
+      - name: Docker Hub description
         uses: peter-evans/dockerhub-description@v4
         with:
           repository: romanowalex/store-service

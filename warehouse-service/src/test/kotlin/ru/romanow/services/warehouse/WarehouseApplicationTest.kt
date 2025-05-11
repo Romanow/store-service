@@ -42,8 +42,12 @@ internal class WarehouseApplicationTest {
 
     @BeforeEach
     fun beforeEach() {
+        itemRepository.deleteAll()
         itemRepository.saveAll(
-            listOf(Items(name = ITEM1_NAME, availableCount = 0), Items(name = ITEM2_NAME, availableCount = 1))
+            listOf(
+                Items(name = ITEM1_NAME, availableCount = 0),
+                Items(name = ITEM2_NAME, availableCount = 1)
+            )
         )
     }
 

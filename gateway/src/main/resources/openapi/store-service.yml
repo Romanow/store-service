@@ -232,7 +232,7 @@ components:
         {
           "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
           "userId": "romanow",
-          "status": "NEW",
+          "status": "PROCESSED",
           "orderDate": "2025-05-05T10:00:00Z",
           "items": [
             "Lego 8880",
@@ -260,7 +260,7 @@ components:
         {
           "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
           "userId": "romanow",
-          "status": "NEW",
+          "status": "PROCESSED",
           "orderDate": "2025-05-05T10:00:00Z",
           "items": [
             {
@@ -297,7 +297,7 @@ components:
           "warranty": {
             "name": "Lego 8880",
             "status": "ON_WARRANTY",
-            "comment": "https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg",
+            "comment": "",
             "warrantyStartDate": "2025-05-05T10:00:00Z",
             "lastUpdateDate": "2025-05-05T10:00:00Z"
           }
@@ -346,7 +346,7 @@ components:
         {
           "name": "Lego 8880",
           "status": "TAKE_NEW",
-          "comment": ""
+          "comment": "Take new item from Warehouse"
         }
       properties:
         name:

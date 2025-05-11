@@ -79,7 +79,7 @@ jobs:
         uses: matt-ball/newman-action@master
         with:
           collection: tests/postman/collection.json
-          environment: tests/postman/local-environment.json
+          environment: tests/postman/local.json
           delayRequest: 100
           reporters: '["cli"]'
 

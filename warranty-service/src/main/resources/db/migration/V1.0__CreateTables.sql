@@ -6,7 +6,7 @@ CREATE TABLE warranty
     order_uid     UUID         NOT NULL,
     name          VARCHAR      NOT NULL,
     status        VARCHAR(255) NOT NULL
-        CHECK ( status IN ('ON_WARRANTY', 'WARRANTY_USED', 'REMOVED_FROM_WARRANTY') ),
+        CHECK ( status IN ('ON_WARRANTY', 'TAKE_NEW', 'REPAIR', 'REMOVED_FROM_WARRANTY') ),
     created_date  TIMESTAMP    NOT NULL,
     modified_date TIMESTAMP    NOT NULL,
     modified_user VARCHAR      NOT NULL

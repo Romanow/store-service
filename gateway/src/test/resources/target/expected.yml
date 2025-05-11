@@ -6,6 +6,8 @@ servers:
   - url: http://localhost:8080
     description: Local server
 security: []
+tags:
+  - name: public
 paths:
   /store/api/public/v1/orders:
     get:
@@ -246,7 +248,7 @@ components:
       example:
         orderUid: d3795a76-d514-4db7-90d1-173e7e49aedb
         userId: romanow
-        status: NEW
+        status: PROCESSED
         orderDate: 2025-05-05T10:00:00Z
         items:
           - Lego 8880
@@ -256,7 +258,7 @@ components:
       example:
         orderUid: d3795a76-d514-4db7-90d1-173e7e49aedb
         userId: romanow
-        status: NEW
+        status: PROCESSED
         orderDate: 2025-05-05T10:00:00Z
         items:
           - name: Lego 8880
@@ -291,14 +293,12 @@ components:
       example:
         name: Lego 8880
         status: TAKE_NEW
-        comment: ""
+        comment: Take new item from Warehouse
     OrderStatus:
       type: string
       additionalProperties: false
       enum:
-        - NEW
         - PROCESSED
-        - DENIED
         - CANCELED
     WarrantyStatus:
       type: string

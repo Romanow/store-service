@@ -198,7 +198,7 @@ components:
         {
           "name": "Lego 8880",
           "status": "TAKE_NEW",
-          "comment": ""
+          "comment": "Take new item from Warehouse"
         }
       properties:
         name:

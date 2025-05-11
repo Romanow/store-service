@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
 services:
-  warehouse-url: ${WAREHOUSE_URL:http://warranty:8280}
+  warehouse-url: ${WAREHOUSE_URL:http://warehouse:8280}
 
 management:
   otlp:

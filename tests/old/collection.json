@@ -1,0 +1,1843 @@
+{
+    "info": {
+        "_postman_id": "19e14e80-dd74-450e-97fe-7114d3d1fac5",
+        "name": "[rsoi] Services",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "976707"
+    },
+    "item": [
+        {
+            "name": "store",
+            "item": [
+                {
+                    "name": "[store] Health Check",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Health check\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "basic",
+                            "basic": [
+                                {
+                                    "key": "password",
+                                    "value": "passwd",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "username",
+                                    "value": "management",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{storeUrl}}/manage/health",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "manage",
+                                "health"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[store] Check Authorization",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User orders\", function() {",
+                                    "    pm.response.to.have.status(401)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{storeUrl}}/api/v1/store/orders",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "store",
+                                "orders"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[store] Purchase item",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Purchase item\", function() {",
+                                    "    pm.response.to.have.status(201)",
+                                    "    var location = pm.response.headers.get(\"Location\")",
+                                    "    pm.expect(location).to.not.empty;",
+                                    "    var orderUid = location.split(\"/\").pop()",
+                                    "    pm.environment.set(\"orderUid\", orderUid)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"model\": \"Lego 8880\",\n    \"size\": \"L\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{storeUrl}}/api/v1/store/purchase",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "store",
+                                "purchase"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[store] User order info",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User order info\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    const orderUid = pm.variables.get(\"orderUid\")",
+                                    "    ",
+                                    "    pm.expect(response.orderUid).to.eq(orderUid)",
+                                    "    pm.expect(response.date).to.not.empty",
+                                    "    pm.expect(response.model).to.eq(\"Lego 8880\")",
+                                    "    pm.expect(response.size).to.eq(\"L\")",
+                                    "    pm.expect(response.warrantyDate).to.not.empty",
+                                    "    pm.expect(response.warrantyStatus).to.eq(\"ON_WARRANTY\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{storeUrl}}/api/v1/store/{{orderUid}}",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "store",
+                                "{{orderUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[store] User orders",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User orders\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    pm.expect(response.length).to.greaterThan(0)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{storeUrl}}/api/v1/store/orders",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "store",
+                                "orders"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[store] Warranty request",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Warranty request\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    const orderUid = pm.variables.get(\"orderUid\")",
+                                    "    ",
+                                    "    pm.expect(response.orderUid).to.eq(orderUid)",
+                                    "    pm.expect(response.warrantyDate).to.not.empty",
+                                    "    pm.expect(response.decision).to.eq(\"RETURN\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reason\": \"It drowned\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{storeUrl}}/api/v1/store/{{orderUid}}/warranty",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "store",
+                                "{{orderUid}}",
+                                "warranty"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[store] Return order",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Return order\", function() {",
+                                    "    pm.response.to.have.status(204)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{storeUrl}}/api/v1/store/{{orderUid}}/refund",
+                            "host": [
+                                "{{storeUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "store",
+                                "{{orderUid}}",
+                                "refund"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const moment = require(\"moment\")",
+                            "const crypto = require(\"crypto-js\")",
+                            "const lodash = require(\"lodash\")",
+                            "const token = pm.environment.get(\"token\")",
+                            "",
+                            "var expire = true",
+                            "if (token) {",
+                            "    const payload = token.split(\".\")[1]",
+                            "    const json = JSON.parse(crypto.enc.Base64.parse(payload).toString(crypto.enc.Utf8))",
+                            "    expire = moment.unix(json.exp).isBefore(moment())",
+                            "}",
+                            "",
+                            "if (lodash.isEmpty(token) || expire) {",
+                            "",
+                            "    pm.sendRequest({",
+                            "        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
+                            "        method: 'POST',",
+                            "        header: 'Content-Type: application/x-www-form-urlencoded',",
+                            "         body: {",
+                            "          mode: 'urlencoded',",
+                            "          urlencoded: [",
+                            "            { key: \"grant_type\", value: \"password\" },",
+                            "            { key: \"scope\", value: \"openid\" },",
+                            "            { key: \"username\", value: pm.environment.get(\"username\") },",
+                            "            { key: \"password\", value: pm.environment.get(\"password\") },",
+                            "            { key: \"client_id\", value: pm.environment.get(\"clientId\") },",
+                            "            { key: \"client_secret\", value: pm.environment.get(\"clientSecret\") }",
+                            "        ]",
+                            "      }",
+                            "    }, function (error, response) {",
+                            "        pm.environment.set(\"token\", response.json().access_token);",
+                            "  });",
+                            "}"
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "order",
+            "item": [
+                {
+                    "name": "[order] Health Check",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Health check\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "basic",
+                            "basic": [
+                                {
+                                    "key": "password",
+                                    "value": "passwd",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "username",
+                                    "value": "management",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{orderUrl}}/manage/health",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "manage",
+                                "health"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[order] Check Authorization",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User order info\", function() {",
+                                    "    pm.response.to.have.status(401)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{orderUrl}}/api/v1/orders/{{orderUid}}",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                "{{orderUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[order] Create order",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "var uuid = require(\"uuid\");",
+                                    "pm.environment.set(\"userUid\", uuid.v4());"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Create order\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "",
+                                    "    const response = pm.response.json();",
+                                    "    pm.expect(response.orderUid).to.not.empty",
+                                    "    pm.environment.set(\"orderUid\", response.orderUid)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"model\": \"Lego 8880\",\n    \"size\": \"L\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{orderUrl}}/api/v1/orders/{{userUid}}",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                "{{userUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[order] User order info",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User order info\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    const response = pm.response.json();",
+                                    "    const orderUid = pm.variables.get(\"orderUid\")",
+                                    "    pm.expect(response.orderUid).to.eq(orderUid)",
+                                    "    pm.expect(response.itemUid).to.not.empty",
+                                    "    pm.expect(response.status).to.eq(\"PAID\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{orderUrl}}/api/v1/orders/{{userUid}}/{{orderUid}}",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                "{{userUid}}",
+                                "{{orderUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[order] User orders info",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"User orders info\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    const response = pm.response.json();",
+                                    "    const orderUid = pm.variables.get(\"orderUid\")",
+                                    "    pm.expect(response.length).to.eq(1)",
+                                    "    pm.expect(response[0].orderUid).to.eq(orderUid)",
+                                    "    pm.expect(response[0].itemUid).to.not.empty",
+                                    "    pm.expect(response[0].status).to.eq(\"PAID\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{orderUrl}}/api/v1/orders/{{userUid}}",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                "{{userUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[order] Warranty request",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Warranty request\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    const response = pm.response.json();",
+                                    "    pm.expect(response.warrantyDate).to.not.empty",
+                                    "    pm.expect(response.decision).to.eq(\"RETURN\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reason\": \"It drowned\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{orderUrl}}/api/v1/orders/{{orderUid}}/warranty",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                "{{orderUid}}",
+                                "warranty"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[order] Return order",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Return order\", function() {",
+                                    "    pm.response.to.have.status(204)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{orderUrl}}/api/v1/orders/{{orderUid}}",
+                            "host": [
+                                "{{orderUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "orders",
+                                "{{orderUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const moment = require(\"moment\")",
+                            "const crypto = require(\"crypto-js\")",
+                            "const lodash = require(\"lodash\")",
+                            "const token = pm.environment.get(\"token\")",
+                            "",
+                            "var expire = true",
+                            "if (token) {",
+                            "    const payload = token.split(\".\")[1]",
+                            "    const json = JSON.parse(crypto.enc.Base64.parse(payload).toString(crypto.enc.Utf8))",
+                            "    expire = moment.unix(json.exp).isBefore(moment())",
+                            "}",
+                            "",
+                            "if (lodash.isEmpty(token) || expire) {",
+                            "",
+                            "    pm.sendRequest({",
+                            "        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
+                            "        method: 'POST',",
+                            "        header: 'Content-Type: application/x-www-form-urlencoded',",
+                            "         body: {",
+                            "          mode: 'urlencoded',",
+                            "          urlencoded: [",
+                            "            { key: \"grant_type\", value: \"password\" },",
+                            "            { key: \"scope\", value: \"openid\" },",
+                            "            { key: \"username\", value: pm.environment.get(\"username\") },",
+                            "            { key: \"password\", value: pm.environment.get(\"password\") },",
+                            "            { key: \"client_id\", value: pm.environment.get(\"clientId\") },",
+                            "            { key: \"client_secret\", value: pm.environment.get(\"clientSecret\") }",
+                            "        ]",
+                            "      }",
+                            "    }, function (error, response) {",
+                            "        pm.environment.set(\"token\", response.json().access_token);",
+                            "  });",
+                            "}"
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "warehouse",
+            "item": [
+                {
+                    "name": "[warehouse] Health Check",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Health check\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "basic",
+                            "basic": [
+                                {
+                                    "key": "password",
+                                    "value": "passwd",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "username",
+                                    "value": "management",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{warehouseUrl}}/manage/health",
+                            "host": [
+                                "{{warehouseUrl}}"
+                            ],
+                            "path": [
+                                "manage",
+                                "health"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warehouse] Check Authorization",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Get item info\", function() {",
+                                    "    pm.response.to.have.status(401)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"orderUid\": \"{{orderUid}}\",\n    \"model\": \"Lego 8880\",\n    \"size\": \"L\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{warehouseUrl}}/api/v1/warehouse/{{orderItemUid}}",
+                            "host": [
+                                "{{warehouseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warehouse",
+                                "{{orderItemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warehouse] Take item from Warehouse",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Take item from Warehouse\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    const orderUid = pm.variables.get(\"orderUid\")",
+                                    "    pm.expect(response.orderItemUid).to.exist",
+                                    "    pm.expect(response.orderUid).to.eq(orderUid)",
+                                    "    pm.expect(response.model).to.eq(\"Lego 8880\")",
+                                    "    pm.expect(response.size).to.eq(\"L\")",
+                                    "",
+                                    "    pm.environment.set(\"orderItemUid\", response.orderItemUid)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "var uuid = require(\"uuid\");",
+                                    "pm.environment.set(\"orderUid\", uuid.v4());"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"orderUid\": \"{{orderUid}}\",\n    \"model\": \"Lego 8880\",\n    \"size\": \"L\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{warehouseUrl}}/api/v1/warehouse",
+                            "host": [
+                                "{{warehouseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warehouse"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warehouse] Get item info",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Get item info\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    pm.expect(response.model).to.eq(\"Lego 8880\")",
+                                    "    pm.expect(response.size).to.eq(\"L\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"orderUid\": \"{{orderUid}}\",\n    \"model\": \"Lego 8880\",\n    \"size\": \"L\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{warehouseUrl}}/api/v1/warehouse/{{orderItemUid}}",
+                            "host": [
+                                "{{warehouseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warehouse",
+                                "{{orderItemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warehouse] Warranty Request",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Warranty request\", function() {",
+                                    "    pm.response.to.have.status(404)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    const orderItemUid = pm.variables.get(\"orderItemUid\")",
+                                    "    pm.expect(response.message).to.eq(\"Warranty not found for itemUid '\" + orderItemUid + \"'\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reason\": \"It drowned\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{warehouseUrl}}/api/v1/warehouse/{{orderItemUid}}/warranty",
+                            "host": [
+                                "{{warehouseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warehouse",
+                                "{{orderItemUid}}",
+                                "warranty"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warehouse] Return item",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Return item\", function() {",
+                                    "    pm.response.to.have.status(204)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{warehouseUrl}}/api/v1/warehouse/{{orderItemUid}}",
+                            "host": [
+                                "{{warehouseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warehouse",
+                                "{{orderItemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const moment = require(\"moment\")",
+                            "const crypto = require(\"crypto-js\")",
+                            "const lodash = require(\"lodash\")",
+                            "const token = pm.environment.get(\"token\")",
+                            "",
+                            "var expire = true",
+                            "if (token) {",
+                            "    const payload = token.split(\".\")[1]",
+                            "    const json = JSON.parse(crypto.enc.Base64.parse(payload).toString(crypto.enc.Utf8))",
+                            "    expire = moment.unix(json.exp).isBefore(moment())",
+                            "}",
+                            "",
+                            "if (lodash.isEmpty(token) || expire) {",
+                            "",
+                            "    pm.sendRequest({",
+                            "        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
+                            "        method: 'POST',",
+                            "        header: 'Content-Type: application/x-www-form-urlencoded',",
+                            "         body: {",
+                            "          mode: 'urlencoded',",
+                            "          urlencoded: [",
+                            "            { key: \"grant_type\", value: \"password\" },",
+                            "            { key: \"scope\", value: \"openid\" },",
+                            "            { key: \"username\", value: pm.environment.get(\"username\") },",
+                            "            { key: \"password\", value: pm.environment.get(\"password\") },",
+                            "            { key: \"client_id\", value: pm.environment.get(\"clientId\") },",
+                            "            { key: \"client_secret\", value: pm.environment.get(\"clientSecret\") }",
+                            "        ]",
+                            "      }",
+                            "    }, function (error, response) {",
+                            "        pm.environment.set(\"token\", response.json().access_token);",
+                            "  });",
+                            "}"
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "warranty",
+            "item": [
+                {
+                    "name": "[warranty] Health Check",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Health check\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "basic",
+                            "basic": [
+                                {
+                                    "key": "password",
+                                    "value": "passwd",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "username",
+                                    "value": "management",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{warrantyUrl}}/manage/health",
+                            "host": [
+                                "{{warrantyUrl}}"
+                            ],
+                            "path": [
+                                "manage",
+                                "health"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warranty] Check Authorization",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Warranty status\", function() {",
+                                    "    pm.response.to.have.status(401)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{warrantyUrl}}/api/v1/warranty/{{itemUid}}",
+                            "host": [
+                                "{{warrantyUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warranty",
+                                "{{itemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warranty] Start warranty",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "var uuid = require(\"uuid\");",
+                                    "pm.environment.set(\"itemUid\", uuid.v4());"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Start warranty\", function() {",
+                                    "    pm.response.to.have.status(204)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{warrantyUrl}}/api/v1/warranty/{{itemUid}}",
+                            "host": [
+                                "{{warrantyUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warranty",
+                                "{{itemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warranty] Warranty status",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Warranty status\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    const itemUid = pm.variables.get(\"itemUid\")",
+                                    "    pm.expect(response.itemUid).to.eq(itemUid)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{warrantyUrl}}/api/v1/warranty/{{itemUid}}",
+                            "host": [
+                                "{{warrantyUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warranty",
+                                "{{itemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warranty] Request for warranty",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Request for warranty\", function() {",
+                                    "    pm.response.to.have.status(200)",
+                                    "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+                                    "    ",
+                                    "    const response = pm.response.json();",
+                                    "    pm.expect(response.decision).to.eq(\"RETURN\")",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"reason\": \"It drowned\",\n    \"availableCount\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{warrantyUrl}}/api/v1/warranty/{{itemUid}}/warranty",
+                            "host": [
+                                "{{warrantyUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warranty",
+                                "{{itemUid}}",
+                                "warranty"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "[warranty] Stop warranty",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Stop warranty\", function() {",
+                                    "    pm.response.to.have.status(204)",
+                                    "})"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "type": "text",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "type": "text",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{warrantyUrl}}/api/v1/warranty/{{itemUid}}",
+                            "host": [
+                                "{{warrantyUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "warranty",
+                                "{{itemUid}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            "const moment = require(\"moment\")",
+                            "const crypto = require(\"crypto-js\")",
+                            "const lodash = require(\"lodash\")",
+                            "const token = pm.environment.get(\"token\")",
+                            "",
+                            "var expire = true",
+                            "if (token) {",
+                            "    const payload = token.split(\".\")[1]",
+                            "    const json = JSON.parse(crypto.enc.Base64.parse(payload).toString(crypto.enc.Utf8))",
+                            "    expire = moment.unix(json.exp).isBefore(moment())",
+                            "}",
+                            "",
+                            "if (lodash.isEmpty(token) || expire) {",
+                            "",
+                            "    pm.sendRequest({",
+                            "        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
+                            "        method: 'POST',",
+                            "        header: 'Content-Type: application/x-www-form-urlencoded',",
+                            "         body: {",
+                            "          mode: 'urlencoded',",
+                            "          urlencoded: [",
+                            "            { key: \"grant_type\", value: \"password\" },",
+                            "            { key: \"scope\", value: \"openid\" },",
+                            "            { key: \"username\", value: pm.environment.get(\"username\") },",
+                            "            { key: \"password\", value: pm.environment.get(\"password\") },",
+                            "            { key: \"client_id\", value: pm.environment.get(\"clientId\") },",
+                            "            { key: \"client_secret\", value: pm.environment.get(\"clientSecret\") }",
+                            "        ]",
+                            "      }",
+                            "    }, function (error, response) {",
+                            "        pm.environment.set(\"token\", response.json().access_token);",
+                            "  });",
+                            "}"
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}

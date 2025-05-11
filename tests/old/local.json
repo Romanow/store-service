@@ -3,43 +3,8 @@
     "name": "[local] Services",
     "values": [
         {
-            "key": "storeUrl",
-            "value": "http://localhost:8480",
-            "enabled": true
-        },
-        {
-            "key": "warrantyUrl",
-            "value": "http://localhost:8180",
-            "enabled": true
-        },
-        {
-            "key": "orderUrl",
-            "value": "http://localhost:8380",
-            "enabled": true
-        },
-        {
-            "key": "warehouseUrl",
-            "value": "http://localhost:8280",
-            "enabled": true
-        },
-        {
-            "key": "itemUid",
-            "value": "752d8aa1-1b1f-4c3c-8a05-ff02e08de399",
-            "enabled": true
-        },
-        {
-            "key": "orderUid",
-            "value": "0307da11-7367-4d0c-aa69-5246ea8013bd",
-            "enabled": true
-        },
-        {
-            "key": "orderItemUid",
-            "value": "3fdfe916-fc69-49df-a1d0-9762925bc2cf",
-            "enabled": true
-        },
-        {
-            "key": "userUid",
-            "value": "636c12c8fbc9a92736a6557f",
+            "key": "gatewayUrl",
+            "value": "http://localhost:8080",
             "enabled": true
         },
         {
