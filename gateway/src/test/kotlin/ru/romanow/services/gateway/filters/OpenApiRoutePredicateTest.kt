@@ -36,7 +36,7 @@ class OpenApiRoutePredicateTest {
             Stream.of(
                 of("/api/public/v1/echo", GET, true),
                 of("/api/public/v1/echo", POST, false),
-                of("/api/private/v1/echo", GET, false)
+                of("/api/protected/v1/echo", GET, false)
             )
     }
 

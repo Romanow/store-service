@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2Clien
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
-import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpMethod.OPTIONS
 import org.springframework.http.HttpStatus.UNAUTHORIZED
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -44,7 +43,7 @@ class SecurityConfiguration {
             .securityMatcher("/api/**")
             .authorizeHttpRequests {
                 it.requestMatchers(OPTIONS).permitAll()
-                it.requestMatchers(GET, "/").permitAll()
+                it.requestMatchers("/api/public/**").permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2ResourceServer {
@@ -63,9 +62,9 @@ class SecurityConfiguration {
     @ConditionalOnProperty("oauth2.security.enabled", havingValue = "true", matchIfMissing = true)
     fun managementSecurityFilterChain(http: HttpSecurity, properties: ActuatorSecurityProperties): SecurityFilterChain {
         return http
-            .securityMatcher("/manage/**", "/api-docs")
+            .securityMatcher("/manage/**")
             .authorizeHttpRequests {
-                it.requestMatchers("/manage/health/**", "/manage/prometheus", "/api-docs")
+                it.requestMatchers("/manage/health/**", "/manage/prometheus")
                     .permitAll()
                     .anyRequest().hasRole(properties.role)
             }

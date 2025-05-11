@@ -60,7 +60,7 @@ internal class WarrantyApplicationTest {
 
     @Test
     fun `when status then success`() {
-        mockMvc.get("/api/private/v1/warranty/$ORDER_UID")
+        mockMvc.get("/api/protected/v1/warranty/$ORDER_UID")
             .andExpect {
                 status { isOk() }
                 status { contentType(MediaType.APPLICATION_JSON) }
@@ -79,12 +79,12 @@ internal class WarrantyApplicationTest {
     fun `when warrantyRequest then success`() {
         val responseBody = objectMapper.writeValueAsString(listOf(ItemInfo(name = ITEM1_NAME, count = 1)))
         stubFor(
-            get(urlPathEqualTo("/api/private/v1/items"))
+            get(urlPathEqualTo("/api/protected/v1/items"))
                 .withQueryParam("names", havingExactly(ITEM1_NAME))
                 .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(responseBody))
         )
 
-        mockMvc.post("/api/private/v1/warranty/$ORDER_UID/request") {
+        mockMvc.post("/api/protected/v1/warranty/$ORDER_UID/request") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }
@@ -102,7 +102,7 @@ internal class WarrantyApplicationTest {
 
     @Test
     fun `when start then success`() {
-        mockMvc.post("/api/private/v1/warranty/$ORDER_UID/start") {
+        mockMvc.post("/api/protected/v1/warranty/$ORDER_UID/start") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
         }
@@ -111,7 +111,7 @@ internal class WarrantyApplicationTest {
 
     @Test
     fun `when stop then success`() {
-        mockMvc.delete("/api/private/v1/warranty/$ORDER_UID/stop") {
+        mockMvc.delete("/api/protected/v1/warranty/$ORDER_UID/stop") {
             contentType = MediaType.APPLICATION_JSON
         }
             .andExpect { status { isAccepted() } }

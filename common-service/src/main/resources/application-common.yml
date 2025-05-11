@@ -43,11 +43,6 @@ management:
     readinessstate.enabled: true
     livenessstate.enabled: true
 
-springdoc:
-  paths-to-match: /api/v1/**
-  api-docs:
-    path: /api-docs
-
 circuit-breaker:
   enabled: ${CIRCUIT_BREAKER_ENABLED:false}
   default-timeout: ${CIRCUIT_BREAKER_TIMEOUT:30s}

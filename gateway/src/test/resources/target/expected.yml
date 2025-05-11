@@ -9,7 +9,7 @@ security: []
 tags:
   - name: public
 paths:
-  /store/api/public/v1/orders:
+  /store/api/protected/v1/orders:
     get:
       tags:
         - public
@@ -36,7 +36,7 @@ paths:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
-  /store/api/public/v1/orders/{orderUid}:
+  /store/api/protected/v1/orders/{orderUid}:
     get:
       tags:
         - public
@@ -74,7 +74,7 @@ paths:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
-  /store/api/public/v1/orders/{orderUid}/cancel:
+  /store/api/protected/v1/orders/{orderUid}/cancel:
     delete:
       tags:
         - public
@@ -108,7 +108,7 @@ paths:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
-  /store/api/public/v1/orders/{orderUid}/warranty:
+  /store/api/protected/v1/orders/{orderUid}/warranty:
     post:
       tags:
         - public
@@ -156,7 +156,7 @@ paths:
         - field: authenticationToken
           type: org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
           optional: true
-  /store/api/public/v1/orders/purchase:
+  /store/api/protected/v1/orders/purchase:
     post:
       tags:
         - public

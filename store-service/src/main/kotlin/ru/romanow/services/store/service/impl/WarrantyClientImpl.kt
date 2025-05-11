@@ -33,7 +33,7 @@ internal class WarrantyClientImpl(
         val type = object : ParameterizedTypeReference<List<WarrantyStatusResponse>>() {}
         return warrantyWebClient
             .get()
-            .uri("/api/private/v1/warranty/$orderUid")
+            .uri("/api/protected/v1/warranty/$orderUid")
             .retrieve()
             .onStatus({ it.isError }, { response -> buildEx(response) { WarrantyProcessException(it) } })
             .bodyToMono(type)
@@ -41,7 +41,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("status").run(it) { throwable ->
                         fallback.apply(
-                            GET, "${serverUrlProperties.warehouseUrl}/api/private/v1/warranty/$orderUid",
+                            GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid",
                             throwable
                         )
                     }
@@ -56,7 +56,7 @@ internal class WarrantyClientImpl(
         val type = object : ParameterizedTypeReference<List<WarrantyResponse>>() {}
         return warrantyWebClient
             .post()
-            .uri("/api/private/v1/warranty/$orderUid/request")
+            .uri("/api/protected/v1/warranty/$orderUid/request")
             .body(BodyInserters.fromValue(items))
             .retrieve()
             .onStatus({ it == CONFLICT }, { response -> buildEx(response) { WarrantyProcessException(it) } })
@@ -66,7 +66,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("request").run(it) { throwable ->
                         fallback.apply(
-                            GET, "${serverUrlProperties.warehouseUrl}/api/private/v1/warranty/$orderUid/request",
+                            GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/request",
                             throwable
                         )
                     }
@@ -80,7 +80,7 @@ internal class WarrantyClientImpl(
     override fun start(orderUid: UUID, items: List<String>) {
         warrantyWebClient
             .post()
-            .uri("/api/private/v1/warranty/$orderUid/start")
+            .uri("/api/protected/v1/warranty/$orderUid/start")
             .body(BodyInserters.fromValue(items))
             .retrieve()
             .onStatus({ it.isError }, { response -> buildEx(response) { WarrantyProcessException(it) } })
@@ -89,7 +89,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("start").run(it) { throwable ->
                         fallback.apply(
-                            POST, "${serverUrlProperties.warehouseUrl}/api/private/v1/warranty/$orderUid/start",
+                            POST, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/start",
                             throwable
                         )
                     }
@@ -103,7 +103,7 @@ internal class WarrantyClientImpl(
     override fun stop(orderUid: UUID) {
         warrantyWebClient
             .method(DELETE)
-            .uri("/api/private/v1/warranty/$orderUid/stop")
+            .uri("/api/protected/v1/warranty/$orderUid/stop")
             .retrieve()
             .onStatus({ it.isError }, { response -> buildEx(response) { WarrantyProcessException(it) } })
             .toBodilessEntity()
@@ -111,7 +111,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("stop").run(it) { throwable ->
                         fallback.apply(
-                            DELETE, "${serverUrlProperties.warehouseUrl}/api/private/v1/warranty/$orderUid/stop",
+                            DELETE, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/stop",
                             throwable
                         )
                     }

@@ -14,7 +14,7 @@ tags:
   - name: public
 
 paths:
-  /api/public/v1/orders:
+  /api/protected/v1/orders:
     get:
       operationId: orders
       summary: Получить список заказов пользователя
@@ -42,7 +42,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/public/v1/orders/{orderUid}:
+  /api/protected/v1/orders/{orderUid}:
     get:
       operationId: orderByUid
       summary: Получить подробную информацию о заказе
@@ -81,7 +81,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/public/v1/orders/{orderUid}/cancel:
+  /api/protected/v1/orders/{orderUid}/cancel:
     delete:
       operationId: cancel
       summary: Отменить заказ
@@ -116,7 +116,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/public/v1/orders/{orderUid}/warranty:
+  /api/protected/v1/orders/{orderUid}/warranty:
     post:
       operationId: warranty
       summary: Запросить гарантию по заказу
@@ -165,7 +165,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/public/v1/orders/purchase:
+  /api/protected/v1/orders/purchase:
     post:
       operationId: purchase
       summary: Выполнить заказ
@@ -232,7 +232,7 @@ components:
         {
           "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
           "userId": "romanow",
-          "status": "NEW",
+          "status": "PROCESSED",
           "orderDate": "2025-05-05T10:00:00Z",
           "items": [
             "Lego 8880",
@@ -260,7 +260,7 @@ components:
         {
           "orderUid": "d3795a76-d514-4db7-90d1-173e7e49aedb",
           "userId": "romanow",
-          "status": "NEW",
+          "status": "PROCESSED",
           "orderDate": "2025-05-05T10:00:00Z",
           "items": [
             {

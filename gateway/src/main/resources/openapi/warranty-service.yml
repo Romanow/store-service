@@ -11,15 +11,15 @@ security:
   - TokenBasedAuth: [ ]
 
 tags:
-  - name: private
+  - name: internal
 
 paths:
-  /api/private/v1/warranty/{orderUid}:
+  /api/protected/v1/warranty/{orderUid}:
     get:
       operationId: status
       summary: Получить статус гарантии
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       parameters:
@@ -45,12 +45,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/private/v1/warranty/{orderUid}/start:
+  /api/protected/v1/warranty/{orderUid}/start:
     post:
       operationId: start
       summary: Поставить заказ на гарантию
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       parameters:
@@ -78,12 +78,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/private/v1/warranty/{orderUid}/request:
+  /api/protected/v1/warranty/{orderUid}/request:
     post:
       operationId: warrantyRequest
       summary: Запрос гарантии
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       parameters:
@@ -123,12 +123,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/private/v1/warranty/{orderUid}/stop:
+  /api/protected/v1/warranty/{orderUid}/stop:
     delete:
       operationId: stop
       summary: Снять заказ с гарантии
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       parameters:

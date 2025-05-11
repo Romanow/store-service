@@ -12,7 +12,7 @@ security:
 
 tags:
   - name: public
-  - name: private
+  - name: internal
 
 paths:
   /api/public/v1/items:
@@ -31,12 +31,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/ItemInfo'
 
-  /api/private/v1/items:
+  /api/protected/v1/items:
     get:
       operationId: items
       summary: Получить информацию о товарах
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       parameters:
@@ -70,12 +70,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/private/v1/items/take:
+  /api/protected/v1/items/take:
     post:
       operationId: take
       summary: Забрать товары со склада
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       requestBody:
@@ -108,12 +108,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/private/v1/items/refund:
+  /api/protected/v1/items/refund:
     delete:
       operationId: refund
       summary: Вернуть товары на склад
       tags:
-        - private
+        - internal
       security:
         - TokenBasedAuth: [ ]
       requestBody:

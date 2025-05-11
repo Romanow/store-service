@@ -71,8 +71,8 @@ class SecurityConfiguration {
             authorizeExchange {
                 authorize("/oauth2/authorization/**", permitAll)
                 authorize("/login/oauth2/code/**", permitAll)
+                authorize("/api/public/**", permitAll)
                 authorize(PathPatternParserServerWebExchangeMatcher("/**", OPTIONS), permitAll)
-                authorize("/", permitAll)
                 authorize(anyExchange, authenticated)
             }
             oauth2ResourceServer {

@@ -31,9 +31,7 @@ dependencies {
     api "org.codehaus.janino:janino"
     api "org.codehaus.janino:commons-compiler"
     api "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion"
-
-    api "org.springdoc:springdoc-openapi-starter-common:$openApiVersion"
-    api "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApiVersion"
+    api "org.springdoc:springdoc-openapi-starter-webmvc-api:$openApiVersion"
 
     kapt "org.springframework.boot:spring-boot-configuration-processor"
 

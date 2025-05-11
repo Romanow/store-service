@@ -6,7 +6,8 @@ package ru.romanow.services.store.service.impl
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod.*
-import org.springframework.http.HttpStatus.*
+import org.springframework.http.HttpStatus.CONFLICT
+import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
@@ -34,7 +35,7 @@ internal class WarehouseClientImpl(
         val type = object : ParameterizedTypeReference<List<ItemInfo>>() {}
         return warehouseWebClient
             .get()
-            .uri { it.path("/api/private/v1/items").queryParam("names", names).build() }
+            .uri { it.path("/api/protected/v1/items").queryParam("names", names).build() }
             .retrieve()
             .onStatus({ it == NOT_FOUND }, { response -> buildEx(response) { EntityNotFoundException(it) } })
             .onStatus({ it.isError }, { response -> buildEx(response) { WarehouseProcessException(it) } })
@@ -42,7 +43,7 @@ internal class WarehouseClientImpl(
             .transform {
                 if (circuitBreakerProperties.enabled) {
                     factory.create("items").run(it) { throwable ->
-                        fallback.apply(GET, "${serverUrlProperties.warehouseUrl}/api/private/v1/items", throwable)
+                        fallback.apply(GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/items", throwable)
                     }
                 } else {
                     return@transform it
@@ -54,7 +55,7 @@ internal class WarehouseClientImpl(
     override fun take(items: List<String>) {
         warehouseWebClient
             .post()
-            .uri("/api/private/v1/items/take")
+            .uri("/api/protected/v1/items/take")
             .body(BodyInserters.fromValue(items))
             .retrieve()
             .onStatus({ it == NOT_FOUND }, { response -> buildEx(response) { EntityNotFoundException(it) } })
@@ -64,7 +65,9 @@ internal class WarehouseClientImpl(
             .transform {
                 if (circuitBreakerProperties.enabled) {
                     factory.create("take").run(it) { throwable ->
-                        fallback.apply(POST, "${serverUrlProperties.warehouseUrl}/api/private/v1/items/take", throwable)
+                        fallback.apply(
+                            POST, "${serverUrlProperties.warehouseUrl}/api/protected/v1/items/take", throwable
+                        )
                     }
                 } else {
                     return@transform it
@@ -76,7 +79,7 @@ internal class WarehouseClientImpl(
     override fun refund(items: List<String>) {
         warehouseWebClient
             .method(DELETE)
-            .uri("/api/private/v1/items/refund")
+            .uri("/api/protected/v1/items/refund")
             .body(BodyInserters.fromValue(items))
             .retrieve()
             .onStatus({ it == NOT_FOUND }, { response -> buildEx(response) { EntityNotFoundException(it) } })
@@ -86,7 +89,7 @@ internal class WarehouseClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("refund").run(it) { throwable ->
                         fallback.apply(
-                            DELETE, "${serverUrlProperties.warehouseUrl}/api/private/v1/items/refund", throwable
+                            DELETE, "${serverUrlProperties.warehouseUrl}/api/protected/v1/items/refund", throwable
                         )
                     }
                 } else {

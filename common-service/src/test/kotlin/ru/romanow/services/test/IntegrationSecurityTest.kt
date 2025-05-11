@@ -79,8 +79,33 @@ internal class IntegrationSecurityTest {
 
     @Test
     fun `when request to secured api with auth then success`() {
+        mockMvc.get("/api/protected/echo?message=test") {
+            headers { header(HttpHeaders.AUTHORIZATION, "Bearer ${accessToken()}") }
+        }
+            .andExpect {
+                status { isOk() }
+                content { string("[protected] test - $LOGIN") }
+            }
+    }
+
+    @Test
+    fun `when request to secured api then unauthorized`() {
+        mockMvc.get("/api/protected/echo?message=test")
+            .andExpect { status { isUnauthorized() } }
+    }
+
+    @Test
+    fun `when request to public api then success`() {
+        mockMvc.get("/api/public/echo?message=test")
+            .andExpect {
+                status { isOk() }
+                content { string("[public] test") }
+            }
+    }
+
+    private fun accessToken(): String {
         val type = object : ParameterizedTypeReference<Map<String, String>>() {}
-        val response = builder.build()
+        return builder.build()
             .post()
             .uri("http://${issuerUri.authority}/realms/master/protocol/openid-connect/token")
             .body(
@@ -92,31 +117,20 @@ internal class IntegrationSecurityTest {
             )
             .retrieve()
             .bodyToMono(type)
-            .block()!!
-
-        mockMvc.get("/api/echo?message=test") {
-            headers { header(HttpHeaders.AUTHORIZATION, "Bearer ${response["access_token"]}") }
-        }
-            .andExpect {
-                status { isOk() }
-                content { string("test - $LOGIN") }
-            }
-    }
-
-    @Test
-    fun `when request to secured api then unauthorized`() {
-        mockMvc.get("/api/echo?message=test")
-            .andExpect { status { isUnauthorized() } }
+            .block()
+            ?.get("access_token") as String
     }
 
     @RestController
     @SpringBootApplication
     internal class TestApplication {
 
-        @GetMapping("/api/echo")
-        fun echo(token: JwtAuthenticationToken, @RequestParam message: String): String {
-            return "$message - ${token.token.claims["preferred_username"]}"
-        }
+        @GetMapping("/api/protected/echo")
+        fun echo(token: JwtAuthenticationToken, @RequestParam message: String) =
+            "[protected] $message - ${token.token.claims["preferred_username"]}"
+
+        @GetMapping("/api/public/echo")
+        fun echo(@RequestParam message: String) = "[public] $message"
     }
 
     companion object {

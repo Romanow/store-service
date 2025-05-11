@@ -58,11 +58,6 @@ management:
     readinessstate.enabled: true
     livenessstate.enabled: true
 
-springdoc:
-  paths-to-match: /api/v1/**
-  api-docs:
-    path: /api-docs
-
 logbook:
   predicate:
     include:

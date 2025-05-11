@@ -32,7 +32,7 @@ internal class WarehouseClientImpl(
         val type = object : ParameterizedTypeReference<List<ItemInfo>>() {}
         return warehouseWebClient
             .get()
-            .uri { it.path("/api/private/v1/items").queryParam("names", names).build() }
+            .uri { it.path("/api/protected/v1/items").queryParam("names", names).build() }
             .retrieve()
             .onStatus({ it == NOT_FOUND }, { response -> buildEx(response) { EntityNotFoundException(it) } })
             .onStatus({ it.isError }, { response -> buildEx(response) { WarehouseProcessException(it) } })
@@ -40,7 +40,7 @@ internal class WarehouseClientImpl(
             .transform {
                 if (circuitBreakerProperties.enabled) {
                     factory.create("items").run(it) { throwable ->
-                        fallback.apply(GET, "${serverUrlProperties.warehouseUrl}/api/private/v1/items", throwable)
+                        fallback.apply(GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/items", throwable)
                     }
                 } else {
                     return@transform it

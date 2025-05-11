@@ -67,7 +67,7 @@ internal class WarehouseApplicationTest {
 
     @Test
     fun `when items then success`() {
-        mockMvc.get("/api/private/v1/items") {
+        mockMvc.get("/api/protected/v1/items") {
             queryParam("names", ITEM1_NAME)
             queryParam("names", ITEM2_NAME)
         }
@@ -86,7 +86,7 @@ internal class WarehouseApplicationTest {
 
     @Test
     fun `when take then success`() {
-        mockMvc.post("/api/private/v1/items/take") {
+        mockMvc.post("/api/protected/v1/items/take") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
         }
@@ -95,7 +95,7 @@ internal class WarehouseApplicationTest {
 
     @Test
     fun `when take then ItemNotAvailableException`() {
-        mockMvc.post("/api/private/v1/items/take") {
+        mockMvc.post("/api/protected/v1/items/take") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }
@@ -104,7 +104,7 @@ internal class WarehouseApplicationTest {
 
     @Test
     fun `when refund then success`() {
-        mockMvc.delete("/api/private/v1/items/refund") {
+        mockMvc.delete("/api/protected/v1/items/refund") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }

@@ -1,770 +1,770 @@
 {
-    "info": {
-        "_postman_id": "8fb3b022-b822-4d2c-a8f2-e2b5a10c54eb",
-        "name": "Store Service",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-        "_exporter_id": "976707"
-    },
-    "item": [
-        {
-            "name": "0. Health Check",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test(\"Health check\", function() {",
-                            "    pm.response.to.have.status(200)",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "auth": {
-                    "type": "basic",
-                    "basic": [
-                        {
-                            "key": "password",
-                            "value": "passwd",
-                            "type": "string"
-                        },
-                        {
-                            "key": "username",
-                            "value": "management",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "method": "GET",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "value": "application/json",
-                        "type": "text"
-                    }
-                ],
-                "url": {
-                    "raw": "{{gatewayUrl}}/manage/health",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "manage",
-                        "health"
-                    ]
-                }
-            },
-            "response": []
-        },
-        {
-            "name": "1. Получить все доступные товары",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "const lodash = require(\"lodash\")",
-                            "",
-                            "pm.test(\"Available Items\", function() {",
-                            "    pm.response.to.have.status(200)",
-                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
-                            "",
-                            "    const response = pm.response.json();",
-                            "    pm.expect(response.length).to.be.above(0);",
-                            "    const idx = lodash.random(response.length - 1)",
-                            "    pm.collectionVariables.set(\"itemName\", response[idx].name)",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "method": "GET",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "value": "application/json"
-                    }
-                ],
-                "url": {
-                    "raw": "{{gatewayUrl}}/warehouse/api/public/v1/items",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "warehouse",
-                        "api",
-                        "public",
-                        "v1",
-                        "items"
-                    ]
-                }
-            },
-            "response": [
-                {
-                    "name": "Информация о доступных товарах",
-                    "originalRequest": {
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Accept",
-                                "value": "application/json"
-                            }
-                        ],
-                        "url": {
-                            "raw": "{{gatewayUrl}}/warehouse/api/public/v1/items",
-                            "host": [
-                                "{{gatewayUrl}}"
-                            ],
-                            "path": [
-                                "warehouse",
-                                "api",
-                                "public",
-                                "v1",
-                                "items"
-                            ]
-                        }
-                    },
-                    "status": "OK",
-                    "code": 200,
-                    "_postman_previewlanguage": "json",
-                    "header": [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/json"
-                        }
-                    ],
-                    "cookie": [],
-                    "body": "[\n  {\n    \"name\": \"Lego 8880\",\n    \"count\": 1,\n    \"description\": \"Lego Technic Supercar 8880\",\n    \"manufacturer\": \"Lego\",\n    \"imageUrl\": \"https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg\"\n  }\n]"
-                }
-            ]
-        },
-        {
-            "name": "Выполнить заказ",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test(\"Purchase\", function() {",
-                            "    pm.response.to.have.status(201)",
-                            "    var location = pm.response.headers.get(\"Location\")",
-                            "    pm.expect(location).to.not.empty;",
-                            "    var orderUid = location.split(\"/\").pop()",
-                            "    pm.collectionVariables.set(\"orderUid\", orderUid)",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "auth": {
-                    "type": "bearer",
-                    "bearer": [
-                        {
-                            "key": "token",
-                            "value": "{{token}}",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    },
-                    {
-                        "key": "Accept",
-                        "value": "application/json"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "[\"{{itemName}}\"]",
-                    "options": {
-                        "raw": {
-                            "headerFamily": "json",
-                            "language": "json"
-                        }
-                    }
-                },
-                "url": {
-                    "raw": "{{gatewayUrl}}/store/api/public/v1/orders/purchase",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "store",
-                        "api",
-                        "public",
-                        "v1",
-                        "orders",
-                        "purchase"
-                    ]
-                }
-            },
-            "response": [
-                {
-                    "name": "Заказ создан",
-                    "originalRequest": {
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[\"{{itemName}}\"]",
-                            "options": {
-                                "raw": {
-                                    "headerFamily": "json",
-                                    "language": "json"
-                                }
-                            }
-                        },
-                        "url": {
-                            "raw": "{{gatewayUrl}}/store/api/public/v1/orders/purchase",
-                            "host": [
-                                "{{gatewayUrl}}"
-                            ],
-                            "path": [
-                                "store",
-                                "api",
-                                "public",
-                                "v1",
-                                "orders",
-                                "purchase"
-                            ]
-                        }
-                    },
-                    "status": "Created",
-                    "code": 201,
-                    "_postman_previewlanguage": "text",
-                    "header": [
-                        {
-                            "key": "Location",
-                            "value": "<string>",
-                            "description": {
-                                "content": "Ссылка на созданный заказ",
-                                "type": "text/plain"
-                            }
-                        }
-                    ],
-                    "cookie": [],
-                    "body": ""
-                }
-            ]
-        },
-        {
-            "name": "2. Получить список заказов пользователя",
-            "event": [
-                {
-                    "listen": "prerequest",
-                    "script": {
-                        "exec": [
-                            ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                },
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "const lodash = require(\"lodash\")",
-                            "",
-                            "pm.test(\"User orders\", function() {",
-                            "    pm.response.to.have.status(200)",
-                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
-                            "",
-                            "    const response = pm.response.json();",
-                            "    const orderUid = pm.collectionVariables.get(\"orderUid\");",
-                            "    const itemName = pm.collectionVariables.get(\"itemName\");",
-                            "    const item = lodash.find(response, { \"orderUid\": orderUid });",
-                            "    pm.expect(item.userId).to.be.not.empty;",
-                            "    pm.expect(item.orderDate).to.be.not.empty;",
-                            "    pm.expect(item.status).to.eq(\"PROCESSED\");",
-                            "    pm.expect(item.items[0]).to.eq(itemName);",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "auth": {
-                    "type": "bearer",
-                    "bearer": [
-                        {
-                            "key": "token",
-                            "value": "{{token}}",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "method": "GET",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "value": "application/json"
-                    }
-                ],
-                "url": {
-                    "raw": "{{gatewayUrl}}/store/api/public/v1/orders",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "store",
-                        "api",
-                        "public",
-                        "v1",
-                        "orders"
-                    ]
-                }
-            },
-            "response": [
-                {
-                    "name": "Список заказов пользователя",
-                    "originalRequest": {
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Accept",
-                                "value": "application/json"
-                            }
-                        ],
-                        "url": {
-                            "raw": "{{gatewayUrl}}/store/api/public/v1/orders",
-                            "host": [
-                                "{{gatewayUrl}}"
-                            ],
-                            "path": [
-                                "store",
-                                "api",
-                                "public",
-                                "v1",
-                                "orders"
-                            ]
-                        }
-                    },
-                    "status": "OK",
-                    "code": 200,
-                    "_postman_previewlanguage": "json",
-                    "header": [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/json"
-                        }
-                    ],
-                    "cookie": [],
-                    "body": "[\n  {\n    \"orderUid\": \"d3795a76-d514-4db7-90d1-173e7e49aedb\",\n    \"userId\": \"romanow\",\n    \"status\": \"PROCESSED\",\n    \"orderDate\": \"2025-05-05T10:00:00Z\",\n    \"items\": [\n      \"Lego 8880\"\n    ]\n  }\n]"
-                }
-            ]
-        },
-        {
-            "name": "3. Получить подробную информацию о заказе",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test(\"Order by Uid\", function() {",
-                            "    pm.response.to.have.status(200)",
-                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
-                            "",
-                            "    const response = pm.response.json();",
-                            "    const orderUid = pm.collectionVariables.get(\"orderUid\");",
-                            "    const itemName = pm.collectionVariables.get(\"itemName\");",
-                            "    pm.expect(response.orderUid).to.eq(orderUid);",
-                            "    pm.expect(response.userId).to.be.not.empty;",
-                            "    pm.expect(response.orderDate).to.be.not.empty;",
-                            "    pm.expect(response.status).to.eq(\"PROCESSED\");",
-                            "    pm.expect(response.items[0].name).to.eq(itemName);",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "auth": {
-                    "type": "bearer",
-                    "bearer": [
-                        {
-                            "key": "token",
-                            "value": "{{bearerToken}}",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "method": "GET",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "value": "application/json"
-                    }
-                ],
-                "url": {
-                    "raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "store",
-                        "api",
-                        "public",
-                        "v1",
-                        "orders",
-                        "{{orderUid}}"
-                    ]
-                }
-            },
-            "response": [
-                {
-                    "name": "Подробная информация о заказе",
-                    "originalRequest": {
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Accept",
-                                "value": "application/json"
-                            }
-                        ],
-                        "url": {
-                            "raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}",
-                            "host": [
-                                "{{gatewayUrl}}"
-                            ],
-                            "path": [
-                                "store",
-                                "api",
-                                "public",
-                                "v1",
-                                "orders",
-                                "{{orderUid}}"
-                            ]
-                        }
-                    },
-                    "status": "OK",
-                    "code": 200,
-                    "_postman_previewlanguage": "json",
-                    "header": [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/json",
-                            "description": "",
-                            "type": "text"
-                        }
-                    ],
-                    "cookie": [],
-                    "body": "{\n  \"orderUid\": \"d3795a76-d514-4db7-90d1-173e7e49aedb\",\n  \"userId\": \"romanow\",\n  \"status\": \"PROCESSED\",\n  \"orderDate\": \"2025-05-05T10:00:00Z\",\n  \"items\": [\n    {\n      \"name\": \"Lego 8880\",\n      \"description\": \"Lego Technic Supercar 8880\",\n      \"manufacturer\": \"Lego\",\n      \"imageUrl\": \"https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg\",\n      \"warranty\": {\n        \"name\": \"Lego 8880\",\n        \"status\": \"ON_WARRANTY\",\n        \"comment\": \"\",\n        \"warrantyStartDate\": \"2025-05-05T10:00:00Z\",\n        \"lastUpdateDate\": \"2025-05-05T10:00:00Z\"\n      }\n    }\n  ]\n}"
-                }
-            ]
-        },
-        {
-            "name": "4. Запросить гарантию по заказу",
-            "event": [
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test(\"Warranty Request\", function() {",
-                            "    pm.response.to.have.status(200)",
-                            "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
-                            "",
-                            "    const response = pm.response.json();",
-                            "    const itemName = pm.collectionVariables.get(\"itemName\");",
-                            "    pm.expect(response[0].name).to.eq(itemName);",
-                            "    pm.expect(response[0].status).to.eq(\"TAKE_NEW\");",
-                            "    pm.expect(response[0].comment).to.be.not.empty;",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "auth": {
-                    "type": "bearer",
-                    "bearer": [
-                        {
-                            "key": "token",
-                            "value": "{{token}}",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "method": "POST",
-                "header": [
-                    {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                    },
-                    {
-                        "key": "Accept",
-                        "value": "application/json"
-                    }
-                ],
-                "body": {
-                    "mode": "raw",
-                    "raw": "[\"{{itemName}}\"]",
-                    "options": {
-                        "raw": {
-                            "headerFamily": "json",
-                            "language": "json"
-                        }
-                    }
-                },
-                "url": {
-                    "raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/warranty",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "store",
-                        "api",
-                        "public",
-                        "v1",
-                        "orders",
-                        "{{orderUid}}",
-                        "warranty"
-                    ]
-                }
-            },
-            "response": [
-                {
-                    "name": "Информация о статусе гарантии",
-                    "originalRequest": {
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[\"{{itemName}}\"]",
-                            "options": {
-                                "raw": {
-                                    "headerFamily": "json",
-                                    "language": "json"
-                                }
-                            }
-                        },
-                        "url": {
-                            "raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/warranty",
-                            "host": [
-                                "{{gatewayUrl}}"
-                            ],
-                            "path": [
-                                "store",
-                                "api",
-                                "public",
-                                "v1",
-                                "orders",
-                                "{{orderUid}}",
-                                "warranty"
-                            ]
-                        }
-                    },
-                    "status": "OK",
-                    "code": 200,
-                    "_postman_previewlanguage": "json",
-                    "header": [
-                        {
-                            "key": "Content-Type",
-                            "value": "application/json"
-                        }
-                    ],
-                    "cookie": [],
-                    "body": "[\n  {\n    \"name\": \"Lego 8880\",\n    \"status\": \"TAKE_NEW\",\n    \"comment\": \"Take new item from Warehouse\"\n  }\n]"
-                }
-            ]
-        },
-        {
-            "name": "5. Отменить заказ",
-            "event": [
-                {
-                    "listen": "prerequest",
-                    "script": {
-                        "exec": [
-                            ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                },
-                {
-                    "listen": "test",
-                    "script": {
-                        "exec": [
-                            "pm.test(\"Return order\", function() {",
-                            "    pm.response.to.have.status(202)",
-                            "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                    }
-                }
-            ],
-            "request": {
-                "auth": {
-                    "type": "bearer",
-                    "bearer": [
-                        {
-                            "key": "token",
-                            "value": "{{bearerToken}}",
-                            "type": "string"
-                        }
-                    ]
-                },
-                "method": "DELETE",
-                "header": [
-                    {
-                        "key": "Accept",
-                        "value": "application/json"
-                    }
-                ],
-                "url": {
-                    "raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/cancel",
-                    "host": [
-                        "{{gatewayUrl}}"
-                    ],
-                    "path": [
-                        "store",
-                        "api",
-                        "public",
-                        "v1",
-                        "orders",
-                        "{{orderUid}}",
-                        "cancel"
-                    ]
-                }
-            },
-            "response": [
-                {
-                    "name": "Заказ отменен",
-                    "originalRequest": {
-                        "method": "DELETE",
-                        "header": [],
-                        "url": {
-                            "raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/cancel",
-                            "host": [
-                                "{{gatewayUrl}}"
-                            ],
-                            "path": [
-                                "store",
-                                "api",
-                                "public",
-                                "v1",
-                                "orders",
-                                "{{orderUid}}",
-                                "cancel"
-                            ]
-                        }
-                    },
-                    "status": "Accepted",
-                    "code": 202,
-                    "_postman_previewlanguage": "text",
-                    "header": [],
-                    "cookie": [],
-                    "body": ""
-                }
-            ]
-        }
-    ],
-    "event": [
-        {
-            "listen": "prerequest",
-            "script": {
-                "type": "text/javascript",
-                "packages": {},
-                "exec": [
-                    "const moment = require(\"moment\")",
-                    "const crypto = require(\"crypto-js\")",
-                    "const lodash = require(\"lodash\")",
-                    "const token = pm.environment.get(\"token\")",
-                    "",
-                    "var expire = true",
-                    "if (token) {",
-                    "    const payload = token.split(\".\")[1]",
-                    "    const json = JSON.parse(crypto.enc.Base64.parse(payload).toString(crypto.enc.Utf8))",
-                    "    expire = moment.unix(json.exp).isBefore(moment())",
-                    "}",
-                    "",
-                    "if (lodash.isEmpty(token) || expire) {",
-                    "",
-                    "    pm.sendRequest({",
-                    "        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
-                    "        method: 'POST',",
-                    "        header: 'Content-Type: application/x-www-form-urlencoded',",
-                    "         body: {",
-                    "          mode: 'urlencoded',",
-                    "          urlencoded: [",
-                    "            { key: \"grant_type\", value: \"password\" },",
-                    "            { key: \"scope\", value: \"openid\" },",
-                    "            { key: \"username\", value: pm.environment.get(\"username\") },",
-                    "            { key: \"password\", value: pm.environment.get(\"password\") },",
-                    "            { key: \"client_id\", value: pm.environment.get(\"clientId\") },",
-                    "            { key: \"client_secret\", value: pm.environment.get(\"clientSecret\") }",
-                    "        ]",
-                    "      }",
-                    "    }, function (_, response) {",
-                    "        pm.collectionVariables.set(\"token\", response.json().access_token);",
-                    "  });",
-                    "}"
-                ]
-            }
-        },
-        {
-            "listen": "test",
-            "script": {
-                "type": "text/javascript",
-                "packages": {},
-                "exec": [
-                    ""
-                ]
-            }
-        }
-    ],
-    "variable": [
-        {
-            "key": "itemName",
-            "value": "",
-            "type": "string"
-        },
-        {
-            "key": "itemUid",
-            "value": "",
-            "type": "string"
-        },
-        {
-            "key": "token",
-            "value": ""
-        },
-        {
-            "key": "orderUid",
-            "value": ""
-        }
-    ]
+	"info": {
+		"_postman_id": "8fb3b022-b822-4d2c-a8f2-e2b5a10c54eb",
+		"name": "Store Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "976707"
+	},
+	"item": [
+		{
+			"name": "0. Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Health check\", function() {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "passwd",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "management",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/manage/health",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"manage",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "1. Получить все доступные товары",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const lodash = require(\"lodash\")",
+							"",
+							"pm.test(\"Available Items\", function() {",
+							"    pm.response.to.have.status(200)",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+							"",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.length).to.be.above(0);",
+							"    const idx = lodash.random(response.length - 1)",
+							"    pm.collectionVariables.set(\"itemName\", response[idx].name)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/warehouse/api/public/v1/items",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"warehouse",
+						"api",
+						"public",
+						"v1",
+						"items"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Информация о доступных товарах",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{gatewayUrl}}/warehouse/api/public/v1/items",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"warehouse",
+								"api",
+								"public",
+								"v1",
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n  {\n    \"name\": \"Lego 8880\",\n    \"count\": 1,\n    \"description\": \"Lego Technic Supercar 8880\",\n    \"manufacturer\": \"Lego\",\n    \"imageUrl\": \"https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg\"\n  }\n]"
+				}
+			]
+		},
+		{
+			"name": "2. Выполнить заказ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Purchase\", function() {",
+							"    pm.response.to.have.status(201)",
+							"    var location = pm.response.headers.get(\"Location\")",
+							"    pm.expect(location).to.not.empty;",
+							"    var orderUid = location.split(\"/\").pop()",
+							"    pm.collectionVariables.set(\"orderUid\", orderUid)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\"{{itemName}}\"]",
+					"options": {
+						"raw": {
+							"headerFamily": "json",
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gatewayUrl}}/store/api/public/v1/orders/purchase",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"store",
+						"api",
+						"public",
+						"v1",
+						"orders",
+						"purchase"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Заказ создан",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{itemName}}\"]",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gatewayUrl}}/store/api/public/v1/orders/purchase",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"store",
+								"api",
+								"public",
+								"v1",
+								"orders",
+								"purchase"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "text",
+					"header": [
+						{
+							"key": "Location",
+							"value": "<string>",
+							"description": {
+								"content": "Ссылка на созданный заказ",
+								"type": "text/plain"
+							}
+						}
+					],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "3. Получить список заказов пользователя",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const lodash = require(\"lodash\")",
+							"",
+							"pm.test(\"User orders\", function() {",
+							"    pm.response.to.have.status(200)",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+							"",
+							"    const response = pm.response.json();",
+							"    const orderUid = pm.collectionVariables.get(\"orderUid\");",
+							"    const itemName = pm.collectionVariables.get(\"itemName\");",
+							"    const item = lodash.find(response, { \"orderUid\": orderUid });",
+							"    pm.expect(item.userId).to.be.not.empty;",
+							"    pm.expect(item.orderDate).to.be.not.empty;",
+							"    pm.expect(item.status).to.eq(\"PROCESSED\");",
+							"    pm.expect(item.items[0]).to.eq(itemName);",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/store/api/public/v1/orders",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"store",
+						"api",
+						"public",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Список заказов пользователя",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{gatewayUrl}}/store/api/public/v1/orders",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"store",
+								"api",
+								"public",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n  {\n    \"orderUid\": \"d3795a76-d514-4db7-90d1-173e7e49aedb\",\n    \"userId\": \"romanow\",\n    \"status\": \"PROCESSED\",\n    \"orderDate\": \"2025-05-05T10:00:00Z\",\n    \"items\": [\n      \"Lego 8880\"\n    ]\n  }\n]"
+				}
+			]
+		},
+		{
+			"name": "4. Получить подробную информацию о заказе",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Order by Uid\", function() {",
+							"    pm.response.to.have.status(200)",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+							"",
+							"    const response = pm.response.json();",
+							"    const orderUid = pm.collectionVariables.get(\"orderUid\");",
+							"    const itemName = pm.collectionVariables.get(\"itemName\");",
+							"    pm.expect(response.orderUid).to.eq(orderUid);",
+							"    pm.expect(response.userId).to.be.not.empty;",
+							"    pm.expect(response.orderDate).to.be.not.empty;",
+							"    pm.expect(response.status).to.eq(\"PROCESSED\");",
+							"    pm.expect(response.items[0].name).to.eq(itemName);",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"store",
+						"api",
+						"public",
+						"v1",
+						"orders",
+						"{{orderUid}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Подробная информация о заказе",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"store",
+								"api",
+								"public",
+								"v1",
+								"orders",
+								"{{orderUid}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n  \"orderUid\": \"d3795a76-d514-4db7-90d1-173e7e49aedb\",\n  \"userId\": \"romanow\",\n  \"status\": \"PROCESSED\",\n  \"orderDate\": \"2025-05-05T10:00:00Z\",\n  \"items\": [\n    {\n      \"name\": \"Lego 8880\",\n      \"description\": \"Lego Technic Supercar 8880\",\n      \"manufacturer\": \"Lego\",\n      \"imageUrl\": \"https://main-cdn.sbermegamarket.ru/big2/lego-8880.jpg\",\n      \"warranty\": {\n        \"name\": \"Lego 8880\",\n        \"status\": \"ON_WARRANTY\",\n        \"comment\": \"\",\n        \"warrantyStartDate\": \"2025-05-05T10:00:00Z\",\n        \"lastUpdateDate\": \"2025-05-05T10:00:00Z\"\n      }\n    }\n  ]\n}"
+				}
+			]
+		},
+		{
+			"name": "5. Запросить гарантию по заказу",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Warranty Request\", function() {",
+							"    pm.response.to.have.status(200)",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+							"",
+							"    const response = pm.response.json();",
+							"    const itemName = pm.collectionVariables.get(\"itemName\");",
+							"    pm.expect(response[0].name).to.eq(itemName);",
+							"    pm.expect(response[0].status).to.eq(\"TAKE_NEW\");",
+							"    pm.expect(response[0].comment).to.be.not.empty;",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\"{{itemName}}\"]",
+					"options": {
+						"raw": {
+							"headerFamily": "json",
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/warranty",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"store",
+						"api",
+						"public",
+						"v1",
+						"orders",
+						"{{orderUid}}",
+						"warranty"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Информация о статусе гарантии",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\"{{itemName}}\"]",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/warranty",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"store",
+								"api",
+								"public",
+								"v1",
+								"orders",
+								"{{orderUid}}",
+								"warranty"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n  {\n    \"name\": \"Lego 8880\",\n    \"status\": \"TAKE_NEW\",\n    \"comment\": \"Take new item from Warehouse\"\n  }\n]"
+				}
+			]
+		},
+		{
+			"name": "6. Отменить заказ",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Return order\", function() {",
+							"    pm.response.to.have.status(202)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearerToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/cancel",
+					"host": [
+						"{{gatewayUrl}}"
+					],
+					"path": [
+						"store",
+						"api",
+						"public",
+						"v1",
+						"orders",
+						"{{orderUid}}",
+						"cancel"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Заказ отменен",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gatewayUrl}}/store/api/public/v1/orders/{{orderUid}}/cancel",
+							"host": [
+								"{{gatewayUrl}}"
+							],
+							"path": [
+								"store",
+								"api",
+								"public",
+								"v1",
+								"orders",
+								"{{orderUid}}",
+								"cancel"
+							]
+						}
+					},
+					"status": "Accepted",
+					"code": 202,
+					"_postman_previewlanguage": "text",
+					"header": [],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const moment = require(\"moment\")",
+					"const crypto = require(\"crypto-js\")",
+					"const lodash = require(\"lodash\")",
+					"const token = pm.environment.get(\"token\")",
+					"",
+					"var expire = true",
+					"if (token) {",
+					"    const payload = token.split(\".\")[1]",
+					"    const json = JSON.parse(crypto.enc.Base64.parse(payload).toString(crypto.enc.Utf8))",
+					"    expire = moment.unix(json.exp).isBefore(moment())",
+					"}",
+					"",
+					"if (lodash.isEmpty(token) || expire) {",
+					"",
+					"    pm.sendRequest({",
+					"        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
+					"        method: 'POST',",
+					"        header: 'Content-Type: application/x-www-form-urlencoded',",
+					"         body: {",
+					"          mode: 'urlencoded',",
+					"          urlencoded: [",
+					"            { key: \"grant_type\", value: \"password\" },",
+					"            { key: \"scope\", value: \"openid\" },",
+					"            { key: \"username\", value: pm.environment.get(\"username\") },",
+					"            { key: \"password\", value: pm.environment.get(\"password\") },",
+					"            { key: \"client_id\", value: pm.environment.get(\"clientId\") },",
+					"            { key: \"client_secret\", value: pm.environment.get(\"clientSecret\") }",
+					"        ]",
+					"      }",
+					"    }, function (_, response) {",
+					"        pm.collectionVariables.set(\"token\", response.json().access_token);",
+					"  });",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "itemName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "itemUid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "orderUid",
+			"value": ""
+		}
+	]
 }

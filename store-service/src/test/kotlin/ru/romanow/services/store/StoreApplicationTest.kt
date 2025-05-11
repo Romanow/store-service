@@ -67,7 +67,7 @@ internal class StoreApplicationTest {
 
     @Test
     fun `when orders then success`() {
-        mockMvc.get("/api/public/v1/orders")
+        mockMvc.get("/api/protected/v1/orders")
             .andExpect {
                 status { isOk() }
                 status { contentType(APPLICATION_JSON) }
@@ -96,18 +96,18 @@ internal class StoreApplicationTest {
             )
         )
         stubFor(
-            get(urlPathEqualTo("/api/private/v1/warranty/$ORDER_UID"))
+            get(urlPathEqualTo("/api/protected/v1/warranty/$ORDER_UID"))
                 .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(warrantyResponse))
         )
 
         val warehouseResponse = objectMapper.writeValueAsString(listOf(ItemInfo(name = ITEM1_NAME, count = 1)))
         stubFor(
-            get(urlPathEqualTo("/api/private/v1/items"))
+            get(urlPathEqualTo("/api/protected/v1/items"))
                 .withQueryParam("names", havingExactly(ITEM1_NAME))
                 .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(warehouseResponse))
         )
 
-        mockMvc.get("/api/public/v1/orders/$ORDER_UID")
+        mockMvc.get("/api/protected/v1/orders/$ORDER_UID")
             .andExpect {
                 status { isOk() }
                 status { contentType(APPLICATION_JSON) }
@@ -133,19 +133,19 @@ internal class StoreApplicationTest {
     fun `when purchase then success`() {
         val request = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
         stubFor(
-            post(urlMatching("/api/private/v1/warranty/$UUID_REGEX/start"))
+            post(urlMatching("/api/protected/v1/warranty/$UUID_REGEX/start"))
                 .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
                 .withRequestBody(equalTo(request))
                 .willReturn(aResponse().withStatus(202))
         )
         stubFor(
-            post(urlPathEqualTo("/api/private/v1/items/take"))
+            post(urlPathEqualTo("/api/protected/v1/items/take"))
                 .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
                 .withRequestBody(equalTo(request))
                 .willReturn(aResponse().withStatus(202))
         )
 
-        mockMvc.post("/api/public/v1/orders/purchase") {
+        mockMvc.post("/api/protected/v1/orders/purchase") {
             contentType = APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM2_NAME))
         }
@@ -153,7 +153,7 @@ internal class StoreApplicationTest {
                 status { isCreated() }
                 status {
                     header {
-                        string(LOCATION, matchesPattern("http://localhost/api/public/v1/orders/$UUID_REGEX"))
+                        string(LOCATION, matchesPattern("http://localhost/api/protected/v1/orders/$UUID_REGEX"))
                     }
                 }
             }
@@ -166,13 +166,13 @@ internal class StoreApplicationTest {
             listOf(WarrantyResponse(name = ITEM1_NAME, status = TAKE_NEW, comment = "Take new item from Warehouse"))
         )
         stubFor(
-            post(urlPathEqualTo("/api/private/v1/warranty/$ORDER_UID/request"))
+            post(urlPathEqualTo("/api/protected/v1/warranty/$ORDER_UID/request"))
                 .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
                 .withRequestBody(equalTo(warrantyRequest))
                 .willReturn(ok().withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE).withBody(warrantyResponse))
         )
 
-        mockMvc.post("/api/public/v1/orders/$ORDER_UID/warranty") {
+        mockMvc.post("/api/protected/v1/orders/$ORDER_UID/warranty") {
             contentType = APPLICATION_JSON
             content = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         }
@@ -190,17 +190,17 @@ internal class StoreApplicationTest {
     fun `when cancel then success`() {
         val warehouseRequest = objectMapper.writeValueAsString(listOf(ITEM1_NAME))
         stubFor(
-            delete(urlPathEqualTo("/api/private/v1/warranty/$ORDER_UID/stop"))
+            delete(urlPathEqualTo("/api/protected/v1/warranty/$ORDER_UID/stop"))
                 .willReturn(aResponse().withStatus(202))
         )
         stubFor(
-            delete(urlPathEqualTo("/api/private/v1/items/refund"))
+            delete(urlPathEqualTo("/api/protected/v1/items/refund"))
                 .withHeader(CONTENT_TYPE, equalTo(APPLICATION_JSON_VALUE))
                 .withRequestBody(equalTo(warehouseRequest))
                 .willReturn(aResponse().withStatus(202))
         )
 
-        mockMvc.delete("/api/public/v1/orders/$ORDER_UID/cancel")
+        mockMvc.delete("/api/protected/v1/orders/$ORDER_UID/cancel")
             .andExpect { status { accepted() } }
     }
 

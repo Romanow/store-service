@@ -23,7 +23,7 @@ paths:
               schema:
                 type: string
 
-  /api/private/v1/echo:
+  /api/protected/v1/echo:
     get:
       summary: Private echo endpoint
       tags:
