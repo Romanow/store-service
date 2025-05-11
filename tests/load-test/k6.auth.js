@@ -46,7 +46,7 @@ export default function (token) {
         {"model": "Lego 8880", "size": "L"},
         {"model": "Lego 42070", "size": "L"}
     ];
-    let response = http.post("http://localhost:8480/api/v1/store/purchase", JSON.stringify(randomItem(data)), params);
+    let response = http.post("http://localhost:8080/api/v1/store/purchase", JSON.stringify(randomItem(data)), params);
     check(response, {
         "status is CREATED": (r) => r.status === 201,
         "location header is present": (r) => !!r.headers["Location"]
@@ -54,14 +54,14 @@ export default function (token) {
     const orderUid = response.headers["Location"].split("/").pop()
 
     // step 2: user info
-    response = http.get("http://localhost:8480/api/v1/store/orders", params);
+    response = http.get("http://localhost:8080/api/v1/store/orders", params);
     check(response, {
         "status is OK": (r) => r.status === 200,
         "content is present": (r) => !!r.body,
     });
 
     // step 3: order info by user
-    response = http.get(`http://localhost:8480/api/v1/store/${orderUid}`, params);
+    response = http.get(`http://localhost:8080/api/v1/store/${orderUid}`, params);
     check(response, {
         "status is 200": (r) => r.status === 200,
         "content is present": (r) => !!r.body,
@@ -69,14 +69,14 @@ export default function (token) {
 
     // step 4: warranty request
     const body = {"reason": "It drowned"}
-    response = http.post(`http://localhost:8480/api/v1/store/${orderUid}/warranty`, JSON.stringify(body), params);
+    response = http.post(`http://localhost:8080/api/v1/store/${orderUid}/warranty`, JSON.stringify(body), params);
     check(response, {
         "status is OK": (r) => r.status === 200,
         "content is present": (r) => !!r.body,
     });
 
     // step 5: return order
-    response = http.del(`http://localhost:8480/api/v1/store/${orderUid}/refund`, null, params);
+    response = http.del(`http://localhost:8080/api/v1/store/${orderUid}/refund`, null, params);
     check(response, {
         "status is NO_CONTENT": (r) => r.status === 204
     });

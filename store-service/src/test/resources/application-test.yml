@@ -1,3 +1,7 @@
+services:
+  warranty-url: http://localhost:${wiremock.server.port}
+  warehouse-url: http://localhost:${wiremock.server.port}
+
 oauth2:
   security:
     enabled: false

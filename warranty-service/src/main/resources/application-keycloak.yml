@@ -6,12 +6,6 @@ spring:
           keycloak:
             client-id: ${KEYCLOAK_CLIENT_ID:store}
             client-secret: ${KEYCLOAK_CLIENT_SECRET:kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC}
-            redirect-uri: ${KEYCLOAK_REDIRECT_URI:{baseUrl}/login/oauth2/code/keycloak}
-            scope:
-              - openid
-              - email
-              - profile
         provider:
           keycloak:
             issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8100/realms/master/}
-            user-name-attribute: preferred_username

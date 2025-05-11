@@ -1,0 +1,17 @@
+services:
+  store:
+    url: http://localhost:8180
+    pattern: /store/**
+    path: openapi/store-service.yml
+  warehouse:
+    url: http://localhost:8280
+    pattern: /warehouse/**
+    path: openapi/warehouse-service.yml
+  warranty:
+    url: http://localhost:8380
+    pattern: /warranty/**
+    path: openapi/warranty-service.yml
+
+management:
+  tracing:
+    enabled: false

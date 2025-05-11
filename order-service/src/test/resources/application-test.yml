@@ -1,7 +1,0 @@
-oauth2:
-  security:
-    enabled: false
-
-management:
-  tracing:
-    enabled: false

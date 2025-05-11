@@ -5,8 +5,9 @@ plugins {
     id "org.jetbrains.kotlin.kapt" version "1.9.25" apply false
     id "org.jetbrains.kotlin.plugin.jpa" version "1.9.25" apply false
     id "org.jetbrains.kotlin.plugin.spring" version "1.9.25" apply false
-    id "org.jlleitschuh.gradle.ktlint" version "12.1.2" apply false
-    id "org.springframework.boot" version "3.4.3" apply false
+    id "org.jlleitschuh.gradle.ktlint" version "12.2.0" apply false
+    id "org.openapi.generator" version "7.8.0" apply false
+    id "org.springframework.boot" version "3.4.5" apply false
     id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false
     id "com.adarshr.test-logger" version "4.0.0" apply false
     id "io.spring.dependency-management" version "1.1.7"
@@ -14,14 +15,19 @@ plugins {
 
 ext {
     kotlinVersion = "1.9.25"
-    springBootVersion = "3.4.3"
-    springCircuitBreakerVersion = "3.2.0"
+    springBootVersion = "3.4.5"
+    springGatewayVersion = "4.2.0"
+    springCircuitBreakerVersion = "3.2.1"
     validationApiVersion = "2.0.1.Final"
+    wireMockVersion = "3.12.1"
     jwtVersion = "4.5.0"
     openApiVersion = "2.8.5"
-    logbookVersion = "3.10.0"
+    logbookVersion = "3.12.0"
     logstashEncoderVersion = "7.4"
-    postgresContainerVersion = "1.20.5"
+    aggregatorByTagsVersion = "1.0.0"
+    wireMockVersion = "3.10.0"
+    postgresContainerVersion = "1.21.0"
+    keycloakContainerVersion = "3.6.0"
 }
 
 subprojects { ->
@@ -41,15 +47,26 @@ subprojects { ->
 
     repositories {
         mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.github.com/Romanow/aggregator-by-tags")
+            credentials {
+                username = System.getenv("GITHUB_USER")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 
     ktlint {
-        version.set("1.1.1")
+        version.set("1.2.1")
+        filter {
+            exclude { entry -> entry.file.toString().contains("generated") }
+        }
     }
 
     dependencyManagement {
         imports {
             mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
+            mavenBom "org.springframework.cloud:spring-cloud-gateway-dependencies:$springGatewayVersion"
             mavenBom "org.springframework.cloud:spring-cloud-circuitbreaker-dependencies:$springCircuitBreakerVersion"
         }
     }
@@ -58,9 +75,7 @@ subprojects { ->
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
         implementation "org.jetbrains.kotlin:kotlin-reflect"
         implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
-
-        implementation "javax.validation:validation-api:$validationApiVersion"
-        implementation "org.apache.commons:commons-lang3"
+        implementation "jakarta.validation:jakarta.validation-api"
     }
 
     processResources {

@@ -1,9 +1,9 @@
 image:
   repository: romanowalex/warranty-service
-  tag: v3.2
+  tag: v4.0
 
 database:
   name: warranty
 
 ports:
-  internal: 8180
+  internal: 8380

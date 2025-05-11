@@ -12,7 +12,7 @@ Built from branch: ${git.branch}
 Commit id: ${git.commit.id.abbrev}
 Commit time: ${git.commit.time}
 ==============================================================
-Order service: ${services.order-url}
+Database url: ${spring.datasource.url}
 Warehouse service: ${services.warehouse-url}
 Warranty service: ${services.warranty-url}
 ==============================================================

@@ -8,10 +8,10 @@ scrape_configs:
     metrics_path: "/manage/prometheus"
     static_configs:
       - targets:
-          - "store:8480"
-          - "orders:8380"
+          - "gateway:8080"
+          - "orders:8180"
           - "warehouse:8280"
-          - "warranty:8180"
+          - "warranty:8380"
 
   - job_name: cadvisor
     static_configs:

@@ -1,11 +1,15 @@
--- V 1.0 Create warranty table
+-- v1.0 Create tables
 CREATE TABLE warranty
 (
     id            SERIAL PRIMARY KEY,
-    item_uid      uuid         NOT NULL,
-    warranty_date TIMESTAMP    NOT NULL,
-    status        VARCHAR(255) NOT NULL,
-    comment       VARCHAR(1024)
+    comment       VARCHAR(1024),
+    order_uid     UUID         NOT NULL,
+    name          VARCHAR      NOT NULL,
+    status        VARCHAR(255) NOT NULL
+        CHECK ( status IN ('ON_WARRANTY', 'TAKE_NEW', 'REPAIR', 'REMOVED_FROM_WARRANTY') ),
+    created_date  TIMESTAMP    NOT NULL,
+    modified_date TIMESTAMP    NOT NULL,
+    modified_user VARCHAR      NOT NULL
 );
 
-CREATE UNIQUE INDEX idx_warranty_item_uid ON warranty (item_uid);
+CREATE UNIQUE INDEX idx_warranty_order_uid_name ON warranty (order_uid, name);

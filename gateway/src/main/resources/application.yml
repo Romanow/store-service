@@ -1,0 +1,81 @@
+server:
+  port: ${APPLICATION_PORT:8080}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: ${APPLICATION_CONTEXT_PATH:/}
+    session:
+      cookie:
+        http-only: off
+        max-age: 86400
+
+spring:
+  profiles:
+    active: local
+  config:
+    import: optional:git.properties
+  application:
+    name: gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns:
+              - "http://localhost:*"
+            allowedMethods: [ GET, POST, PUT, DELETE ]
+            exposed-headers: [ LOCATION ]
+
+management:
+  otlp:
+    tracing:
+      endpoint: ${COLLECTOR_ENDPOINT:http://localhost:4318/v1/traces}
+  tracing:
+    enabled: ${TRACING_ENABLED:false}
+    sampling:
+      probability: 1.0
+  endpoint:
+    health.probes.enabled: true
+  endpoints:
+    web:
+      base-path: /manage
+      exposure.include: info,health,loggers,prometheus
+  metrics.tags:
+    application: ${spring.application.name}
+  health.diskspace.enabled: false
+  endpoint.health.show-details: always
+  info.git.mode: simple
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  credentials:
+    user: management
+    passwd: passwd
+    role: MANAGEMENT
+  health:
+    readinessstate.enabled: true
+    livenessstate.enabled: true
+
+logbook:
+  predicate:
+    include:
+      - path: /api/**
+  format:
+    style: http
+  write:
+    max-body-size: 30000
+
+oauth2:
+  security:
+    enabled: ${OAUTH2_SECURITY_ENABLED:false}
+  login:
+    success-redirect-uri: ${OAUTH2_SUCCESS_REDIRECT_URI:/}
+
+logging:
+  fluent-bit:
+    enabled: ${FLUENT_BIT_ENABLED:false}
+    address: ${FLUENT_BIT_ADDRESS:fluent-bit:5170}
+  level:
+    org.zalando.logbook: TRACE

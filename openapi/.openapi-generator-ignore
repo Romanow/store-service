@@ -1,0 +1,10 @@
+**/pom.xml
+**/*.gradle
+**/gradlew*
+**/README.md
+**/docs/*.md
+**/gradle/
+**/test/
+**/apis/
+**/infrastructure/
+**/ApiUtil.kt

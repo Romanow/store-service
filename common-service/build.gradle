@@ -5,8 +5,6 @@ plugins {
 }
 
 dependencies {
-    api project(":common-api")
-
     api "com.fasterxml.jackson.module:jackson-module-kotlin"
 
     api "org.springframework.boot:spring-boot-starter-web"
@@ -33,11 +31,14 @@ dependencies {
     api "org.codehaus.janino:janino"
     api "org.codehaus.janino:commons-compiler"
     api "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion"
-
-    api "org.springdoc:springdoc-openapi-starter-common:$openApiVersion"
-    api "org.springdoc:springdoc-openapi-starter-webmvc-ui:$openApiVersion"
+    api "org.springdoc:springdoc-openapi-starter-webmvc-api:$openApiVersion"
 
     kapt "org.springframework.boot:spring-boot-configuration-processor"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-testcontainers"
+    testImplementation "org.testcontainers:postgresql:$postgresContainerVersion"
+    testImplementation "com.github.dasniko:testcontainers-keycloak:$keycloakContainerVersion"
 }
 
 test {

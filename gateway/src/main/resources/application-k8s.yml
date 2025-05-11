@@ -1,0 +1,22 @@
+services:
+  store:
+    url: ${STORE_URL:http://store:8180}
+    pattern: /store/api/public/**
+    path: openapi/store-service.yml
+  warehouse:
+    url: ${WAREHOUSE_URL:http://warehouse:8280}
+    pattern: /warehouse/api/public/**
+    path: openapi/warehouse-service.yml
+  warranty:
+    url: ${WARRANTY_URL:http://warranty:8380}
+    pattern: /warranty/api/public/**
+    path: openapi/warranty-service.yml
+
+management:
+  otlp:
+    tracing:
+      endpoint: http://jaeger:4318/v1/traces
+
+logging:
+  pattern:
+    correlation: "[%X{traceId:-},%X{spanId:-}]"

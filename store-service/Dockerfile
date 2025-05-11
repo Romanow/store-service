@@ -5,7 +5,7 @@ COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
 FROM amazoncorretto:17
-ENV PORT=8480
+ENV PORT=8180
 WORKDIR application
 COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/dependencies/ ./

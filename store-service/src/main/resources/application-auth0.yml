@@ -6,11 +6,6 @@ spring:
           auth0:
             client-id: ${AUTH0_CLIENT_ID:pXrawhpoDM63b82A7fkiLvRIH81wgmH9}
             client-secret: ${AUTH0_CLIENT_SECRET:LzQSxUOE2dmAUdgstWke4ngXUeZNLVczvSid7ZVV8HTegCRbOxchQtJ_23EuZ9_V}
-            redirect-uri: ${AUTH0_REDIRECT_URI:{baseUrl}/login/oauth2/code/auth0}
-            scope:
-              - openid
-              - email
-              - profile
         provider:
           auth0:
             issuer-uri: ${AUTH0_ISSUER_URI:https://romanowalex.eu.auth0.com/}

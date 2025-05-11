@@ -1,0 +1,23 @@
+spring:
+  application.name: test
+  testcontainers:
+    dynamic-property-registry-injection: allow
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: store
+            client-secret: kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC
+
+oauth2:
+  security:
+    enabled: true
+
+management:
+  tracing:
+    enabled: false
+
+logging:
+  level:
+    org.springframework.security: debug

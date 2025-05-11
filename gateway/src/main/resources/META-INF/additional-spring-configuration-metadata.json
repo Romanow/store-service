@@ -1,0 +1,74 @@
+{
+  "groups": [
+    {
+      "name": "services",
+      "type": "ru.romanow.services.gateway.properties.ServerUrlProperties",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "management.credentials",
+      "type": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "oauth2.security.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable OAuth2 security.",
+      "defaultValue": "true"
+    },
+    {
+      "name": "oauth2.security.success-redirect-uri",
+      "type": "java.lang.String",
+      "description": "OAuth2 redirect uri.",
+      "defaultValue": "true"
+    },
+    {
+      "name": "services.store",
+      "type": "ru.romanow.services.gateway.properties.RouteConfig",
+      "description": "Store service config.",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "services.warranty",
+      "type": "ru.romanow.services.gateway.properties.RouteConfig",
+      "description": "Warranty  service config.",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "services.warehouse",
+      "type": "ru.romanow.services.gateway.properties.RouteConfig",
+      "description": "Warehouse  service config.",
+      "sourceType": "ru.romanow.services.gateway.properties.ServerUrlProperties"
+    },
+    {
+      "name": "management.credentials.user",
+      "type": "java.lang.String",
+      "description": "User for management endpoints.",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "management.credentials.passwd",
+      "type": "java.lang.String",
+      "description": "Password for management endpoints.",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "management.credentials.role",
+      "type": "java.lang.String",
+      "description": "Role for management endpoints.",
+      "sourceType": "ru.romanow.services.gateway.properties.ActuatorSecurityProperties"
+    },
+    {
+      "name": "logging.fluent-bit.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable send logs to logging collector."
+    },
+    {
+      "name": "logging.fluent-bit.address",
+      "type": "java.lang.Boolean",
+      "description": "Fluent Bit address."
+    }
+  ]
+}

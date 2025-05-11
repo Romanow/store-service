@@ -7,12 +7,12 @@ plugins {
 }
 
 dependencies {
-    implementation project(":warehouse-api")
-    implementation project(":warranty-api")
     implementation project(":common-service")
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "org.testcontainers:postgresql:$postgresContainerVersion"
+    testImplementation "com.github.dasniko:testcontainers-keycloak:$keycloakContainerVersion"
 }
 
 gitProperties {
@@ -22,6 +22,38 @@ gitProperties {
 }
 
 generateGitProperties.outputs.upToDateWhen { false }
+
+tasks.register("serverCodeGeneration", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "kotlin-spring"
+    ignoreFileOverride = "$rootDir/openapi/.openapi-generator-ignore"
+    templateDir = "$rootDir/openapi/templates"
+    configFile = "$rootDir/openapi/server-config.yml"
+    configOptions = [
+        apiPackage  : "ru.romanow.services.warehouse.web",
+        modelPackage: "ru.romanow.services.warehouse.model"
+    ]
+    typeMappings = [
+        'DateTime': 'LocalDateTime',
+    ]
+
+    inputSpec = "$rootDir/warehouse-service/openapi/warehouse-service.yml"
+    outputDir = "$buildDir/generated"
+}
+
+tasks.register("generateCodeByContracts") {
+    dependsOn serverCodeGeneration
+}
+
+runKtlintCheckOverMainSourceSet.dependsOn(tasks.generateCodeByContracts)
+compileKotlin.dependsOn(tasks.generateCodeByContracts)
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated/src/main/kotlin"
+        }
+    }
+}
 
 test {
     useJUnitPlatform()

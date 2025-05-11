@@ -1,22 +1,15 @@
--- V 1.0 Create item and order_item tables
+-- v1.0 Create tables
 CREATE TABLE items
 (
     id              SERIAL PRIMARY KEY,
-    model           VARCHAR(255)  NOT NULL,
-    size            VARCHAR(255)  NOT NULL,
-    available_count INT DEFAULT 0 NOT NULL
+    name            VARCHAR   NOT NULL,
+    description     VARCHAR,
+    available_count INTEGER   NOT NULL,
+    manufacturer    VARCHAR,
+    image_url       VARCHAR,
+    created_date    TIMESTAMP NOT NULL,
+    modified_date   TIMESTAMP NOT NULL,
+    modified_user   VARCHAR   NOT NULL
 );
 
-CREATE TABLE order_item
-(
-    id             SERIAL NOT NULL,
-    order_uid      uuid   NOT NULL,
-    order_item_uid uuid   NOT NULL,
-    item_id        INT
-        CONSTRAINT fk_order_item_item_id REFERENCES items (id),
-    canceled       BOOLEAN DEFAULT FALSE
-);
-
-CREATE INDEX idx_order_item_item_id ON order_item (item_id);
-CREATE INDEX idx_order_item_order_uid ON order_item (order_uid);
-CREATE UNIQUE INDEX idx_order_item_item_uid ON order_item (order_item_uid);
+CREATE UNIQUE INDEX ux_items_name ON items (name);
