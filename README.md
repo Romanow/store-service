@@ -17,7 +17,14 @@ GitHub: [romanow/store-service](https://github.com/Romanow/store-service).
 
 ## Взаимодействие сервисов
 
-[//]: # (TODO mermaid)
+```mermaid
+graph TD
+    A[Gateway] --> B[Store Service]
+    A[Gateway] --> C[Warehouse Service]
+    D[Warranty Service] --> C[Warehouse Service]
+    B[Store Service] --> C[Warehouse Service]
+    B[Store Service] --> D[Warranty Service]
+```
 
 ## Сборка и запуск
 
