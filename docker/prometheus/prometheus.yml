@@ -9,7 +9,7 @@ scrape_configs:
     static_configs:
       - targets:
           - "gateway:8080"
-          - "orders:8180"
+          - "store:8180"
           - "warehouse:8280"
           - "warranty:8380"
 

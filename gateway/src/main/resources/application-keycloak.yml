@@ -13,5 +13,5 @@ spring:
               - profile
         provider:
           keycloak:
-            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8100/realms/master/}
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8100/realms/master}
             user-name-attribute: preferred_username

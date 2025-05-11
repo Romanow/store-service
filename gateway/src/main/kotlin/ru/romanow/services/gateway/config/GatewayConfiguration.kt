@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.cloud.gateway.route.builder.filters
 import org.springframework.cloud.gateway.route.builder.routes
+import org.springframework.cloud.gateway.support.RouteMetadataUtils.RESPONSE_TIMEOUT_ATTR
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import ru.romanow.openapi.aggregator.DefaultOpenApiAggregatorService
@@ -39,6 +40,7 @@ class GatewayConfiguration {
                 filters {
                     stripPrefix(1)
                 }
+                metadata(RESPONSE_TIMEOUT_ATTR, 5000)
                 uri(config.url)
             }
         }

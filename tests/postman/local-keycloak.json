@@ -1,0 +1,51 @@
+{
+    "id": "e776ae7d-5e29-476c-8c80-49fe850e1e4b",
+    "name": "[local][keycloak] Store Service",
+    "values": [
+        {
+            "key": "gatewayUrl",
+            "value": "http://localhost:8080",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "username",
+            "value": "program@mail.ru",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "password",
+            "value": "test",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "clientId",
+            "value": "store",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "clientSecret",
+            "value": "kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "identityProviderUrl",
+            "value": "http://keycloak:8100/realms/master/protocol/openid-connect/token",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "any",
+            "enabled": true
+        }
+    ],
+    "_postman_variable_scope": "environment",
+    "_postman_exported_at": "2025-05-11T20:31:37.818Z",
+    "_postman_exported_using": "Postman/11.44.6"
+}

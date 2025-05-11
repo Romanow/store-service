@@ -715,10 +715,10 @@
                     "    expire = moment.unix(json.exp).isBefore(moment())",
                     "}",
                     "",
+                    "const identityProviderUrl = pm.environment.get(\"identityProviderUrl\");",
                     "if (lodash.isEmpty(token) || expire) {",
-                    "",
                     "    pm.sendRequest({",
-                    "        url: 'https://romanowalex.eu.auth0.com/oauth/token',",
+                    "        url: identityProviderUrl,",
                     "        method: 'POST',",
                     "        header: 'Content-Type: application/x-www-form-urlencoded',",
                     "         body: {",
@@ -733,7 +733,7 @@
                     "        ]",
                     "      }",
                     "    }, function (_, response) {",
-                    "        pm.collectionVariables.set(\"token\", response.json().access_token);",
+                    "        pm.environment.set(\"token\", response.json().access_token);",
                     "  });",
                     "}"
                 ]

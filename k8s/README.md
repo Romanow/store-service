@@ -23,6 +23,7 @@ $ sudo tee -a /etc/hosts >/dev/null <<EOT
 127.0.0.1    grafana.local
 127.0.0.1    jaeger.local
 127.0.0.1    kibana.local
+127.0.0.1    keycloak
 EOT
 
 # install postgres

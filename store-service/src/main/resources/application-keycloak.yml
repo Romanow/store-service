@@ -8,4 +8,4 @@ spring:
             client-secret: ${KEYCLOAK_CLIENT_SECRET:kIrcBrIz9OvgnDKQEUAi8XsiI6ekzUZC}
         provider:
           keycloak:
-            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8100/realms/master/}
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://keycloak:8100/realms/master}

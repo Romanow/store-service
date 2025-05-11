@@ -13,9 +13,9 @@ Built from branch: ${git.branch}
 Commit id: ${git.commit.id.abbrev}
 Commit time: ${git.commit.time}
 ==============================================================
-Store service: ${services.store-url}
-Warehouse service: ${services.warehouse-url}
-Warranty service: ${services.warranty-url}
+Store service: ${services.store.url}
+Warehouse service: ${services.warehouse.url}
+Warranty service: ${services.warranty.url}
 ==============================================================
 Tracing enabled: ${management.tracing.enabled}
 Security enabled: ${oauth2.security.enabled}
