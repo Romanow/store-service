@@ -27,7 +27,7 @@ ext {
     aggregatorByTagsVersion = "1.0.0"
     wireMockVersion = "3.10.0"
     postgresContainerVersion = "1.21.0"
-    keycloakContainerVersion = "3.6.0"
+    keycloakContainerVersion = "3.7.0"
 }
 
 subprojects { ->
