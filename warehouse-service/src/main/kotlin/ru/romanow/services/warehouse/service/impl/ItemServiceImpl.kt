@@ -36,7 +36,8 @@ internal class ItemServiceImpl(
         val items = itemRepository.findItemByNames(names)
         if (items.size != names.size) {
             val itemsNotFound = names.subtract(items.map { it.name }.toSet())
-            throw EntityNotFoundException("Not found information about items '$itemsNotFound')}'")
+            logger.error("Not found information about items '$itemsNotFound'")
+            throw EntityNotFoundException("Not found information about items '$itemsNotFound'")
         }
         return items.map {
             ItemInfo(
@@ -54,19 +55,26 @@ internal class ItemServiceImpl(
         val items = itemRepository.findItemByNames(names)
         if (items.size != names.size) {
             val itemsNotFound = names.subtract(items.map { it.name }.toSet())
-            throw EntityNotFoundException("Not found information about items '$itemsNotFound!)}'")
+            logger.error("Not found information about items '$itemsNotFound'")
+            throw EntityNotFoundException("Not found information about items '$itemsNotFound'")
         }
         val itemsNotAvailable = items.filter { it.availableCount < 1 }.map { it.name }
         if (itemsNotAvailable.isNotEmpty()) {
-            throw ItemNotAvailableException("Not available items '$itemsNotAvailable'")
+            logger.error("Items '$itemsNotAvailable' not available")
+            throw ItemNotAvailableException("Items '$itemsNotAvailable' not available")
         }
         items.forEach { it.availableCount -= 1 }
-        logger.info("Take ${items.size} items: '$names'")
+        logger.info("Took ${items.size} items: '$names'")
     }
 
     @Transactional
     override fun returnItems(names: List<String>) {
         val updated = itemRepository.returnItems(names)
+        if (updated != names.size) {
+            val items = itemRepository.findItemByNames(names)
+            val itemsNotFound = names.subtract(items.map { it.name }.toSet())
+            throw EntityNotFoundException("Can't return items, because '$itemsNotFound' is not found")
+        }
         logger.info("Returned $updated items: '$names'")
     }
 }

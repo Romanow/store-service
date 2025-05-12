@@ -15,16 +15,9 @@
     {
       "name": "circuit-breaker.enabled",
       "type": "java.lang.Boolean",
-      "sourceType": "ru.romanow.services.common.properties.CircuitBreakerConfigurationProperties",
+      "sourceType": "ru.romanow.services.common.properties.CircuitBreakerProperties",
       "description": "Enable circuit breaker.",
       "defaultValue": true
-    },
-    {
-      "name": "circuit-breaker.default-timeout",
-      "type": "java.time.Duration",
-      "sourceType": "ru.romanow.services.common.properties.CircuitBreakerConfigurationProperties",
-      "description": "Default timeout for circuit breaker.",
-      "defaultValue": "200ms"
     },
     {
       "name": "oauth2.security.enabled",

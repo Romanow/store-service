@@ -49,14 +49,16 @@ class OrderController(
         @PathVariable orderUid: UUID,
         @Valid @RequestBody requestBody: List<String>,
     ): ResponseEntity<List<WarrantyResponse>> {
-        return ResponseEntity.ok(orderManagementService.warrantyRequest(orderUid, requestBody))
+        val userId = extractUserId(authenticationToken)
+        return ResponseEntity.ok(orderManagementService.warrantyRequest(userId, orderUid, requestBody))
     }
 
     override fun cancel(
         authenticationToken: JwtAuthenticationToken?,
         @PathVariable orderUid: UUID
     ): ResponseEntity<Unit> {
-        orderManagementService.cancel(orderUid)
+        val userId = extractUserId(authenticationToken)
+        orderManagementService.cancel(userId, orderUid)
         return ResponseEntity.accepted().build()
     }
 

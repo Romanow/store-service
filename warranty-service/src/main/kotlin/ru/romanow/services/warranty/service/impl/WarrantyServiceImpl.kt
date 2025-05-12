@@ -4,6 +4,7 @@
 package ru.romanow.services.warranty.service.impl
 
 import jakarta.persistence.EntityNotFoundException
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Example.of
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,6 +23,7 @@ internal class WarrantyServiceImpl(
     private val warrantyRepository: WarrantyRepository,
     private val warehouseClient: WarehouseClient
 ) : WarrantyService {
+    private val logger = LoggerFactory.getLogger(WarrantyServiceImpl::class.java)
 
     @Transactional(readOnly = true)
     override fun status(orderUid: UUID) =
@@ -45,6 +47,7 @@ internal class WarrantyServiceImpl(
                 status = WarrantyStatus.ON_WARRANTY
             )
         }
+
         warrantyRepository.saveAll(warranties)
     }
 
@@ -54,6 +57,7 @@ internal class WarrantyServiceImpl(
         val warrantyMap = warranties.associateBy { it.name!! }
         if (!items.all { warrantyMap.containsKey(it) }) {
             val itemsNotOnWarranty = items.subtract(warrantyMap.keys)
+            logger.error("Items '$itemsNotOnWarranty' not on warranty for order '$orderUid'")
             throw ItemNotOnWarrantyException("Items '$itemsNotOnWarranty' not on warranty for order '$orderUid'")
         }
         val availableItems = warehouseClient.items(warrantyMap.keys)
@@ -70,7 +74,8 @@ internal class WarrantyServiceImpl(
                             warranty.comment = "Send to repair because Warehouse don't have enough items"
                         }
                     }
-                    WarrantyResponse(
+                    logger.info("Item '${it.name}' set up status ${warranty.status}")
+                    return@map WarrantyResponse(
                         name = it.name,
                         status = warranty.status!!,
                         comment = warranty.comment!!
@@ -87,5 +92,6 @@ internal class WarrantyServiceImpl(
         if (updated == 0) {
             throw EntityNotFoundException("Warranties for order $orderUid not found")
         }
+        logger.info("Stopped warranty for order '$orderUid'")
     }
 }

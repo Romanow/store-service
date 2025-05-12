@@ -71,7 +71,8 @@
         </root>
     </springProfile>
 
-    <root level="info">
+    <logger name="org.zalando.logbook" level="TRACE" />
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

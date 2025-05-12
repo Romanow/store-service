@@ -45,14 +45,13 @@ management:
 
 circuit-breaker:
   enabled: ${CIRCUIT_BREAKER_ENABLED:false}
-  default-timeout: ${CIRCUIT_BREAKER_TIMEOUT:30s}
 
 logbook:
   predicate:
       include:
         - path: /api/**
   format:
-    style: http
+    style: json
   write:
     max-body-size: 30000
 

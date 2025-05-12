@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import ru.romanow.services.store.exceptions.ItemNotAvailableException
 import ru.romanow.services.store.exceptions.ItemNotOnWarrantyException
+import ru.romanow.services.store.exceptions.OrderAccessException
 import ru.romanow.services.store.model.ErrorResponse
 
 @Hidden
@@ -28,6 +29,12 @@ class ExceptionController {
         val validationErrors = prepareValidationErrors(exception.bindingResult.fieldErrors)
         logger.debug("Bad Request: {}", validationErrors)
         return ErrorResponse(validationErrors)
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(OrderAccessException::class)
+    fun forbidden(exception: OrderAccessException): ErrorResponse {
+        return ErrorResponse(exception.message)
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

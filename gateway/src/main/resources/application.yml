@@ -59,11 +59,14 @@ management:
     livenessstate.enabled: true
 
 logbook:
+  filter:
+    enabled: true
+    form-request-mode:
   predicate:
-    include:
-      - path: /api/**
+    exclude:
+      - path: /manage/**
   format:
-    style: http
+    style: json
   write:
     max-body-size: 30000
 
@@ -77,5 +80,3 @@ logging:
   fluent-bit:
     enabled: ${FLUENT_BIT_ENABLED:false}
     address: ${FLUENT_BIT_ADDRESS:fluent-bit:5170}
-  level:
-    org.zalando.logbook: TRACE

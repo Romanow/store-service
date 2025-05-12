@@ -18,7 +18,7 @@ dependencies {
     implementation "io.micrometer:micrometer-tracing-bridge-otel"
     implementation "io.opentelemetry:opentelemetry-exporter-otlp"
     implementation "io.micrometer:micrometer-registry-prometheus"
-    implementation "org.zalando:logbook-spring-boot-starter:$logbookVersion"
+    implementation "org.zalando:logbook-spring-boot-webflux-autoconfigure:$logbookVersion"
     implementation "org.codehaus.janino:janino"
     implementation "org.codehaus.janino:commons-compiler"
     implementation "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion"

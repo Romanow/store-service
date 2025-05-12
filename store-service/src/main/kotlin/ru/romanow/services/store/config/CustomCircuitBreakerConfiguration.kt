@@ -3,17 +3,19 @@
  */
 package ru.romanow.services.store.config
 
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.context.annotation.Configuration
 import ru.romanow.services.common.config.CircuitBreakerConfigurationSupport
-import ru.romanow.services.store.exceptions.WarehouseProcessException
-import ru.romanow.services.store.exceptions.WarrantyProcessException
+import ru.romanow.services.store.exceptions.ItemNotAvailableException
+import ru.romanow.services.store.exceptions.ItemNotOnWarrantyException
 
 @Configuration
 class CustomCircuitBreakerConfiguration : CircuitBreakerConfigurationSupport {
     override fun ignoredExceptions(): Array<Class<out Throwable>> {
         return arrayOf(
-            WarehouseProcessException::class.java,
-            WarrantyProcessException::class.java
+            EntityNotFoundException::class.java,
+            ItemNotAvailableException::class.java,
+            ItemNotOnWarrantyException::class.java
         )
     }
 }

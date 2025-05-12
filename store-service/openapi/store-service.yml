@@ -74,6 +74,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: У пользователя нет доступа до заказа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         404:
           description: Заказ не найден
           content:
@@ -105,6 +111,12 @@ paths:
           description: Заказ отменен
         401:
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: У пользователя нет доступа до заказа
           content:
             application/json:
               schema:
@@ -154,6 +166,12 @@ paths:
                   $ref: '#/components/schemas/WarrantyResponse'
         401:
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: У пользователя нет доступа до заказа
           content:
             application/json:
               schema:
@@ -336,9 +354,11 @@ components:
         warrantyStartDate:
           type: string
           format: date-time
+          nullable: true
         lastUpdateDate:
           type: string
           format: date-time
+          nullable: true
       additionalProperties: false
     WarrantyResponse:
       type: object
@@ -363,6 +383,7 @@ components:
         - CANCELED
     WarrantyStatus:
       type: string
+      nullable: true
       enum:
         - ON_WARRANTY
         - TAKE_NEW

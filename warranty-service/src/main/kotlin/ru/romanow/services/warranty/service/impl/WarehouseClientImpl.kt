@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import ru.romanow.services.common.config.CircuitBreakerFactory
 import ru.romanow.services.common.config.Fallback
-import ru.romanow.services.common.properties.CircuitBreakerConfigurationProperties
+import ru.romanow.services.common.properties.CircuitBreakerProperties
 import ru.romanow.services.common.properties.ServerUrlProperties
 import ru.romanow.services.common.utils.buildEx
 import ru.romanow.services.warehouse.models.ItemInfo
@@ -24,7 +24,7 @@ internal class WarehouseClientImpl(
     private val fallback: Fallback,
     private val warehouseWebClient: WebClient,
     private val serverUrlProperties: ServerUrlProperties,
-    private val circuitBreakerProperties: CircuitBreakerConfigurationProperties,
+    private val circuitBreakerProperties: CircuitBreakerProperties,
     private val factory: CircuitBreakerFactory
 ) : WarehouseClient {
 
@@ -39,7 +39,7 @@ internal class WarehouseClientImpl(
             .bodyToMono(type)
             .transform {
                 if (circuitBreakerProperties.enabled) {
-                    factory.create("items").run(it) { throwable ->
+                    factory.create("Items Details").run(it) { throwable ->
                         fallback.apply(GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/items", throwable)
                     }
                 } else {

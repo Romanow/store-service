@@ -32,7 +32,7 @@
                         </providers>
                     </encoder>
                 </appender>
-                <root level="info">
+                <root level="INFO">
                     <appender-ref ref="FLUENT-BIT"/>
                 </root>
             </then>
@@ -66,13 +66,13 @@
                 </providers>
             </encoder>
         </appender>
-        <root level="info">
+        <root level="INFO">
             <appender-ref ref="FLUENT-BIT"/>
         </root>
     </springProfile>
 
     <logger name="org.zalando.logbook" level="TRACE" />
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

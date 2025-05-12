@@ -17,6 +17,6 @@ interface ItemRepository : JpaRepository<Items, Int> {
     fun findItemByNames(@Param("names") names: List<String>?): List<Items>
 
     @Modifying
-    @Query("update Items i set i.availableCount = i.availableCount - 1 where i.name in :names")
+    @Query("update Items i set i.availableCount = i.availableCount + 1 where i.name in :names")
     fun returnItems(@Param("names") names: List<String>): Int
 }

@@ -12,6 +12,6 @@ interface OrderManagementService {
     fun orders(userId: String): List<OrderResponse>
     fun orderByUid(orderUid: UUID): DetailedOrderResponse
     fun purchase(userId: String, items: List<String>): UUID
-    fun warrantyRequest(orderUid: UUID, items: List<String>): List<WarrantyResponse>
-    fun cancel(orderUid: UUID)
+    fun warrantyRequest(userId: String, orderUid: UUID, items: List<String>): List<WarrantyResponse>
+    fun cancel(userId: String, orderUid: UUID)
 }
