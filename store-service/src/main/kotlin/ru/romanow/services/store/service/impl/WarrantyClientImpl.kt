@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import ru.romanow.services.common.config.CircuitBreakerFactory
-import ru.romanow.services.common.config.Fallback
+import ru.romanow.services.common.config.FallbackHandler
 import ru.romanow.services.common.properties.CircuitBreakerProperties
 import ru.romanow.services.common.properties.ServerUrlProperties
 import ru.romanow.services.common.utils.buildEx
@@ -23,11 +23,11 @@ import java.util.*
 
 @Service
 internal class WarrantyClientImpl(
-    private val fallback: Fallback,
+    private val fallback: FallbackHandler,
     private val warrantyWebClient: WebClient,
     private val serverUrlProperties: ServerUrlProperties,
     private val circuitBreakerProperties: CircuitBreakerProperties,
-    private val factory: CircuitBreakerFactory
+    private val circuitBreakerFactory: CircuitBreakerFactory
 ) : WarrantyClient {
 
     override fun status(orderUid: UUID): Optional<List<WarrantyStatusResponse>> {
@@ -40,12 +40,15 @@ internal class WarrantyClientImpl(
             .bodyToMono(type)
             .transform {
                 if (circuitBreakerProperties.enabled) {
-                    factory.create("Warranty Status").run(it) { throwable ->
-                        fallback.apply(
-                            GET, "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid",
-                            throwable
-                        )
-                    }
+                    circuitBreakerFactory
+                        .create("Warranty Status")
+                        .run(it) { throwable ->
+                            fallback.apply(
+                                method = GET,
+                                url = "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid",
+                                throwable = throwable
+                            )
+                        }
                 } else {
                     return@transform it
                 }
@@ -65,12 +68,17 @@ internal class WarrantyClientImpl(
             .bodyToMono(type)
             .transform {
                 if (circuitBreakerProperties.enabled) {
-                    factory.create("Warranty Request").run(it) { throwable ->
-                        fallback.apply(
-                            POST, "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid/request",
-                            throwable
-                        )
-                    }
+                    circuitBreakerFactory
+                        .create("Warranty Request")
+                        .run(it) { throwable ->
+                            fallback.apply(
+                                method = POST,
+                                url = "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid/request",
+                                throwable = throwable,
+                                useFallback = false,
+                                params = arrayOf(items)
+                            )
+                        }
                 } else {
                     return@transform it
                 }
@@ -88,12 +96,17 @@ internal class WarrantyClientImpl(
             .toBodilessEntity()
             .transform {
                 if (circuitBreakerProperties.enabled) {
-                    factory.create("Start Warranty").run(it) { throwable ->
-                        fallback.apply(
-                            POST, "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid/start",
-                            throwable
-                        )
-                    }
+                    circuitBreakerFactory
+                        .create("Start Warranty")
+                        .run(it) { throwable ->
+                            fallback.apply(
+                                method = POST,
+                                url = "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid/start",
+                                throwable = throwable,
+                                useFallback = false,
+                                params = arrayOf(items)
+                            )
+                        }
                 } else {
                     return@transform it
                 }
@@ -110,12 +123,16 @@ internal class WarrantyClientImpl(
             .toBodilessEntity()
             .transform {
                 if (circuitBreakerProperties.enabled) {
-                    factory.create("Stop Warranty").run(it) { throwable ->
-                        fallback.apply(
-                            DELETE, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/stop",
-                            throwable
-                        )
-                    }
+                    circuitBreakerFactory
+                        .create("Stop Warranty")
+                        .run(it) { throwable ->
+                            fallback.apply(
+                                method = DELETE,
+                                url = "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/stop",
+                                throwable = throwable,
+                                useFallback = false
+                            )
+                        }
                 } else {
                     return@transform it
                 }

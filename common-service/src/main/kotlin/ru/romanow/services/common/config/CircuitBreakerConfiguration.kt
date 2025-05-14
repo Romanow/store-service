@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import reactor.core.publisher.Mono
 import ru.romanow.services.common.exceptions.CircuitBreakerIgnoredException
-import ru.romanow.services.common.exceptions.CircuitBreakerThrowableException
 import ru.romanow.services.common.properties.CircuitBreakerProperties
 
 typealias CircuitBreakerFactory =
@@ -45,14 +44,16 @@ class CircuitBreakerConfiguration {
     }
 
     @Bean
-    fun fallback(): Fallback {
-        return object : Fallback {
-            override fun <T> apply(method: HttpMethod, url: String, throwable: Throwable, vararg params: Any): Mono<T> {
+    fun fallback(): FallbackHandler {
+        return object : FallbackHandler {
+            override fun <T> apply(
+                method: HttpMethod, url: String, throwable: Throwable, useFallback: Boolean, vararg params: Any
+            ): Mono<T> {
                 logger.warn(
                     "Request to {} '{}' failed with exception: {}. (params: '{}')",
                     method.name(), url, throwable.message, params
                 )
-                if (throwable is CircuitBreakerIgnoredException || throwable is CircuitBreakerThrowableException) {
+                if (throwable is CircuitBreakerIgnoredException || !useFallback) {
                     throw throwable
                 }
                 return Mono.empty()

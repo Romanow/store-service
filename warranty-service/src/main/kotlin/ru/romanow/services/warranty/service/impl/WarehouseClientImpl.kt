@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import ru.romanow.services.common.config.CircuitBreakerFactory
-import ru.romanow.services.common.config.Fallback
+import ru.romanow.services.common.config.FallbackHandler
 import ru.romanow.services.common.properties.CircuitBreakerProperties
 import ru.romanow.services.common.properties.ServerUrlProperties
 import ru.romanow.services.common.utils.buildEx
@@ -21,11 +21,11 @@ import java.util.*
 
 @Service
 internal class WarehouseClientImpl(
-    private val fallback: Fallback,
+    private val fallback: FallbackHandler,
     private val warehouseWebClient: WebClient,
     private val serverUrlProperties: ServerUrlProperties,
     private val circuitBreakerProperties: CircuitBreakerProperties,
-    private val factory: CircuitBreakerFactory
+    private val circuitBreakerFactory: CircuitBreakerFactory
 ) : WarehouseClient {
 
     override fun items(names: Set<String>): Optional<List<ItemInfo>> {
@@ -39,9 +39,16 @@ internal class WarehouseClientImpl(
             .bodyToMono(type)
             .transform {
                 if (circuitBreakerProperties.enabled) {
-                    factory.create("Items Details").run(it) { throwable ->
-                        fallback.apply(GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/items", throwable)
-                    }
+                    circuitBreakerFactory
+                        .create("Items Details")
+                        .run(it) { throwable ->
+                            fallback.apply(
+                                method = GET,
+                                url = "${serverUrlProperties.warehouseUrl}/api/protected/v1/items",
+                                throwable = throwable,
+                                params = arrayOf(names)
+                            )
+                        }
                 } else {
                     return@transform it
                 }

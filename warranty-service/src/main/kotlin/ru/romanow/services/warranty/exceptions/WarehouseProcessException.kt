@@ -3,6 +3,4 @@
  */
 package ru.romanow.services.warranty.exceptions
 
-import ru.romanow.services.common.exceptions.CircuitBreakerThrowableException
-
-class WarehouseProcessException(message: String?) : CircuitBreakerThrowableException(message)
+class WarehouseProcessException(message: String?) : RuntimeException(message)

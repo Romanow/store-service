@@ -9,4 +9,4 @@ import ru.romanow.services.common.model.ErrorResponse
 import java.util.function.Function
 
 fun <T : RuntimeException> buildEx(response: ClientResponse, func: Function<String?, T>): Mono<T> =
-    response.bodyToMono(ErrorResponse::class.java).flatMap { b -> Mono.error { func.apply(b.message) } }
+    response.bodyToMono(ErrorResponse::class.java).flatMap { Mono.error { func.apply(it.message) } }
