@@ -3,4 +3,6 @@
  */
 package ru.romanow.services.warehouse.exceptions
 
-class ItemNotAvailableException(message: String?) : RuntimeException(message)
+import ru.romanow.services.common.exceptions.CircuitBreakerIgnoredException
+
+class ItemNotAvailableException(message: String?) : CircuitBreakerIgnoredException(message)

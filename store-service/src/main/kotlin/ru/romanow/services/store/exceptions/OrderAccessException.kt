@@ -3,4 +3,6 @@
  */
 package ru.romanow.services.store.exceptions
 
-class OrderAccessException(message: String?) : RuntimeException(message)
+import ru.romanow.services.common.exceptions.CircuitBreakerIgnoredException
+
+class OrderAccessException(message: String?) : CircuitBreakerIgnoredException(message)

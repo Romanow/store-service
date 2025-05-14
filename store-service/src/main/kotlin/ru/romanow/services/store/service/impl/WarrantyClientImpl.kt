@@ -42,7 +42,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("Warranty Status").run(it) { throwable ->
                         fallback.apply(
-                            GET, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid",
+                            GET, "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid",
                             throwable
                         )
                     }
@@ -67,7 +67,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("Warranty Request").run(it) { throwable ->
                         fallback.apply(
-                            POST, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/request",
+                            POST, "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid/request",
                             throwable
                         )
                     }
@@ -90,7 +90,7 @@ internal class WarrantyClientImpl(
                 if (circuitBreakerProperties.enabled) {
                     factory.create("Start Warranty").run(it) { throwable ->
                         fallback.apply(
-                            POST, "${serverUrlProperties.warehouseUrl}/api/protected/v1/warranty/$orderUid/start",
+                            POST, "${serverUrlProperties.warrantyUrl}/api/protected/v1/warranty/$orderUid/start",
                             throwable
                         )
                     }

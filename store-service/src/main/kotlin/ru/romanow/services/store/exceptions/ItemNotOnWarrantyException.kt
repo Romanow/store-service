@@ -3,4 +3,6 @@
  */
 package ru.romanow.services.store.exceptions
 
-class ItemNotOnWarrantyException(message: String?) : RuntimeException(message)
+import ru.romanow.services.common.exceptions.CircuitBreakerIgnoredException
+
+class ItemNotOnWarrantyException(message: String?) : CircuitBreakerIgnoredException(message)
