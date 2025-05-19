@@ -3,10 +3,6 @@ server:
   forward-headers-strategy: framework
   servlet:
     context-path: ${APPLICATION_CONTEXT_PATH:/}
-    session:
-      cookie:
-        http-only: off
-        max-age: 86400
 
 spring:
   profiles:

@@ -1,12 +1,6 @@
 server:
   port: ${APPLICATION_PORT:8080}
   forward-headers-strategy: framework
-  servlet:
-    context-path: ${APPLICATION_CONTEXT_PATH:/}
-    session:
-      cookie:
-        http-only: off
-        max-age: 86400
 
 spring:
   profiles:
@@ -17,6 +11,8 @@ spring:
     name: gateway
   main:
     web-application-type: reactive
+  webflux:
+    base-path: ${APPLICATION_CONTEXT_PATH:/}
   cloud:
     gateway:
       globalcors:
