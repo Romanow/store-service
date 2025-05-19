@@ -1,0 +1,18 @@
+services:
+  influxdb:
+    image: influxdb:1.11
+    container_name: influxdb
+    environment:
+      - INFLUXDB_DB=k6
+    ports:
+      - "8086:8086"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:8086/ping || exit 1" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - influxdb:/var/lib/influxdb
+
+volumes:
+  influxdb:

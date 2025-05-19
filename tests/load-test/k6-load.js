@@ -27,7 +27,7 @@ export function setup() {
         }
     }
 
-    const url = "https://romanowalex.eu.auth0.com/oauth/token"
+    const url = __ENV.IDENTITY_PROVIDER
     const result = http.post(url, body.toString(), params)
     return result.json().access_token
 }
@@ -40,44 +40,38 @@ export default function (token) {
         }
     };
 
-    // step 1: purchase item
-    const data = [
-        {"model": "Lego 8070", "size": "M"},
-        {"model": "Lego 8880", "size": "L"},
-        {"model": "Lego 42070", "size": "L"}
-    ];
-    let response = http.post("http://localhost:8080/api/v1/store/purchase", JSON.stringify(randomItem(data)), params);
+    // step 1: list items
+    let response = http.get("http://localhost:8080/warehouse/api/public/v1/items");
     check(response, {
-        "status is CREATED": (r) => r.status === 201,
-        "location header is present": (r) => !!r.headers["Location"]
+        "status is OK": (r) => r.status === 200,
+        "content is present": (r) => !!r.body,
+    });
+    const item = [randomItem(response.json("#.name"))]
+
+    // step 2: purchase
+    response = http.post("http://localhost:8080/store/api/protected/v1/orders/purchase", JSON.stringify(item), params);
+    check(response, {
+        "status is OK": (r) => r.status === 201,
     });
     const orderUid = response.headers["Location"].split("/").pop()
 
-    // step 2: user info
-    response = http.get("http://localhost:8080/api/v1/store/orders", params);
+    // step 3: order info by user
+    response = http.get(`http://localhost:8080/store/api/protected/v1/orders/${orderUid}`, params);
     check(response, {
         "status is OK": (r) => r.status === 200,
         "content is present": (r) => !!r.body,
     });
 
-    // step 3: order info by user
-    response = http.get(`http://localhost:8080/api/v1/store/${orderUid}`, params);
-    check(response, {
-        "status is 200": (r) => r.status === 200,
-        "content is present": (r) => !!r.body,
-    });
-
     // step 4: warranty request
-    const body = {"reason": "It drowned"}
-    response = http.post(`http://localhost:8080/api/v1/store/${orderUid}/warranty`, JSON.stringify(body), params);
+    response = http.post(`http://localhost:8080/store/api/protected/v1/orders/${orderUid}/warranty`, JSON.stringify(item), params);
     check(response, {
         "status is OK": (r) => r.status === 200,
         "content is present": (r) => !!r.body,
     });
 
     // step 5: return order
-    response = http.del(`http://localhost:8080/api/v1/store/${orderUid}/refund`, null, params);
+    response = http.del(`http://localhost:8080/store/api/protected/v1/orders/${orderUid}/cancel`, null, params);
     check(response, {
-        "status is NO_CONTENT": (r) => r.status === 204
+        "status is NO_CONTENT": (r) => r.status === 202
     });
 };

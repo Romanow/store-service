@@ -26,3 +26,8 @@ providers:
     type: file
     options:
       path: /etc/grafana/provisioning/dashboards/dashboards/postgres-exporter.json
+
+  - name: "k6"
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards/dashboards/k6-results.json

@@ -48,18 +48,25 @@ $ curl --location --request POST 'https://romanowalex.eu.auth0.com/oauth/token' 
 ```shell
 $ brew install k6
 
+$ export SPRING_PROFILES_ACTIVE=docker,auth0
+$ export OAUTH2_SECURITY_ENABLED=true
+$ export TRACING_ENABLED=true
 $ docker compose \
     -f docker-compose.yml \
     -f docker-compose.tracing.yml \
-    -f docker-compose.logging.yml \
+    -f docker-compose.influxdb.yml \
     -f docker-compose.monitoring.yml \
     up -d --wait
 
-$ K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=report.html \
-  k6 run \
+# можно использовать встроенные dashboards: K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=report.html
+# – Auth0: https://romanowalex.eu.auth0.com/oauth/token
+# – Keycloak: http://keycloak:8100/realms/master/protocol/openid-connect/token
+$ k6 run \
+    --out influxdb=http://localhost:8086/k6 \
+    -e IDENTITY_PROVIDER=https://romanowalex.eu.auth0.com/oauth/token \
     -e USERNAME=ronin@romanow-alex.ru \
     -e PASSWORD=Qwerty123 \
     -e CLIENT_ID=<Client ID> \
     -e CLIENT_SECRET=<Client Secret> \
-    k6.auth.js
+    k6-load.js
 ```
