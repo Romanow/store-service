@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.gateway.filters
 
 import org.assertj.core.api.Assertions.assertThat

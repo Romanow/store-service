@@ -10,6 +10,7 @@ services:
   postgres:
     image: postgres:15
     container_name: postgres
+    pull_policy: never
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "postgres"

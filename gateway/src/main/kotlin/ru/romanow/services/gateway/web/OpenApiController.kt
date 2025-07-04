@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.gateway.web
 
 import io.swagger.v3.core.util.Yaml

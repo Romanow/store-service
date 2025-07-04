@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Romanov Alexey, 2025
+ */
 package ru.romanow.services.gateway
 
 import com.github.tomakehurst.wiremock.client.WireMock.*

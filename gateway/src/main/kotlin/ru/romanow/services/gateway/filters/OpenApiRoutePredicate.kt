@@ -38,18 +38,21 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
             if (operation != null && matcher.match(path, requestPath.value()) &&
                 (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
             ) {
-                val params = matcher.extractUriTemplateVariables(path, requestPath.value())
-                val find = operation.parameters.none { it.`in` == "path" } ||
-                    operation.parameters.filter { it.name in params }.any {
-                        val value = params[it.name]!!
-                        var check = checkType(value, it.schema.type)
-                        if (check) {
-                            check = check && checkSubtype(value, it.schema.format)
-                            check = check && (it.schema.pattern == null || it.schema.pattern.toRegex().matches(value))
+                val hasPathParameters = operation.parameters == null || operation.parameters.none { it.`in` == "path" }
+                if (!hasPathParameters) {
+                    val params = matcher.extractUriTemplateVariables(path, requestPath.value())
+                    val exists = operation.parameters
+                        .filter { it.name in params }
+                        .any {
+                            val value = params[it.name]!!
+                            return@any checkType(value, it.schema.type)
+                                && checkSubtype(value, it.schema.format)
+                                && (it.schema.pattern == null || it.schema.pattern.toRegex().matches(value))
                         }
-                        return@any check
+                    if (exists) {
+                        result.add(operation)
                     }
-                if (find) {
+                } else {
                     result.add(operation)
                 }
             }
