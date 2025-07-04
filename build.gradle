@@ -46,6 +46,7 @@ subprojects { ->
     [compileKotlin, compileTestKotlin]*.kotlinOptions*.jvmTarget = "17"
 
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             url = uri("https://maven.pkg.github.com/Romanow/aggregator-by-tags")

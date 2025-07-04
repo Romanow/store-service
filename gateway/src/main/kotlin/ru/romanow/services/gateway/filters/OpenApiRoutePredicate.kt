@@ -45,9 +45,9 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
                         .filter { it.name in params }
                         .any {
                             val value = params[it.name]!!
-                            return@any checkType(value, it.schema.type)
-                                && checkSubtype(value, it.schema.format)
-                                && (it.schema.pattern == null || it.schema.pattern.toRegex().matches(value))
+                            return@any checkType(value, it.schema.type) &&
+                                checkSubtype(value, it.schema.format) &&
+                                (it.schema.pattern == null || it.schema.pattern.toRegex().matches(value))
                         }
                     if (exists) {
                         result.add(operation)
