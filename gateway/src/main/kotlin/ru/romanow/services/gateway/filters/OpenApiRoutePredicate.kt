@@ -4,6 +4,7 @@
 package ru.romanow.services.gateway.filters
 
 import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
 import org.springframework.cloud.gateway.handler.predicate.AbstractRoutePredicateFactory
 import org.springframework.http.HttpMethod
@@ -20,22 +21,56 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
     override fun apply(config: PredicateConfig) = Predicate<ServerWebExchange> {
         val method = it.request.method
         val path = trimSlash(it.request.path, config.prefix)
-        return@Predicate checkIsOperationExists(config.openApi, method, path, config.tags)
+        return@Predicate findOperations(config.openApi, method, path, config.tags).isNotEmpty()
     }
 
-    fun checkIsOperationExists(openApi: OpenAPI, method: HttpMethod, path: PathContainer, tags: Set<String>?) =
-        openApi.paths.entries.stream().filter { isOperationMatch(it, method, path, tags) }.count() > 0
-
-    private fun isOperationMatch(
-        path: Map.Entry<String, PathItem>, requestMethod: HttpMethod, requestPath: PathContainer, tags: Set<String>?
-    ): Boolean {
-        val method = PathItem.HttpMethod.valueOf(requestMethod.name())
-        val operation = path.value.readOperationsMap()[method]
+    fun findOperations(
+        openApi: OpenAPI,
+        requestMethod: HttpMethod,
+        requestPath: PathContainer,
+        tags: Set<String>?
+    ): List<Operation> {
         val matcher = AntPathMatcher()
-        return operation != null &&
-            matcher.match(path.key, requestPath.value()) &&
-            (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
+        val method = PathItem.HttpMethod.valueOf(requestMethod.name())
+        val result = mutableListOf<Operation>()
+        for ((path, pathItem) in openApi.paths) {
+            val operation: Operation? = pathItem.readOperationsMap()[method]
+            if (operation != null && matcher.match(path, requestPath.value()) &&
+                (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
+            ) {
+                val params = matcher.extractUriTemplateVariables(path, requestPath.value())
+                val find = operation.parameters.none { it.`in` == "path" } ||
+                    operation.parameters.filter { it.name in params }.any {
+                        val value = params[it.name]!!
+                        var check = checkType(value, it.schema.type)
+                        if (check) {
+                            check = check && checkSubtype(value, it.schema.format)
+                            check = check && (it.schema.pattern == null || it.schema.pattern.toRegex().matches(value))
+                        }
+                        return@any check
+                    }
+                if (find) {
+                    result.add(operation)
+                }
+            }
+        }
+        return result
     }
+
+    private fun checkType(value: String, type: String?) =
+        when (type) {
+            "number", "integer" -> value.all { it.isDigit() }
+            "boolean" -> value.toBooleanStrictOrNull() != null
+            "string" -> true
+            else -> true
+        }
+
+    private fun checkSubtype(value: String, type: String) =
+        when (type) {
+            "int32", "int64" -> value.all { it.isDigit() }
+            "uuid" -> UUID_REGEX.matches(value)
+            else -> true
+        }
 
     private fun trimSlash(path: RequestPath, trimPrefix: Int): PathContainer =
         if (path.value().endsWith("/")) {
@@ -43,4 +78,8 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
         } else {
             path.subPath(2 * trimPrefix)
         }
+
+    companion object {
+        private val UUID_REGEX = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}".toRegex()
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpMethod.POST
 import org.springframework.http.server.PathContainer
 import ru.romanow.services.gateway.services.OpenApiServiceImpl
+import java.util.*
 import java.util.stream.Stream
 
 class OpenApiRoutePredicateTest {
@@ -22,21 +23,24 @@ class OpenApiRoutePredicateTest {
 
     @ParameterizedTest
     @ArgumentsSource(ValueProvider::class)
-    fun testCheckIsOperationExists(path: String, method: HttpMethod, expected: Boolean) {
+    fun testCheckIsOperationExists(path: String, method: HttpMethod, expectedCount: Int) {
         val openApi = openApiService.read(OPEN_API)
 
         val result = openApiRoutePredicate
-            .checkIsOperationExists(openApi, method, PathContainer.parsePath(path), setOf("public"))
+            .findOperations(openApi, method, PathContainer.parsePath(path), setOf("public"))
 
-        assertThat(result).isEqualTo(expected)
+        assertThat(result).hasSize(expectedCount)
     }
 
     internal class ValueProvider : ArgumentsProvider {
         override fun provideArguments(context: ExtensionContext): Stream<Arguments> =
             Stream.of(
-                of("/api/public/v1/echo", GET, true),
-                of("/api/public/v1/echo", POST, false),
-                of("/api/protected/v1/echo", GET, false)
+                of("/api/public/v1/echo", GET, 1),
+                of("/api/public/v1/${UUID.randomUUID()}", GET, 1),
+                of("/api/public/v1/100", GET, 1),
+                of("/api/public/v1/test", GET, 0),
+                of("/api/public/v1/echo", POST, 0),
+                of("/api/protected/v1/echo", GET, 0)
             )
     }
 

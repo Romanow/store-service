@@ -23,6 +23,47 @@ paths:
               schema:
                 type: string
 
+  /api/public/v1/{requestUid}:
+    get:
+      summary: Get status by requestUid endpoint
+      tags:
+        - public
+      parameters:
+        - name: requestUid
+          in: path
+          schema:
+            type: string
+            format: uuid
+            pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+      responses:
+        200:
+          description: Status response
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /api/public/v1/{requestId}:
+    get:
+      summary: Get status by id endpoint
+      tags:
+        - public
+      parameters:
+        - name: requestId
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 65536
+      responses:
+        200:
+          description: Status response
+          content:
+            application/json:
+              schema:
+                type: string
+
   /api/protected/v1/echo:
     get:
       summary: Private echo endpoint
@@ -42,4 +83,4 @@ paths:
               schema:
                 type: string
 
-components: {}
+components: { }
