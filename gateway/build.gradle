@@ -23,7 +23,7 @@ dependencies {
     implementation "org.codehaus.janino:commons-compiler"
     implementation "net.logstash.logback:logstash-logback-encoder:$logstashEncoderVersion"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:$openApiVersion"
-    implementation "ru.romanow.openapi:aggregator-by-tags:$aggregatorByTagsVersion"
+    implementation "ru.romanow-alex:aggregator-by-tags:$aggregatorByTagsVersion"
 
     testImplementation "org.wiremock.integrations:wiremock-spring-boot:$wireMockVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test"

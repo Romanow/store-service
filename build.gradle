@@ -24,7 +24,7 @@ ext {
     openApiVersion = "2.8.5"
     logbookVersion = "3.12.0"
     logstashEncoderVersion = "7.4"
-    aggregatorByTagsVersion = "1.0.0"
+    aggregatorByTagsVersion = "1.0.1"
     wireMockVersion = "3.10.0"
     postgresContainerVersion = "1.21.0"
     keycloakContainerVersion = "3.6.0"
@@ -46,15 +46,7 @@ subprojects { ->
     [compileKotlin, compileTestKotlin]*.kotlinOptions*.jvmTarget = "17"
 
     repositories {
-        mavenLocal()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/Romanow/aggregator-by-tags")
-            credentials {
-                username = System.getenv("GITHUB_USER")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
     }
 
     ktlint {
