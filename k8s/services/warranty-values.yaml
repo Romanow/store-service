@@ -1,6 +1,6 @@
 image:
   repository: romanowalex/warranty-service
-  tag: v4.0
+  tag: v4.1
 
 database:
   name: warranty

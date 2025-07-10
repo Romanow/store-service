@@ -1,6 +1,6 @@
 image:
   repository: romanowalex/store-gateway
-  tag: v4.0
+  tag: v4.1
 
 database:
   name: orders
