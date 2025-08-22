@@ -1,4 +1,4 @@
-profile: k8s
+profile: k8s,auth0
 
 ingress:
   enabled: true
@@ -10,6 +10,10 @@ database:
   username: program
   password: test
 
+environments:
+  - name: OAUTH2_SECURITY_ENABLED
+    value: true
+
 resources:
   requests:
     cpu: 0.5
@@ -19,33 +23,14 @@ resources:
     memory: 1024Mi
 
 circuitBreaker:
-  enabled: true
+  enabled: false
 
-jaeger:
-  enabled: true
-  application:
-    host: localhost
-    port: 6831
-  collector:
-    host: jaeger-collector
-    port: 14250
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 100m
-      memory: 256Mi
+tracing:
+  enabled: false
+  host: fluent-bit
+  port: 6831
 
-filebeat:
-  enabled: true
-  logstash:
-    host: logstash
-    port: 5044
-  resources:
-    requests:
-      cpu: 50m
-      memory: 128Mi
-    limits:
-      cpu: 50m
-      memory: 128Mi
+logging:
+  enabled: false
+  host: jaeger
+  port: 6831

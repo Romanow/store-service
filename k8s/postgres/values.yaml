@@ -6,7 +6,7 @@ users:
     password: test
 
 databases:
-  - name: orders
+  - name: store
     user: program
   - name: warehouse
     user: program

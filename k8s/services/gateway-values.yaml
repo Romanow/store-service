@@ -2,8 +2,5 @@ image:
   repository: romanowalex/store-gateway
   tag: v4.1
 
-database:
-  name: orders
-
 ports:
   internal: 8080

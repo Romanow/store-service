@@ -1,0 +1,51 @@
+{
+    "id": "be8f6b35-a13d-49a3-baae-cec9eaa63601",
+    "name": "[local] Store Service",
+    "values": [
+        {
+            "key": "gatewayUrl",
+            "value": "http://gateway.local",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "username",
+            "value": "ronin@romanow-alex.ru",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "password",
+            "value": "Qwerty123",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "clientId",
+            "value": "pXrawhpoDM63b82A7fkiLvRIH81wgmH9",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "clientSecret",
+            "value": "LzQSxUOE2dmAUdgstWke4ngXUeZNLVczvSid7ZVV8HTegCRbOxchQtJ_23EuZ9_V",
+            "type": "secret",
+            "enabled": true
+        },
+        {
+            "key": "identityProviderUrl",
+            "value": "https://romanowalex.eu.auth0.com/oauth/token",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "any",
+            "enabled": true
+        }
+    ],
+    "_postman_variable_scope": "environment",
+    "_postman_exported_at": "2025-05-11T20:31:29.889Z",
+    "_postman_exported_using": "Postman/11.44.6"
+}
