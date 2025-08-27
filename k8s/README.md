@@ -68,7 +68,7 @@ $ helm install prometheus-stack prometheus-community/kube-prometheus-stack --val
 
 ```shell
 $ helm install fluent-bit romanow/fluent-bit
-$ helm install elasticsearch romanow/elastic --values=elastic/values.yaml
+$ helm install elasticsearch romanow/elasticsearch --values=elasticsearch/values.yaml
 $ helm install kibana romanow/kibana --set ingress.domain=local
 ```
 

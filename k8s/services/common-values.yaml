@@ -31,6 +31,6 @@ tracing:
   port: 6831
 
 logging:
-  enabled: false
+  enabled: true
   host: jaeger
   port: 6831

@@ -28,6 +28,6 @@ class WebClientConfiguration {
             .build()
 
     private fun httpClient() = HttpClient.create()
-        .option(CONNECT_TIMEOUT_MILLIS, 100)
-        .responseTimeout(Duration.ofSeconds(1))
+        .option(CONNECT_TIMEOUT_MILLIS, 200)
+        .responseTimeout(Duration.ofSeconds(5))
 }

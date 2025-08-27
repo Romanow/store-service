@@ -7,7 +7,7 @@
     <springProperty scope="context" name="FLUENT_BIT_ENABLED" source="logging.fluent-bit.enabled"/>
     <springProperty scope="context" name="FLUENT_BIT_ADDRESS" source="logging.fluent-bit.address"/>
 
-    <springProfile name="docker">
+    <springProfile name="docker | k8s">
         <if condition="${FLUENT_BIT_ENABLED}">
             <then>
                 <appender name="FLUENT-BIT" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
@@ -32,43 +32,11 @@
                         </providers>
                     </encoder>
                 </appender>
-                <root level="info">
+                <root level="INFO">
                     <appender-ref ref="FLUENT-BIT"/>
                 </root>
             </then>
         </if>
-    </springProfile>
-
-    <springProfile name="k8s">
-        <appender name="FLUENT-BIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <file>/var/log/${APPLICATION_NAME}/application.log</file>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <fileNamePattern>application.%d{yyyy-MM-dd}.log.gz}</fileNamePattern>
-                <maxHistory>7</maxHistory>
-            </rollingPolicy>
-            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-                <providers>
-                    <pattern>
-                        <pattern>
-                            {
-                                "timestamp": "@timestamp",
-                                "level": "%level",
-                                "application": "${APPLICATION_NAME:-}",
-                                "trace": "%X{traceId:-}",
-                                "span": "%X{spanId:-}",
-                                "pid": "${PID:-}",
-                                "thread": "%thread",
-                                "class": "%logger{40}",
-                                "message": "%message"
-                            }
-                        </pattern>
-                    </pattern>
-                </providers>
-            </encoder>
-        </appender>
-        <root level="info">
-            <appender-ref ref="FLUENT-BIT"/>
-        </root>
     </springProfile>
 
     <logger name="org.zalando.logbook" level="TRACE" />
