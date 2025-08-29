@@ -1,6 +1,6 @@
 {
     "id": "be8f6b35-a13d-49a3-baae-cec9eaa63601",
-    "name": "[local] Store Service",
+    "name": "[local][auth0] Store Service",
     "values": [
         {
             "key": "gatewayUrl",

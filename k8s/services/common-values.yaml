@@ -26,11 +26,9 @@ circuitBreaker:
   enabled: false
 
 tracing:
-  enabled: false
-  host: fluent-bit
-  port: 6831
+  enabled: true
+  endpoint: http://jaeger:4318/v1/traces
 
 logging:
-  enabled: true
-  host: jaeger
-  port: 6831
+  enabled: false
+  endpoint: fluent-bit:5170
