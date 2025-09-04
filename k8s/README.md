@@ -77,8 +77,8 @@ $ helm install kibana romanow/kibana --set ingress.domain=local
 #### Jaeger
 
 ```shell
-$ helm install prometheus romanow/prometheus
-$ helm install jaeger romanow/jaeger --set ingress.domain=local
+$ helm install elasticsearch romanow/elasticsearch --values=elasticsearch/values.yaml
+$ helm install jaeger romanow/jaeger --values=tracing/helm/values.yaml
 ```
 
 Открыть в браузере [http://jaeger.local](http://jaeger.local).

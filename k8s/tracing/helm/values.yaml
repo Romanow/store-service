@@ -1,0 +1,24 @@
+ingress:
+  enabled: true
+  domain: local
+
+traces:
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      server_urls: ["http://elasticsearch:9200"]
+      auth:
+        basic:
+          username: logging
+          password: qwerty
+
+metrics:
+  enabled: true
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      server_urls: ["http://elasticsearch:9200"]
+      auth:
+        basic:
+          username: logging
+          password: qwerty
