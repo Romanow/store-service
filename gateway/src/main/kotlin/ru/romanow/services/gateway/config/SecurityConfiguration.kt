@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.http.HttpMethod.OPTIONS
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.config.web.server.invoke
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
@@ -21,10 +22,15 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtIssuerReactiveAuthenticationManagerResolver.fromTrustedIssuers
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint
-import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler
 import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsWebFilter
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
+import ru.romanow.services.gateway.filters.RedirectUriFilter
 import ru.romanow.services.gateway.properties.ActuatorSecurityProperties
+import ru.romanow.services.gateway.services.AuthenticationSuccessHandler
 
 @Configuration
 @EnableWebFluxSecurity
@@ -42,7 +48,7 @@ class SecurityConfiguration {
         http: ServerHttpSecurity,
         properties: ActuatorSecurityProperties
     ): SecurityWebFilterChain {
-        return http.invoke {
+        return http {
             securityMatcher(
                 OrServerWebExchangeMatcher(
                     EndpointRequest.toAnyEndpoint(),
@@ -65,27 +71,31 @@ class SecurityConfiguration {
     @Order(SECOND)
     @ConditionalOnProperty("oauth2.security.enabled", havingValue = "true", matchIfMissing = true)
     fun protectedResourceSecurityFilterChain(
-        http: ServerHttpSecurity, properties: OAuth2ClientProperties
+        http: ServerHttpSecurity,
+        properties: OAuth2ClientProperties,
+        redirectUriFilter: RedirectUriFilter,
+        successHandler: AuthenticationSuccessHandler
     ): SecurityWebFilterChain {
-        return http.invoke {
+        return http {
+            addFilterBefore(redirectUriFilter, SecurityWebFiltersOrder.HTTP_HEADERS_WRITER)
             authorizeExchange {
                 authorize("/oauth2/authorization/**", permitAll)
                 authorize("/login/oauth2/code/**", permitAll)
                 authorize("/*/api/public/**", permitAll)
-                authorize(PathPatternParserServerWebExchangeMatcher("/**", OPTIONS), permitAll)
+                authorize(pathMatchers(OPTIONS, "/**"), permitAll)
                 authorize(anyExchange, authenticated)
             }
             oauth2ResourceServer {
                 authenticationManagerResolver = fromTrustedIssuers(properties.provider.map { it.value.issuerUri })
             }
             oauth2Login {
-                authenticationSuccessHandler = RedirectServerAuthenticationSuccessHandler("/callback")
+                authenticationSuccessHandler = successHandler
             }
             exceptionHandling {
                 authenticationEntryPoint = HttpBasicServerAuthenticationEntryPoint()
             }
+
             csrf { disable() }
-            cors { disable() }
         }
     }
 
@@ -93,12 +103,24 @@ class SecurityConfiguration {
     @Order(SECOND)
     @ConditionalOnProperty("oauth2.security.enabled", havingValue = "false")
     fun disabledSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        return http.invoke {
-            securityMatcher(PathPatternParserServerWebExchangeMatcher("/**"))
+        return http {
             authorizeExchange { authorize(anyExchange, permitAll) }
             csrf { disable() }
-            cors { disable() }
         }
+    }
+
+    @Bean
+    fun corsWebFilter(): CorsWebFilter {
+        val config = CorsConfiguration().apply {
+            allowedOriginPatterns = listOf("http://localhost:*")
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowedHeaders = listOf("Location", "Authorization", "Content-Type", "Origin")
+            allowCredentials = true
+        }
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", config)
+        return CorsWebFilter(source)
     }
 
     @Bean

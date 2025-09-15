@@ -13,15 +13,6 @@ spring:
     web-application-type: reactive
   webflux:
     base-path: ${APPLICATION_CONTEXT_PATH:/}
-  cloud:
-    gateway:
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowed-origin-patterns:
-              - "http://localhost:*"
-            allowedMethods: [ GET, POST, PUT, DELETE ]
-            exposed-headers: [ LOCATION ]
 
 management:
   otlp:
@@ -76,3 +67,6 @@ logging:
   fluent-bit:
     enabled: ${FLUENT_BIT_ENABLED:false}
     address: ${FLUENT_BIT_ADDRESS:fluent-bit:5170}
+  level:
+    org.springframework.security: trace
+    org.springframework.web.cors: trace

@@ -53,7 +53,6 @@ class SecurityConfiguration {
                 it.authenticationEntryPoint(HttpStatusEntryPoint(UNAUTHORIZED))
             }
             .csrf { it.disable() }
-            .cors { }
             .build()
     }
 
@@ -83,7 +82,6 @@ class SecurityConfiguration {
             .securityMatcher("/**")
             .authorizeHttpRequests { it.anyRequest().permitAll() }
             .csrf { it.disable() }
-            .cors { it.disable() }
             .build()
     }
 
