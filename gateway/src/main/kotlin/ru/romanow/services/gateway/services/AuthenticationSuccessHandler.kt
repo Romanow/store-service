@@ -25,7 +25,7 @@ class AuthenticationSuccessHandler(
                 val tokenCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
                     .path("/")
                     .maxAge(Duration.ofHours(24))
-                    .build();
+                    .build()
                 exchange.response.addCookie(tokenCookie)
             }
         }
