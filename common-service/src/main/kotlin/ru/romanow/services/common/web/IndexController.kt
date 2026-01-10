@@ -15,7 +15,5 @@ class IndexController(
     private val applicationName: String
 ) {
     @GetMapping
-    fun index(): String {
-        return "Hello from $applicationName"
-    }
+    fun index() = "Hello from $applicationName"
 }

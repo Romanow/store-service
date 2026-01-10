@@ -35,7 +35,8 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
         val result = mutableListOf<Operation>()
         for ((path, pathItem) in openApi.paths) {
             val operation: Operation? = pathItem.readOperationsMap()[method]
-            if (operation != null && matcher.match(path, requestPath.value()) &&
+            if (operation != null &&
+                matcher.match(path, requestPath.value()) &&
                 (tags.isNullOrEmpty() || operation.tags.containsAll(tags))
             ) {
                 val hasPathParameters = operation.parameters == null || operation.parameters.none { it.`in` == "path" }

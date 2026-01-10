@@ -1,23 +1,23 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    id "idea"
-    id "java-library"
-    id "org.jetbrains.kotlin.jvm" version "1.9.25"
-    id "org.jetbrains.kotlin.kapt" version "1.9.25" apply false
-    id "org.jetbrains.kotlin.plugin.jpa" version "1.9.25" apply false
-    id "org.jetbrains.kotlin.plugin.spring" version "1.9.25" apply false
-    id "org.jlleitschuh.gradle.ktlint" version "12.2.0" apply false
-    id "org.openapi.generator" version "7.8.0" apply false
-    id "org.springframework.boot" version "3.4.5" apply false
+    id "org.jetbrains.kotlin.jvm" version "2.1.21"
+    id "org.jetbrains.kotlin.kapt" version "2.1.21" apply false
+    id "org.jetbrains.kotlin.plugin.jpa" version "2.1.21" apply false
+    id "org.jetbrains.kotlin.plugin.spring" version "2.1.21" apply false
+    id "org.jlleitschuh.gradle.ktlint" version "12.3.0" apply false
+    id "org.openapi.generator" version "7.18.0" apply false
+    id "org.springframework.boot" version "3.5.8" apply false
     id "com.gorylenko.gradle-git-properties" version "2.4.2" apply false
     id "com.adarshr.test-logger" version "4.0.0" apply false
-    id "io.spring.dependency-management" version "1.1.7"
+    id "io.spring.dependency-management" version "1.1.7" apply false
 }
 
 ext {
-    kotlinVersion = "1.9.25"
-    springBootVersion = "3.4.5"
-    springGatewayVersion = "4.2.0"
-    springCircuitBreakerVersion = "3.2.1"
+    kotlinVersion = "2.1.21"
+    springBootVersion = "3.5.8"
+    springGatewayVersion = "4.3.3"
+    springCircuitBreakerVersion = "3.3.1"
     validationApiVersion = "2.0.1.Final"
     wireMockVersion = "3.12.1"
     jwtVersion = "4.5.0"
@@ -26,13 +26,14 @@ ext {
     logstashEncoderVersion = "7.4"
     aggregatorByTagsVersion = "1.0.1"
     wireMockVersion = "3.10.0"
-    postgresContainerVersion = "1.21.0"
+    postgresContainerVersion = "1.21.4"
     keycloakContainerVersion = "3.6.0"
 }
 
 subprojects { ->
     apply plugin: "idea"
-    apply plugin: "kotlin"
+    apply plugin: "java-library"
+    apply plugin: "org.jetbrains.kotlin.jvm"
     apply plugin: "org.jlleitschuh.gradle.ktlint"
     apply plugin: "io.spring.dependency-management"
 
@@ -43,17 +44,14 @@ subprojects { ->
         }
     }
 
-    [compileKotlin, compileTestKotlin]*.kotlinOptions*.jvmTarget = "17"
+    kotlin.compilerOptions.jvmTarget = JvmTarget.JVM_21
 
     repositories {
         mavenCentral()
     }
 
     ktlint {
-        version.set("1.2.1")
-        filter {
-            exclude { entry -> entry.file.toString().contains("generated") }
-        }
+        version.set("1.5.0")
     }
 
     dependencyManagement {
@@ -65,10 +63,10 @@ subprojects { ->
     }
 
     dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
         implementation "org.jetbrains.kotlin:kotlin-reflect"
-        implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
         implementation "jakarta.validation:jakarta.validation-api"
+        implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
     }
 
     processResources {

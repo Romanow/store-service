@@ -6,7 +6,6 @@ package ru.romanow.services.common.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.auditing.CurrentDateTimeProvider
-import org.springframework.data.auditing.DateTimeProvider
 import org.springframework.data.domain.AuditorAware
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.security.core.context.SecurityContextHolder
@@ -19,9 +18,7 @@ import java.util.*
 class DatabaseConfiguration {
 
     @Bean
-    fun dateTimeProvider(): DateTimeProvider {
-        return CurrentDateTimeProvider.INSTANCE
-    }
+    fun dateTimeProvider() = CurrentDateTimeProvider.INSTANCE
 
     @Bean
     fun auditorAware(): AuditorAware<String> {

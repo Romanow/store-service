@@ -5,8 +5,6 @@ plugins {
 }
 
 dependencies {
-    api "com.fasterxml.jackson.module:jackson-module-kotlin"
-
     api "org.springframework.boot:spring-boot-starter-web"
     api "org.springframework.boot:spring-boot-starter-data-jpa"
     api "org.springframework.boot:spring-boot-starter-actuator"
@@ -35,6 +33,7 @@ dependencies {
 
     kapt "org.springframework.boot:spring-boot-configuration-processor"
 
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "org.testcontainers:postgresql:$postgresContainerVersion"

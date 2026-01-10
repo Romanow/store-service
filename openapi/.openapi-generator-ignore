@@ -6,5 +6,6 @@
 **/gradle/
 **/test/
 **/apis/
+**/configuration/
 **/infrastructure/
 **/ApiUtil.kt
