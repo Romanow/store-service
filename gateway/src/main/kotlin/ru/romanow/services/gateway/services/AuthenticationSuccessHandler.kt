@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.web.server.WebFilterExchange
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
@@ -20,7 +21,7 @@ class AuthenticationSuccessHandler(
     override fun onAuthenticationSuccess(filter: WebFilterExchange, authentication: Authentication): Mono<Void> {
         val exchange = filter.exchange
         if (authentication is OAuth2AuthenticationToken) {
-            val accessToken = authentication.principal.attributes["access_token"] as String?
+            val accessToken = (authentication.principal as DefaultOidcUser).idToken.tokenValue
             if (accessToken != null) {
                 val tokenCookie = ResponseCookie.from("ACCESS_TOKEN", accessToken)
                     .path("/")

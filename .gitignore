@@ -1,13 +1,7 @@
 *.iml
 .DS_Store
-.idea
-.gradle
+.idea/
+.gradle/
+.kotlin/
 out/
 build/
-
-**/.terraform/*
-**/.terragrunt-cache/*
-*.tfplan
-*.tfstate
-*.tfstate.*
-*.auto.tfvars

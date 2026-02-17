@@ -47,6 +47,8 @@ circuit-breaker:
   enabled: ${CIRCUIT_BREAKER_ENABLED:false}
 
 logbook:
+  filter:
+    enabled: ${LOG_REQUEST:true}
   predicate:
       include:
         - path: /api/**

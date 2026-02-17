@@ -76,12 +76,17 @@ class OpenApiRoutePredicate : AbstractRoutePredicateFactory<PredicateConfig>(Pre
             else -> true
         }
 
-    private fun trimSlash(path: RequestPath, trimPrefix: Int): PathContainer =
-        if (path.value().endsWith("/")) {
-            path.subPath(2 * trimPrefix, path.elements().size - 1)
+    private fun trimSlash(path: RequestPath, trimPrefix: Int): PathContainer {
+        val elementsCount = path.elements().size
+        val startIndex = 2 * trimPrefix
+        return if (elementsCount <= startIndex) {
+            path
+        } else if (path.value().endsWith('/')) {
+            path.subPath(startIndex, elementsCount - 1)
         } else {
-            path.subPath(2 * trimPrefix)
+            path.subPath(startIndex)
         }
+    }
 
     companion object {
         private val UUID_REGEX = "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}".toRegex()

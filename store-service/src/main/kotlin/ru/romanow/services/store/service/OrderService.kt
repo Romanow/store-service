@@ -10,4 +10,5 @@ interface OrderService {
     fun orders(userId: String): List<Order>
     fun orderByUid(orderUid: UUID): Order
     fun create(userId: String, items: List<String>): Order
+    fun cancel(orderUid: UUID)
 }

@@ -90,7 +90,7 @@ internal class OrderManagementServiceImpl(
             logger.error("User '$userId' can't access order '$orderUid'")
             throw OrderAccessException("User '$userId' can't access order '$orderUid'")
         }
-        order.status = OrderStatus.CANCELED
+        orderService.cancel(orderUid)
         logger.info("Canceled order '$orderUid'")
         warrantyClient.stop(orderUid)
         logger.info("Stopped warranty for order '$orderUid' on Warranty Service")

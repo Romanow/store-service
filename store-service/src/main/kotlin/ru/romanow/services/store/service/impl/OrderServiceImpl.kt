@@ -31,4 +31,9 @@ internal class OrderServiceImpl(private val orderRepository: OrderRepository) : 
         order.items = items.map { OrderItem(order = order, name = it) }
         return orderRepository.save(order)
     }
+
+    @Transactional
+    override fun cancel(orderUid: UUID) {
+        orderRepository.updateStatus(orderUid, OrderStatus.CANCELED)
+    }
 }

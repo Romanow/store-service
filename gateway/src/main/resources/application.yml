@@ -47,11 +47,15 @@ management:
 
 logbook:
   filter:
-    enabled: true
-    form-request-mode:
+    enabled: ${LOG_REQUEST:true}
   predicate:
-    exclude:
-      - path: /manage/**
+    include:
+      - path: "**/api/**"
+  obfuscate:
+    headers:
+      - Cookie
+      - Set-Cookie
+      - Authorization
   format:
     style: json
   write:
@@ -67,6 +71,3 @@ logging:
   fluent-bit:
     enabled: ${FLUENT_BIT_ENABLED:false}
     address: ${FLUENT_BIT_ADDRESS:fluent-bit:5170}
-  level:
-    org.springframework.security: trace
-    org.springframework.web.cors: trace
